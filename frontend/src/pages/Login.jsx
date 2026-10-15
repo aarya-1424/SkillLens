@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { useAuth } from '../context/AuthContext';
 import { guestAllowed, signInWithGoogle, supabaseConfigured } from '../services/auth';
@@ -26,7 +26,7 @@ export default function Login() {
     setError('');
     setBusy(true);
     try {
-      await signInWithGoogle(); // browser leaves for Google here
+      await signInWithGoogle(); // the browser leaves for Google here
     } catch (e) {
       setError(e.message || 'Could not start Google sign-in.');
       setBusy(false);
@@ -39,39 +39,41 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 bg-gray-950">
-      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-blue-500/15 blur-3xl glow" />
-      <div className="relative w-full max-w-sm p-8 rounded-2xl bg-gray-900/70 border border-white/10 shadow-2xl fade-up">
+    <div className="relative min-h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-b from-sky to-canvas text-ink overflow-hidden">
+      <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-brand/20 blur-3xl glow" />
+      <div className="pointer-events-none absolute bottom-0 right-[-10%] w-[500px] h-[500px] rounded-full bg-accent/20 blur-3xl" />
+      <Link to="/" className="absolute top-6 left-6 text-sm text-ink-soft hover:text-ink">← Back</Link>
+
+      <div className="relative w-full max-w-sm p-8 rounded-3xl bg-white border border-line shadow-[0_30px_80px_-40px_rgba(11,31,75,0.35)] fade-up">
         <div className="flex justify-center mb-6"><Logo size="lg" /></div>
-        <h1 className="text-xl font-semibold text-center mb-1">Welcome</h1>
-        <p className="text-sm text-gray-400 text-center mb-8">Sign in to save your videos and track your progress.</p>
+        <h1 className="font-serif text-3xl text-center mb-1">Welcome back</h1>
+        <p className="text-sm text-ink-soft text-center mb-8">Sign in to save your videos and track your progress.</p>
 
         <button
           onClick={handleGoogle}
           disabled={busy || !supabaseConfigured}
-          className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white text-gray-900 font-semibold hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-full bg-brand text-white font-medium hover:bg-brand-deep transition shadow-md shadow-brand/25 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <GoogleIcon />
+          <span className="bg-white rounded-full p-1"><GoogleIcon /></span>
           {busy ? 'Opening Google…' : 'Continue with Google'}
         </button>
 
-        {!supabaseConfigured && (
-          <p className="mt-3 text-xs text-yellow-300 text-center">Google sign-in is being set up.</p>
-        )}
-        {error && <p className="mt-3 text-sm text-red-400 text-center">{error}</p>}
+        {!supabaseConfigured && <p className="mt-3 text-xs text-amber-700 text-center">Google sign-in is being set up.</p>}
+        {error && <p className="mt-3 text-sm text-red-600 text-center">{error}</p>}
 
         {guestAllowed && (
           <>
-            <div className="flex items-center gap-3 my-6 text-xs text-gray-500">
-              <div className="flex-1 h-px bg-white/10" /> or <div className="flex-1 h-px bg-white/10" />
+            <div className="flex items-center gap-3 my-6 text-xs text-ink-soft">
+              <div className="flex-1 h-px bg-line" /> or <div className="flex-1 h-px bg-line" />
             </div>
-            <button onClick={handleGuest} className="w-full px-4 py-3 rounded-xl border border-white/15 font-semibold hover:bg-white/5 transition">
+            <button onClick={handleGuest} className="w-full px-4 py-3 rounded-full border border-line font-medium hover:border-ink/40 transition">
               Explore the demo
             </button>
-            <p className="mt-2 text-xs text-gray-500 text-center">Demo mode doesn't save anything.</p>
+            <p className="mt-2 text-xs text-ink-soft text-center">Demo mode doesn't save anything.</p>
           </>
         )}
       </div>
+      <p className="relative mt-6 text-xs text-ink-soft">Coaching guidance, not medical advice.</p>
     </div>
   );
 }

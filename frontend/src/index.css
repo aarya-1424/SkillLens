@@ -1,13 +1,47 @@
 @import "tailwindcss";
+@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource/dm-serif-display";
+@import "@fontsource/dm-serif-display/400-italic.css";
+
+/* ---------- Design tokens (light, blue) ---------- */
+@theme {
+  --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "DM Serif Display", Georgia, "Times New Roman", serif;
+
+  --color-ink: #0b1f4b;        /* deep navy text */
+  --color-ink-soft: #4b5b7a;   /* muted text */
+  --color-brand: #2563eb;      /* sports blue */
+  --color-brand-deep: #1d4ed8; /* hover */
+  --color-brand-dark: #1e3a8a; /* gradient end */
+  --color-brand-soft: #bfdbfe; /* badges, icon chips */
+  --color-accent: #0ea5e9;     /* second blue (sky) for variety */
+  --color-canvas: #eef4ff;     /* page background: blue-white, never plain white */
+  --color-sky: #dbeafe;        /* section tint */
+  --color-sky-deep: #bfdbfe;   /* stronger tint */
+  --color-line: #bfd3f5;       /* borders, clearly blue */
+  --color-mint: #10b981;       /* "good" accent for scores */
+  --color-amber: #f59e0b;      /* "needs work" accent */
+}
 
 :root {
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
   margin: 0;
-  background: #030712;
+  background: linear-gradient(180deg, #e3edff 0%, var(--color-canvas) 40%, var(--color-canvas) 100%);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Small spaced-out label above headings */
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-brand);
 }
 
 /* ---------- Animations ---------- */
@@ -19,24 +53,6 @@ body {
 .delay-1 { animation-delay: 0.12s; }
 .delay-2 { animation-delay: 0.24s; }
 .delay-3 { animation-delay: 0.36s; }
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-.float { animation: float 5s ease-in-out infinite; }
-
-@keyframes pulse-dot {
-  0%, 100% { r: 2.2; opacity: 1; }
-  50% { r: 3.4; opacity: 0.6; }
-}
-.joint { animation: pulse-dot 2s ease-in-out infinite; }
-
-@keyframes draw {
-  from { stroke-dashoffset: 120; }
-  to { stroke-dashoffset: 0; }
-}
-.bone { stroke-dasharray: 120; animation: draw 1.6s ease-out both; }
 
 @keyframes scan {
   0% { transform: translateY(-5%); opacity: 0; }
@@ -51,8 +67,15 @@ body {
 }
 .glow { animation: glow 6s ease-in-out infinite; }
 
+@keyframes progress-loop {
+  0% { width: 0; }
+  80% { width: 100%; }
+  100% { width: 100%; }
+}
+.progress-loop { animation: progress-loop 3.2s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
-  .fade-up, .float, .joint, .bone, .scan-line, .glow { animation: none !important; }
+  .fade-up, .scan-line, .glow, .progress-loop { animation: none !important; }
 }
 
 /* ---------- Print (PDF report) ---------- */
