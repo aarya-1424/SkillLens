@@ -12,7 +12,7 @@ export default function Faq() {
           <details key={item.q} className="group py-5">
             <summary className="flex items-center justify-between gap-4 cursor-pointer list-none text-lg font-medium [&::-webkit-details-marker]:hidden">
               {item.q}
-              <span className="shrink-0 w-7 h-7 rounded-full border border-line flex items-center justify-center text-ink-soft transition group-open:rotate-45 group-open:bg-ink group-open:text-white group-open:border-ink" aria-hidden="true">+</span>
+              <span className="shrink-0 w-7 h-7 rounded-full border border-line flex items-center justify-center text-ink-soft transition group-open:rotate-45 group-open:bg-brand group-open:text-white group-open:border-brand" aria-hidden="true">+</span>
             </summary>
             <p className="mt-3 text-ink-soft leading-relaxed pr-10">{item.a}</p>
           </details>

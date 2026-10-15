@@ -7,7 +7,7 @@ export default function SportPicker({ cta }) {
   const sport = SPORTS.find((s) => s.name === name);
 
   return (
-    <section id="sports" className="bg-sky/60 border-y border-line">
+    <section id="sports" className="bg-gradient-to-b from-sky-deep/70 to-sky border-y border-line">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
         <div className="max-w-2xl mb-10">
           <p className="eyebrow mb-4">Pick your sport</p>
@@ -22,7 +22,7 @@ export default function SportPicker({ cta }) {
             const on = s.name === name;
             return (
               <button key={s.name} onClick={() => setName(s.name)} aria-pressed={on}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-full border text-sm font-medium transition ${on ? 'bg-ink text-white border-ink' : 'bg-white border-line text-ink hover:border-ink/40'}`}>
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-full border text-sm font-medium transition ${on ? 'bg-brand text-white border-brand shadow-md shadow-brand/25' : 'bg-white border-line text-ink hover:border-brand'}`}>
                 <span aria-hidden="true">{s.icon}</span>{s.name}
               </button>
             );
@@ -49,7 +49,7 @@ export default function SportPicker({ cta }) {
             </div>
             <div>
               <p className="text-xs font-semibold tracking-wider uppercase text-ink-soft mb-3">Camera tip</p>
-              <div className="rounded-2xl bg-sky p-4 text-sm leading-relaxed">📐 {sport.tip}</div>
+              <div className="rounded-2xl bg-brand-soft/60 border border-brand-soft p-4 text-sm leading-relaxed">📐 {sport.tip}</div>
             </div>
           </div>
         </div>

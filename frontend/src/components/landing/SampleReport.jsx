@@ -19,8 +19,8 @@ export default function SampleReport({ cta }) {
 
       <div className="rounded-3xl border border-line bg-white shadow-[0_40px_100px_-40px_rgba(11,31,75,0.25)] overflow-hidden">
         {/* Window chrome */}
-        <div className="flex items-center gap-2 px-4 py-3 border-b border-line bg-canvas">
-          <span className="w-2.5 h-2.5 rounded-full bg-line" /><span className="w-2.5 h-2.5 rounded-full bg-line" /><span className="w-2.5 h-2.5 rounded-full bg-line" />
+        <div className="flex items-center gap-2 px-4 py-3 border-b border-line bg-sky">
+          <span className="w-2.5 h-2.5 rounded-full bg-brand/40" /><span className="w-2.5 h-2.5 rounded-full bg-brand/40" /><span className="w-2.5 h-2.5 rounded-full bg-brand/40" />
           <span className="ml-3 text-xs text-ink-soft">skilllens · Report · Cricket bowling · 15 Oct</span>
         </div>
 
@@ -77,15 +77,15 @@ export default function SampleReport({ cta }) {
               ))}
             </svg>
             <div className="flex justify-between text-[10px] text-ink-soft mt-1"><span>Week 1 · 58</span><span>Week 6 · 82</span></div>
-            <div className="mt-4 p-3 rounded-xl bg-sky text-xs leading-relaxed">
+            <div className="mt-4 p-3 rounded-xl bg-brand-soft/50 border border-brand-soft text-xs leading-relaxed">
               <span className="font-semibold">Coach's note:</span> your elbow is the one thing holding the score back. Fix that and the back strain goes with it.
             </div>
           </div>
         </div>
 
-        <div className="px-5 sm:px-8 py-4 border-t border-line bg-canvas flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="px-5 sm:px-8 py-4 border-t border-line bg-sky flex flex-col sm:flex-row items-center justify-between gap-3">
           <span className="text-sm text-ink-soft">Want this for your own video?</span>
-          <Link to={cta} className="px-5 py-2.5 rounded-full bg-ink text-white text-sm font-medium hover:bg-brand-deep transition">Analyse my technique →</Link>
+          <Link to={cta} className="px-5 py-2.5 rounded-full bg-brand text-white text-sm font-medium hover:bg-brand-deep transition shadow-md shadow-brand/25">Analyse my technique →</Link>
         </div>
       </div>
     </section>

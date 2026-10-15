@@ -132,13 +132,13 @@ export default function FeatureTabs() {
   return (
     <section id="features" className="relative">
       {/* Pinned tab bar */}
-      <div className="sticky top-16 z-10 bg-canvas/85 backdrop-blur border-y border-line">
+      <div className="sticky top-16 z-10 bg-sky/85 backdrop-blur border-y border-line">
         <div role="tablist" aria-label="What you get" className="max-w-6xl mx-auto px-4 sm:px-6 flex gap-2 overflow-x-auto py-3 [scrollbar-width:none]">
           {FEATURES.map((f) => {
             const on = f.key === active;
             return (
               <button key={f.key} role="tab" aria-selected={on} onClick={() => setActive(f.key)}
-                className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium border transition ${on ? 'bg-ink text-white border-ink' : 'bg-white text-ink-soft border-line hover:border-ink/40 hover:text-ink'}`}>
+                className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium border transition ${on ? 'bg-brand text-white border-brand shadow-md shadow-brand/25' : 'bg-white text-ink-soft border-line hover:border-brand hover:text-brand-deep'}`}>
                 {f.tab}
               </button>
             );
@@ -153,10 +153,10 @@ export default function FeatureTabs() {
             <h3 className="font-serif text-4xl sm:text-5xl leading-[1.05] mb-5">{feature.title}</h3>
             <p className="text-ink-soft text-lg leading-relaxed">{feature.body}</p>
           </div>
-          <div className="rounded-3xl border border-line bg-sky/60 p-5 sm:p-7">
+          <div className="rounded-3xl border border-line bg-gradient-to-br from-sky to-sky-deep p-5 sm:p-7">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-semibold tracking-wider uppercase text-ink-soft">Sample · Cricket bowling</span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white border border-line text-ink-soft">Sample data</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-brand-soft text-brand-dark">Sample data</span>
             </div>
             <div className="rounded-2xl bg-white border border-line p-4 sm:p-5">
               <Sample />

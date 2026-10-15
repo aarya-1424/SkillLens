@@ -24,7 +24,7 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-canvas text-ink">
       {/* ---------- Header ---------- */}
-      <header className="sticky top-0 z-20 h-16 bg-canvas/80 backdrop-blur border-b border-line">
+      <header className="sticky top-0 z-20 h-16 bg-white/70 backdrop-blur border-b border-line">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-6">
           <Logo />
           <nav className="hidden md:flex items-center gap-7 text-sm text-ink-soft">
@@ -34,7 +34,7 @@ export default function Landing() {
           </nav>
           <div className="flex items-center gap-2">
             {!signedIn && <Link to="/login" className="hidden sm:inline px-4 py-2 text-sm font-medium text-ink hover:text-brand transition">Log in</Link>}
-            <Link to={cta} className="px-4 py-2 rounded-full bg-ink text-white text-sm font-medium hover:bg-brand-deep transition">
+            <Link to={cta} className="px-4 py-2 rounded-full bg-brand text-white text-sm font-medium hover:bg-brand-deep transition shadow-md shadow-brand/25">
               {signedIn ? 'Open app' : 'Try it free'}
             </Link>
           </div>
@@ -42,8 +42,9 @@ export default function Landing() {
       </header>
 
       {/* ---------- Hero ---------- */}
-      <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full bg-brand/10 blur-3xl glow" />
+      <section className="relative overflow-hidden bg-gradient-to-b from-sky via-canvas to-canvas">
+        <div className="pointer-events-none absolute -top-40 left-[20%] w-[700px] h-[500px] rounded-full bg-brand/20 blur-3xl glow" />
+        <div className="pointer-events-none absolute top-10 right-[-10%] w-[600px] h-[600px] rounded-full bg-accent/20 blur-3xl" />
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-20 sm:pt-24 sm:pb-28 grid md:grid-cols-12 gap-10 items-center">
           <div className="md:col-span-7">
             <p className="fade-up eyebrow mb-6">· Your AI coach ·</p>
@@ -57,7 +58,7 @@ export default function Landing() {
               <Link to={cta} className="px-6 py-3.5 rounded-full bg-brand text-white font-medium hover:bg-brand-deep transition shadow-lg shadow-brand/25">
                 Try it free →
               </Link>
-              <a href="#how" className="px-6 py-3.5 rounded-full border border-line bg-white font-medium hover:border-ink/40 transition">
+              <a href="#how" className="px-6 py-3.5 rounded-full border border-brand-soft bg-white/80 text-brand-deep font-medium hover:bg-white transition">
                 See how it works
               </a>
             </div>
@@ -70,11 +71,11 @@ export default function Landing() {
       </section>
 
       {/* ---------- Trust numbers ---------- */}
-      <section className="border-y border-line bg-white">
+      <section className="border-y border-line bg-gradient-to-r from-sky via-sky-deep/70 to-sky">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
           {STATS.map((s) => (
             <div key={s.label}>
-              <div className="font-serif text-5xl text-ink">
+              <div className="font-serif text-5xl text-brand-deep">
                 <CountUp value={s.value} prefix={s.prefix} suffix={s.suffix} />
               </div>
               <div className="text-sm text-ink-soft mt-1">{s.label}</div>
@@ -87,7 +88,7 @@ export default function Landing() {
       <FeatureTabs />
 
       {/* ---------- How it works ---------- */}
-      <section id="how" className="bg-sky/60 border-y border-line">
+      <section id="how" className="bg-gradient-to-b from-sky-deep/60 to-sky border-y border-line">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28 grid md:grid-cols-2 gap-12 items-center">
           <div>
             <p className="eyebrow mb-4">How it works</p>
@@ -97,7 +98,7 @@ export default function Landing() {
             <ol className="space-y-7">
               {STEPS.map((s) => (
                 <li key={s.n} className="flex gap-5">
-                  <span className="font-serif text-brand text-xl w-8 shrink-0 pt-0.5">{s.n}</span>
+                  <span className="w-9 h-9 shrink-0 rounded-full bg-brand text-white text-sm font-semibold flex items-center justify-center">{s.n}</span>
                   <div>
                     <h3 className="text-lg font-medium">{s.title}</h3>
                     <p className="text-ink-soft mt-1 leading-relaxed">{s.text}</p>
@@ -126,10 +127,10 @@ export default function Landing() {
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {JOURNEY.map((j, i) => (
-            <div key={j.n} className={`rounded-3xl border p-6 ${i === 0 ? 'bg-ink text-white border-ink' : 'bg-white border-line'}`}>
+            <div key={j.n} className={`rounded-3xl border p-6 ${i === 0 ? 'bg-gradient-to-br from-brand to-brand-dark text-white border-brand' : 'bg-white border-line hover:border-brand/50 hover:-translate-y-0.5 transition'}`}>
               <div className={`text-xs ${i === 0 ? 'text-white/60' : 'text-ink-soft'}`}>{j.n}</div>
               <h3 className="font-serif text-2xl mt-6">{j.title}</h3>
-              <span className={`inline-block mt-2 text-[11px] px-2 py-0.5 rounded-full ${i === 0 ? 'bg-white/15' : 'bg-sky text-brand-deep'}`}>{j.tag}</span>
+              <span className={`inline-block mt-2 text-[11px] px-2 py-0.5 rounded-full ${i === 0 ? 'bg-white/20' : 'bg-brand-soft text-brand-dark'}`}>{j.tag}</span>
               <p className={`mt-4 text-sm leading-relaxed ${i === 0 ? 'text-white/80' : 'text-ink-soft'}`}>{j.text}</p>
             </div>
           ))}
@@ -173,7 +174,8 @@ export default function Landing() {
       </section>
 
       {/* ---------- Trust ---------- */}
-      <section id="trust" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
+      <section id="trust" className="bg-sky border-y border-line">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
         <div className="max-w-2xl mb-10">
           <p className="eyebrow mb-4">Trust & safety</p>
           <h2 className="font-serif text-4xl sm:text-5xl leading-[1.05]">Built carefully, <em className="text-brand">because it's your body.</em></h2>
@@ -181,11 +183,12 @@ export default function Landing() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {TRUST.map((t) => (
             <div key={t.title} className="rounded-3xl bg-white border border-line p-6">
-              <div className="w-9 h-9 rounded-full bg-sky flex items-center justify-center text-brand mb-5" aria-hidden="true">✓</div>
+              <div className="w-9 h-9 rounded-full bg-brand text-white flex items-center justify-center mb-5" aria-hidden="true">✓</div>
               <h3 className="font-medium">{t.title}</h3>
               <p className="text-sm text-ink-soft mt-2 leading-relaxed">{t.text}</p>
             </div>
           ))}
+        </div>
         </div>
       </section>
 
@@ -194,7 +197,7 @@ export default function Landing() {
 
       {/* ---------- Final CTA ---------- */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-20 sm:pb-28">
-        <div className="relative overflow-hidden rounded-[2rem] bg-brand text-white px-6 py-16 sm:py-20 text-center">
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand via-brand-deep to-brand-dark text-white px-6 py-16 sm:py-20 text-center">
           <div className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-white/10 blur-2xl" />
           <h2 className="relative font-serif text-4xl sm:text-5xl leading-[1.05]">Ready to see your game <em>clearly?</em></h2>
           <p className="relative mt-4 text-white/80 text-lg">Your first report takes less than a minute.</p>
@@ -205,7 +208,7 @@ export default function Landing() {
       </section>
 
       {/* ---------- Footer ---------- */}
-      <footer className="border-t border-line bg-white">
+      <footer className="border-t border-line bg-sky/60">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-ink-soft">
           <Logo />
           <p>© {new Date().getFullYear()} SkillLens · Coaching guidance, not medical advice.</p>

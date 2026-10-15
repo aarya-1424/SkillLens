@@ -39,8 +39,9 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center px-4 bg-canvas text-ink overflow-hidden">
-      <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-brand/10 blur-3xl glow" />
+    <div className="relative min-h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-b from-sky to-canvas text-ink overflow-hidden">
+      <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-brand/20 blur-3xl glow" />
+      <div className="pointer-events-none absolute bottom-0 right-[-10%] w-[500px] h-[500px] rounded-full bg-accent/20 blur-3xl" />
       <Link to="/" className="absolute top-6 left-6 text-sm text-ink-soft hover:text-ink">← Back</Link>
 
       <div className="relative w-full max-w-sm p-8 rounded-3xl bg-white border border-line shadow-[0_30px_80px_-40px_rgba(11,31,75,0.35)] fade-up">
@@ -51,7 +52,7 @@ export default function Login() {
         <button
           onClick={handleGoogle}
           disabled={busy || !supabaseConfigured}
-          className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-full bg-ink text-white font-medium hover:bg-brand-deep transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-full bg-brand text-white font-medium hover:bg-brand-deep transition shadow-md shadow-brand/25 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className="bg-white rounded-full p-1"><GoogleIcon /></span>
           {busy ? 'Opening Google…' : 'Continue with Google'}
