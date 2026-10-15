@@ -20,7 +20,7 @@ export default function AppLayout() {
     <div className="min-h-screen bg-gray-950">
       <header className="no-print sticky top-0 z-20 backdrop-blur bg-gray-950/80 border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <Logo to="/app" />
+          <Logo to="/app" tone="dark" />
           <nav className="flex items-center gap-1">
             <NavLink to="/app" end className={linkClass}>Dashboard</NavLink>
             <NavLink to="/app/analyze" className={linkClass}>New analysis</NavLink>
