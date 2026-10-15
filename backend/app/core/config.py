@@ -26,6 +26,18 @@ class Settings(BaseSettings):
 
     SENTRY_DSN: str | None = None
 
+    # ---- AI models (any OpenAI-compatible endpoint) ----
+    # Primary: a FreeLLMAPI gateway (github.com/tashfeenahmed/freellmapi), which
+    # rotates across free providers by itself. Model "auto" lets it choose.
+    LLM_BASE_URL: str | None = None  # e.g. http://localhost:3001/v1
+    LLM_API_KEY: str | None = None
+    LLM_MODEL: str = "auto"
+    LLM_EMBEDDING_MODEL: str = "auto"
+    # Backups tried in order if the primary fails. JSON list of
+    # {"base_url": "...", "api_key": "...", "model": "...", "embedding_model": "..."}
+    LLM_FALLBACKS: str = "[]"
+    LLM_TIMEOUT_SECONDS: float = 30.0
+
     @property
     def cors_origins(self) -> list[str]:
         return [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
