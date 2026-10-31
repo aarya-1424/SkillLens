@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { SPORTS } from '../data/sports';
+import { SPORTS } from '../data/landing';
 import { get } from '../services/api';
 
 export default function Dashboard() {

@@ -12,9 +12,9 @@ export default function SportPicker({ cta }) {
         <div className="max-w-2xl mb-10">
           <p className="eyebrow mb-4">Pick your sport</p>
           <h2 className="font-serif text-4xl sm:text-5xl leading-[1.05] mb-4">
-            Nine sports. <em className="text-brand not-italic font-serif italic">One key movement each.</em>
+            Ten sports. <em className="text-brand not-italic font-serif italic">One key movement each.</em>
           </h2>
-          <p className="text-ink-soft text-lg">Choose a sport to see exactly what SkillLens checks and where to put your camera.</p>
+          <p className="text-ink-soft text-lg">Choose a sport to see what SkillLens checks, and where to put your camera.</p>
         </div>
 
         <div className="flex flex-wrap gap-2 mb-8">
@@ -40,7 +40,7 @@ export default function SportPicker({ cta }) {
           </div>
           <div className="md:col-span-3 grid sm:grid-cols-2 gap-5">
             <div>
-              <p className="text-xs font-semibold tracking-wider uppercase text-ink-soft mb-3">What we check</p>
+              <p className="text-xs font-semibold tracking-wider uppercase text-ink-soft mb-3">What we check <span className="normal-case tracking-normal text-brand">· {sport.metrics} checks</span></p>
               <ul className="space-y-2">
                 {sport.checks.map((c) => (
                   <li key={c} className="flex gap-2.5 text-sm"><span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-brand shrink-0" />{c}</li>

@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
+from app.movements import library
+
 router = APIRouter(prefix="/sports", tags=["sports"])
 
 
@@ -9,25 +11,20 @@ class SportOut(BaseModel):
     name: str
     icon: str
     movement: str
+    movement_slug: str
     camera_view: str
+    metric_count: int
     beta: bool = False
-
-
-# Temporary: served from code until the sports/movements tables are filled
-# from the Knowledge Library (see SkillLens Docs/05 Data Plan).
-_SPORTS = [
-    SportOut(slug="cricket", name="Cricket", icon="🏏", movement="Bowling action", camera_view="side"),
-    SportOut(slug="basketball", name="Basketball", icon="🏀", movement="Jump shot", camera_view="side"),
-    SportOut(slug="soccer", name="Soccer", icon="⚽", movement="Instep kick", camera_view="side"),
-    SportOut(slug="tennis", name="Tennis", icon="🎾", movement="Serve", camera_view="side"),
-    SportOut(slug="baseball", name="Baseball", icon="⚾", movement="Pitching", camera_view="side"),
-    SportOut(slug="volleyball", name="Volleyball", icon="🏐", movement="Spike", camera_view="side"),
-    SportOut(slug="swimming", name="Swimming", icon="🏊", movement="Freestyle stroke", camera_view="side", beta=True),
-    SportOut(slug="running", name="Running", icon="🏃", movement="Running stride", camera_view="side"),
-    SportOut(slug="cycling", name="Cycling", icon="🚴", movement="Pedalling", camera_view="side"),
-]
 
 
 @router.get("", response_model=list[SportOut])
 def list_sports() -> list[SportOut]:
-    return _SPORTS
+    """The sports shown on the picker. Derived from the movement library."""
+    return [
+        SportOut(
+            slug=m.sport.lower().replace(" & ", "-").replace(" ", "-"),
+            name=m.sport, icon=m.sport_icon, movement=m.name, movement_slug=m.slug,
+            camera_view=m.camera, metric_count=len(m.metrics), beta=m.beta,
+        )
+        for m in library.all_movements()
+    ]

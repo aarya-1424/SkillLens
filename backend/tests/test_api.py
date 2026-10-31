@@ -11,10 +11,10 @@ def test_health():
     assert res.json()["status"] == "ok"
 
 
-def test_sports_lists_all_nine():
+def test_sports_lists_all_ten():
     res = client.get("/api/v1/sports")
     assert res.status_code == 200
-    assert len(res.json()) == 9
+    assert len(res.json()) == 10
 
 
 def test_me_requires_sign_in():

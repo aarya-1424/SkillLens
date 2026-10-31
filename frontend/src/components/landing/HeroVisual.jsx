@@ -90,7 +90,7 @@ export default function HeroVisual({ videoSrc, compact = false }) {
       {/* Readouts */}
       <div className="absolute left-3 top-3 flex items-center gap-2 text-[11px] font-medium">
         <span className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-white/90 text-ink border border-line">
-          <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" /> Tracking · 33 points
+          <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" /> Tracking every joint
         </span>
       </div>
       <div className="absolute right-3 bottom-3 flex flex-col items-end gap-1.5 text-[11px] font-medium tabular-nums">

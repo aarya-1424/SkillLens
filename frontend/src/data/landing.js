@@ -1,9 +1,9 @@
 // Content for the landing page. Only true numbers go here — funders will check.
 
 export const STATS = [
-  { value: 9, suffix: '', label: 'sports supported' },
-  { value: 33, suffix: '', label: 'body points tracked' },
-  { value: 5, suffix: '', label: 'joints scored per video' },
+  { value: 10, suffix: '', label: 'sports supported' },
+  { value: 65, suffix: '', label: 'technique checks in our library' },
+  { value: 6, suffix: '', label: 'kinds of analysis per movement' },
   { value: 30, prefix: '<', suffix: 's', label: 'per analysis' },
 ];
 
@@ -12,7 +12,7 @@ export const FEATURES = [
     key: 'score',
     tab: 'Technique score',
     title: 'One number that tells you where you stand.',
-    body: 'Every video gets a score out of 100, plus a score for your shoulder, elbow, hip, knee and spine. It comes from measured joint angles compared with correct form — the same video always gets the same score.',
+    body: 'Every video gets a score out of 100, built from every check we run on that movement — joint angles, body position, left/right balance, the order your body fires in, and power. The same video always gets the same score.',
     sample: { kind: 'score' },
   },
   {
@@ -47,7 +47,7 @@ export const FEATURES = [
 
 export const STEPS = [
   { n: '01', title: 'Record', text: 'Film 5–15 seconds of your movement from the side. A phone on a chair is enough.' },
-  { n: '02', title: 'Track', text: 'SkillLens finds 33 body points in every frame, right in your browser.' },
+  { n: '02', title: 'Track', text: 'SkillLens follows every joint in your body, frame by frame, right in your browser.' },
   { n: '03', title: 'Compare', text: 'Your joint angles at the key moments are checked against correct form for your sport.' },
   { n: '04', title: 'Improve', text: 'You get your score, your mistakes, drills, injury risk and a weekly plan.' },
 ];
@@ -62,49 +62,54 @@ export const JOURNEY = [
 
 export const SPORTS = [
   {
-    name: 'Cricket', icon: '🏏', movement: 'Bowling action', view: 'Side view, bowling-arm side',
+    name: 'Cricket', metrics: 8, icon: '🏏', movement: 'Bowling action', view: 'Side view, bowling-arm side',
     checks: ['Elbow straightening during delivery', 'Front knee bracing at landing', 'Trunk lean at release'],
     tip: 'Stand 4–5 m to the side of the crease. Keep the whole run-up and release in frame.',
   },
   {
-    name: 'Basketball', icon: '🏀', movement: 'Jump shot', view: 'Side view, shooting-arm side',
+    name: 'Basketball', metrics: 6, icon: '🏀', movement: 'Jump shot', view: 'Side view, shooting-arm side',
     checks: ['Elbow angle at set point', 'Knee bend in the dip', 'Arm extension at release'],
     tip: 'Film from the side at chest height so the shooting elbow is clearly visible.',
   },
   {
-    name: 'Soccer', icon: '⚽', movement: 'Instep kick', view: 'Side view, kicking-leg side',
-    checks: ['Standing-leg knee bend', 'Kicking-knee extension at contact', 'Body lean at contact'],
+    name: 'Football', metrics: 6, icon: '⚽', movement: 'Instep kick', view: 'Side view, kicking-leg side',
+    checks: ['Standing leg at contact', 'Kicking knee at contact', 'Body lean at contact', 'Hip then knee timing'],
     tip: 'Place the camera level with the ball, a few metres to the side.',
   },
   {
-    name: 'Tennis', icon: '🎾', movement: 'Serve', view: 'Side view',
+    name: 'Tennis', metrics: 6, icon: '🎾', movement: 'Serve', view: 'Side view',
     checks: ['Knee bend in trophy position', 'Elbow angle in trophy position', 'Arm extension at contact'],
     tip: 'Film from the side of the baseline, full body in frame including the toss.',
   },
   {
-    name: 'Baseball', icon: '⚾', movement: 'Pitching', view: 'Side view, throwing-arm side',
+    name: 'Baseball', metrics: 6, icon: '⚾', movement: 'Pitching', view: 'Side view, throwing-arm side',
     checks: ['Arm height at foot contact', 'Elbow angle at foot contact', 'Stride-knee bend'],
     tip: 'Camera at hip height, perpendicular to the throw.',
   },
   {
-    name: 'Volleyball', icon: '🏐', movement: 'Spike', view: 'Side view, hitting-arm side',
+    name: 'Volleyball', metrics: 6, icon: '🏐', movement: 'Spike', view: 'Side view, hitting-arm side',
     checks: ['Knee bend before take-off', 'Elbow height in the arm swing', 'Arm extension at contact'],
     tip: 'Stand back far enough to keep the full jump in frame.',
   },
   {
-    name: 'Swimming', icon: '🏊', movement: 'Freestyle stroke (Beta)', view: 'Side view, dry-land or above water',
-    checks: ['High-elbow catch', 'Arm reach at entry', 'Straight body line'],
-    tip: 'Dry-land stroke practice on a bench gives the clearest reading for now.',
+    name: 'Badminton', metrics: 6, icon: '🏸', movement: 'Overhead smash', view: 'Side view, racket-arm side',
+    checks: ['Racket arm in the loaded position', 'Reach at contact', 'Body turn and lean', 'Hips before shoulders'],
+    tip: 'Film from the side so the full overhead swing is visible, 3–4 m away.',
   },
   {
-    name: 'Running', icon: '🏃', movement: 'Running stride', view: 'Side view',
-    checks: ['Forward lean', 'Knee angle at foot strike', 'Over-striding'],
-    tip: 'Film 2–3 strides from the side on a treadmill or a straight path.',
+    name: 'Running', metrics: 8, icon: '🏃', movement: 'Running stride', view: 'Side view',
+    checks: ['Forward lean', 'How far ahead your foot lands', 'Steps per minute', 'Left and right leg balance'],
+    tip: 'Film 3–4 strides from the side on a treadmill or a straight path.',
   },
   {
-    name: 'Cycling', icon: '🚴', movement: 'Pedalling (stationary bike)', view: 'Side view',
-    checks: ['Knee angle at bottom of stroke', 'Knee angle at top of stroke', 'Back angle'],
+    name: 'Cycling', metrics: 6, icon: '🚴', movement: 'Pedalling (stationary bike)', view: 'Side view',
+    checks: ['Knee at the bottom of the stroke', 'Hip rocking', 'Back angle', 'Left and right leg balance'],
     tip: 'Camera level with the saddle, drive-side of the bike.',
+  },
+  {
+    name: 'Gym & Strength', metrics: 7, icon: '🏋️', movement: 'Squat', view: 'Side view',
+    checks: ['How deep you go', 'Chest position', 'Lower-back rounding', 'Hips and chest rising together'],
+    tip: 'Film from the side at hip height, 2–3 m away. Bodyweight or barbell both work.',
   },
 ];
 
