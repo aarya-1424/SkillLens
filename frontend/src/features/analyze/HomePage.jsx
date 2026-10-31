@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { SPORTS } from '../../data/sports';
+import { SPORTS } from '../../data/landing';
 
 const TIPS = [
   { icon: '📐', text: 'Place the camera at your side, about hip height, 3–5 metres away.' },

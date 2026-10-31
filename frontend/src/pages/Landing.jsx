@@ -62,7 +62,7 @@ export default function Landing() {
                 See how it works
               </a>
             </div>
-            <p className="fade-up delay-3 mt-5 text-sm text-ink-soft">No sensors. Nothing to install. Nine sports.</p>
+            <p className="fade-up delay-3 mt-5 text-sm text-ink-soft">No sensors. Nothing to install. Ten sports.</p>
           </div>
           <div className="md:col-span-5 fade-up delay-2 flex md:justify-end">
             <HeroVisual />
