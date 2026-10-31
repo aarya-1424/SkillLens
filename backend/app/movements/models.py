@@ -63,6 +63,7 @@ MOMENTS = {
     "lowest": "at the lowest point",
     "highest": "at the highest point",
     "trophy": "in the loaded position",
+    "arm_horizontal": "as your arm passes horizontal",
     "takeoff": "as you leave the ground",
 }
 
@@ -88,6 +89,9 @@ class Metric:
     ideal_max: float = 0.0
     tolerance: float = 20.0    # how far outside the band before the score hits 0
     weight: float = 10.0       # importance inside its movement
+    # Multiplier applied to the raw measurement. A running STRIDE cycle is two
+    # steps, so step rate is the cycle rate doubled; a pedal revolution is one.
+    scale: float = 1.0
 
     # Coaching language — the whole point of the product.
     cue_low: str = ""          # what to say when the value is BELOW the band

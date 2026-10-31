@@ -23,6 +23,11 @@ class MetricOut(BaseModel):
     weight: float
     verified: bool
     source: str
+    # The recipe the browser needs to take this measurement itself.
+    how: str
+    scale: float
+    points: list[str]
+    moment_b: str | None = None
 
     @classmethod
     def of(cls, m: Metric) -> "MetricOut":
@@ -31,6 +36,7 @@ class MetricOut(BaseModel):
             name=m.name, means=m.means, unit=m.unit.value, moment=m.moment,
             target_min=m.ideal_min, target_max=m.ideal_max, weight=m.weight,
             verified=m.verified, source=m.source,
+            how=m.how.value, scale=m.scale, points=list(m.points), moment_b=m.moment_b,
         )
 
 
