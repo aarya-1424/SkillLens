@@ -21,11 +21,12 @@ COACH_REVIEW = "Starting point from general coaching guidance — awaiting coach
 
 
 def M(mid, layer, how, unit, group, name, means, points, moment, lo, hi,
-      tol, weight, cue_low, cue_high, cue_good, source=COACH_REVIEW, moment_b=None):
+      tol, weight, cue_low, cue_high, cue_good, source=COACH_REVIEW, moment_b=None,
+      scale=1.0):
     return Metric(
         id=mid, layer=layer, how=how, unit=unit, group=group, name=name, means=means,
         points=tuple(points), moment=moment, moment_b=moment_b,
-        ideal_min=lo, ideal_max=hi, tolerance=tol, weight=weight,
+        ideal_min=lo, ideal_max=hi, tolerance=tol, weight=weight, scale=scale,
         cue_low=cue_low, cue_high=cue_high, cue_good=cue_good, source=source,
     )
 
@@ -41,7 +42,7 @@ CRICKET = Movement(
         M("cricket-bowling.elbow_extension", Layer.JOINT, How.ANGLE_CHANGE, D, "elbow",
           "Elbow straightening in delivery",
           "How much your bowling arm straightens between horizontal and release.",
-          ("{bowl}_shoulder", "{bowl}_elbow", "{bowl}_wrist"), "trophy", 0, 15, 15, 18,
+          ("{bowl}_shoulder", "{bowl}_elbow", "{bowl}_wrist"), "arm_horizontal", 0, 15, 15, 18,
           "", "Your bowling arm is straightening too much on the way through. Keep the elbow locked in one position from the moment your arm passes your shoulder.",
           "Your arm stays locked through delivery — well within the legal limit.",
           source="ICC 15° limit for bowling actions — awaiting coach review", moment_b="release"),
@@ -121,10 +122,10 @@ RUNNING = Movement(
           "A soft, slightly bent knee on landing — exactly right."),
         M("running-stride.cadence", Layer.POWER, How.CADENCE, SPM, "power",
           "Steps per minute", "How many steps you take in a minute.",
-          ("{lead}_ankle",), "whole_clip", 165, 185, 25, 16,
-          "Your steps are slow and long. Try taking quicker, lighter steps — it is the single easiest way to reduce impact on your knees.",
-          "You are taking very quick, short steps. Relax slightly and let the stride open up a little.",
-          "Your step rate is in the efficient range."),
+          ("{lead}_ankle",), "whole_clip", 165, 185, 25, 16, scale=2.0,
+          cue_low="Your steps are slow and long. Try taking quicker, lighter steps — it is the single easiest way to reduce impact on your knees.",
+          cue_high="You are taking very quick, short steps. Relax slightly and let the stride open up a little.",
+          cue_good="Your step rate is in the efficient range."),
         M("running-stride.bounce", Layer.DISTANCE, How.VERTICAL_RANGE, PCT, "balance",
           "Up-and-down bounce", "How much your body travels up and down with each step.",
           ("mid_hip",), "whole_clip", 0, 7, 6, 10,

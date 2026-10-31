@@ -99,13 +99,13 @@ export const WebcamRecorder = ({ onRecordingComplete, onCancel }) => {
         const secs = seconds % 60;
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
-    return (<div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-4 flex items-center justify-center">
-      <div className="w-full max-w-4xl bg-gray-800/50 rounded-2xl shadow-2xl backdrop-blur-sm border border-gray-700 p-8">
-        <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-blue-500 mb-6 text-center">
+    return (<div className="min-h-screen bg-canvas p-4 flex items-center justify-center">
+      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-xl border border-line p-8">
+        <h2 className="text-3xl font-serif text-ink mb-6 text-center">
           Record Your Performance
         </h2>
 
-        {error && (<div className="mb-4 p-4 bg-red-900/50 border border-red-500 rounded-lg text-red-200">
+        {error && (<div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-800">
             {error}
           </div>)}
 
@@ -121,18 +121,18 @@ export const WebcamRecorder = ({ onRecordingComplete, onCancel }) => {
         </div>
 
         <div className="flex gap-4">
-          <button onClick={handleCancel} className="flex-1 px-6 py-3 text-lg font-semibold text-white bg-gray-600 rounded-lg hover:bg-gray-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-gray-500">
+          <button onClick={handleCancel} className="flex-1 px-6 py-3 text-lg font-semibold text-white bg-white border border-line text-ink rounded-full hover:border-ink/40 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-gray-500">
             Cancel
           </button>
           
-          {!isRecording ? (<button onClick={startRecording} disabled={!stream} className="flex-1 px-6 py-3 text-lg font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-500 disabled:bg-gray-700 disabled:cursor-not-allowed">
+          {!isRecording ? (<button onClick={startRecording} disabled={!stream} className="flex-1 px-6 py-3 text-lg font-semibold text-white bg-red-600 rounded-full hover:bg-red-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-500 disabled:bg-gray-700 disabled:cursor-not-allowed">
               Start Recording
-            </button>) : (<button onClick={stopRecording} className="flex-1 px-6 py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500">
+            </button>) : (<button onClick={stopRecording} className="flex-1 px-6 py-3 text-lg font-semibold text-white bg-brand rounded-full hover:bg-brand-deep transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500">
               Stop & Analyze
             </button>)}
         </div>
 
-        <p className="text-center text-sm text-gray-400 mt-4">
+        <p className="text-center text-sm text-ink-soft mt-4">
           <strong>Tip:</strong> Record for at least 10 seconds to get accurate analysis. Make sure your entire body is visible.
         </p>
       </div>

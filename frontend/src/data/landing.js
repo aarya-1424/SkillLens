@@ -62,52 +62,52 @@ export const JOURNEY = [
 
 export const SPORTS = [
   {
-    name: 'Cricket', metrics: 8, icon: '🏏', movement: 'Bowling action', view: 'Side view, bowling-arm side',
+    name: 'Cricket', slug: 'cricket-bowling', metrics: 8, icon: '🏏', movement: 'Bowling action', view: 'Side view, bowling-arm side',
     checks: ['Elbow straightening during delivery', 'Front knee bracing at landing', 'Trunk lean at release'],
     tip: 'Stand 4–5 m to the side of the crease. Keep the whole run-up and release in frame.',
   },
   {
-    name: 'Basketball', metrics: 6, icon: '🏀', movement: 'Jump shot', view: 'Side view, shooting-arm side',
+    name: 'Basketball', slug: 'basketball-jumpshot', metrics: 6, icon: '🏀', movement: 'Jump shot', view: 'Side view, shooting-arm side',
     checks: ['Elbow angle at set point', 'Knee bend in the dip', 'Arm extension at release'],
     tip: 'Film from the side at chest height so the shooting elbow is clearly visible.',
   },
   {
-    name: 'Football', metrics: 6, icon: '⚽', movement: 'Instep kick', view: 'Side view, kicking-leg side',
+    name: 'Football', slug: 'football-instep-kick', metrics: 6, icon: '⚽', movement: 'Instep kick', view: 'Side view, kicking-leg side',
     checks: ['Standing leg at contact', 'Kicking knee at contact', 'Body lean at contact', 'Hip then knee timing'],
     tip: 'Place the camera level with the ball, a few metres to the side.',
   },
   {
-    name: 'Tennis', metrics: 6, icon: '🎾', movement: 'Serve', view: 'Side view',
+    name: 'Tennis', slug: 'tennis-serve', metrics: 6, icon: '🎾', movement: 'Serve', view: 'Side view',
     checks: ['Knee bend in trophy position', 'Elbow angle in trophy position', 'Arm extension at contact'],
     tip: 'Film from the side of the baseline, full body in frame including the toss.',
   },
   {
-    name: 'Baseball', metrics: 6, icon: '⚾', movement: 'Pitching', view: 'Side view, throwing-arm side',
+    name: 'Baseball', slug: 'baseball-pitch', metrics: 6, icon: '⚾', movement: 'Pitching', view: 'Side view, throwing-arm side',
     checks: ['Arm height at foot contact', 'Elbow angle at foot contact', 'Stride-knee bend'],
     tip: 'Camera at hip height, perpendicular to the throw.',
   },
   {
-    name: 'Volleyball', metrics: 6, icon: '🏐', movement: 'Spike', view: 'Side view, hitting-arm side',
+    name: 'Volleyball', slug: 'volleyball-spike', metrics: 6, icon: '🏐', movement: 'Spike', view: 'Side view, hitting-arm side',
     checks: ['Knee bend before take-off', 'Elbow height in the arm swing', 'Arm extension at contact'],
     tip: 'Stand back far enough to keep the full jump in frame.',
   },
   {
-    name: 'Badminton', metrics: 6, icon: '🏸', movement: 'Overhead smash', view: 'Side view, racket-arm side',
+    name: 'Badminton', slug: 'badminton-smash', metrics: 6, icon: '🏸', movement: 'Overhead smash', view: 'Side view, racket-arm side',
     checks: ['Racket arm in the loaded position', 'Reach at contact', 'Body turn and lean', 'Hips before shoulders'],
     tip: 'Film from the side so the full overhead swing is visible, 3–4 m away.',
   },
   {
-    name: 'Running', metrics: 8, icon: '🏃', movement: 'Running stride', view: 'Side view',
+    name: 'Running', slug: 'running-stride', metrics: 8, icon: '🏃', movement: 'Running stride', view: 'Side view',
     checks: ['Forward lean', 'How far ahead your foot lands', 'Steps per minute', 'Left and right leg balance'],
     tip: 'Film 3–4 strides from the side on a treadmill or a straight path.',
   },
   {
-    name: 'Cycling', metrics: 6, icon: '🚴', movement: 'Pedalling (stationary bike)', view: 'Side view',
+    name: 'Cycling', slug: 'cycling-pedal', metrics: 6, icon: '🚴', movement: 'Pedalling (stationary bike)', view: 'Side view',
     checks: ['Knee at the bottom of the stroke', 'Hip rocking', 'Back angle', 'Left and right leg balance'],
     tip: 'Camera level with the saddle, drive-side of the bike.',
   },
   {
-    name: 'Gym & Strength', metrics: 7, icon: '🏋️', movement: 'Squat', view: 'Side view',
+    name: 'Gym & Strength', slug: 'gym-squat', metrics: 7, icon: '🏋️', movement: 'Squat', view: 'Side view',
     checks: ['How deep you go', 'Chest position', 'Lower-back rounding', 'Hips and chest rising together'],
     tip: 'Film from the side at hip height, 2–3 m away. Bodyweight or barbell both work.',
   },
