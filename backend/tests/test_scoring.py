@@ -172,3 +172,27 @@ def test_metric_ids_are_unique_and_namespaced_by_movement():
     assert len(ids) == len(set(ids))
     for mv in library.all_movements():
         assert all(m.id.startswith(mv.slug + ".") for m in mv.metrics)
+
+
+def test_strengths_never_praise_something_that_is_out_of_range():
+    """A check just outside its zone still scores ~99, but it is not a strength.
+
+    Listing it as one put a 'you are doing this wrong' cue under the heading
+    'what you are doing well', which reads as a contradiction.
+    """
+    just_under = KNEE.ideal_min - 0.1          # 154.9 against a 155-175 target
+    r = score_movement(CRICKET, {KNEE.id: just_under})
+    result = r.results[0]
+    assert result.score > 99                   # barely out, so barely penalised
+    assert result.severity == "none"
+    assert result.guidance.status == "low"     # ...but still the wrong side
+    # Neither praised nor flagged as a problem: it shows under "all checks".
+    assert KNEE.id not in [s.metric.id for s in r.strengths]
+    assert KNEE.id not in [f.metric.id for f in r.fixes]
+    assert KNEE.id in [x.metric.id for x in r.results]
+
+
+def test_strengths_do_praise_something_inside_the_zone():
+    r = score_movement(CRICKET, {KNEE.id: 165})
+    assert KNEE.id in [s.metric.id for s in r.strengths]
+    assert r.results[0].guidance.cue == KNEE.cue_good
