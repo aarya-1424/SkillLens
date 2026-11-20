@@ -14,7 +14,9 @@ if not settings.DATABASE_URL:
     raise RuntimeError("Set DATABASE_URL (postgresql+psycopg://...) before running migrations")
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URL.replace("%", "%%"))
 
-# Import models here as they are added so autogenerate can see them.
+# Import models so autogenerate can see them.
+from app.history import models as _history_models  # noqa: E402,F401
+
 target_metadata = Base.metadata
 
 

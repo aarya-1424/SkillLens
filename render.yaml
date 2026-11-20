@@ -5,7 +5,10 @@ services:
     plan: free
     region: singapore
     rootDir: backend
-    buildCommand: pip install -r requirements.txt
+    # Database tables are created/updated on every deploy. If the database is
+    # unreachable the build fails loudly, which beats a server that starts up
+    # and then 500s on the first save.
+    buildCommand: pip install -r requirements.txt && alembic upgrade head
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/v1/health
     envVars:
@@ -15,9 +18,26 @@ services:
         value: production
       - key: SUPABASE_URL
         value: https://jujiyzbnqezajuapwjbv.supabase.co
+
+      # Set these in the Render dashboard (sync: false = not stored in git).
+      # CORS_ORIGINS   your Vercel address, comma separated
+      # DATABASE_URL   Supabase Session pooler string, with the prefix
+      #                changed to postgresql+psycopg://
       - key: CORS_ORIGINS
         sync: false
       - key: DATABASE_URL
         sync: false
+
+      # AI models. Any OpenAI-compatible endpoint works; LLM_FALLBACKS is a
+      # JSON list tried in order when the main one is busy or down.
+      - key: LLM_BASE_URL
+        sync: false
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        sync: false
+      - key: LLM_FALLBACKS
+        sync: false
+
       - key: SENTRY_DSN
         sync: false

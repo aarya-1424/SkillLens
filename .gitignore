@@ -6,6 +6,10 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
+# Local development databases
+*.db
+*.sqlite3
+
 # Secrets — never commit
 .env
 .env.local

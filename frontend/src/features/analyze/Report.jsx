@@ -1,6 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import MetricGauge from '../../components/MetricGauge';
 import SkeletonVideo from '../../components/SkeletonVideo';
+import AskCoach from '../../components/AskCoach';
+import ProgressChart from '../../components/ProgressChart';
+import { getProgress, getSummary, saveAnalysis } from '../../services/history';
 
 const RISK_TONE = {
   Low: 'bg-emerald-50 text-emerald-800 border-emerald-200',
@@ -31,6 +34,29 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
   const { report, movement, tracked, moments, confidence, lowConfidence, unmeasured } = analysis;
   const [jumpTo, setJumpTo] = useState(null);
   const [showAll, setShowAll] = useState(false);
+  const [saved, setSaved] = useState(null);      // the stored report, once kept
+  const [summary, setSummary] = useState(null);  // the AI's few sentences
+  const [progress, setProgress] = useState([]);
+
+  // Keep the report, then fetch the written summary and the progress line.
+  // All of this is optional: in demo mode there is no account, the calls come
+  // back empty, and the report still stands on its own.
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const stored = await saveAnalysis(analysis);
+      if (!alive || !stored) return;
+      setSaved(stored);
+      const [written, points] = await Promise.all([
+        getSummary(stored.id),
+        getProgress(movement.slug),
+      ]);
+      if (!alive) return;
+      if (written?.summary) setSummary(written.summary);
+      setProgress(points || []);
+    })();
+    return () => { alive = false; };
+  }, [analysis, movement.slug]);
 
   const byMoment = useMemo(() => {
     const map = {};
@@ -126,6 +152,14 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
         </div>
       </section>
 
+      {/* What the coach makes of it */}
+      {summary && (
+        <section className="mb-6 rounded-2xl border border-line bg-white p-6">
+          <p className="eyebrow mb-2">Coach's read</p>
+          <p className="text-lg leading-relaxed">{summary}</p>
+        </section>
+      )}
+
       {/* Video */}
       <section id="report-video" className="mb-6">
         <SkeletonVideo videoUrl={videoUrl} tracked={tracked} jumpTo={jumpTo}
@@ -175,6 +209,20 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
           </ul>
         </section>
       )}
+
+      {/* Progress over time */}
+      {saved && (
+        <section className="mb-6 rounded-2xl border border-line bg-white p-6 no-print">
+          <h2 className="font-serif text-2xl mb-1">Your {movement.name.toLowerCase()} over time</h2>
+          <p className="text-sm text-ink-soft mb-4">Every analysis you save is a point on this line.</p>
+          <ProgressChart points={progress} movementName={movement.name} />
+        </section>
+      )}
+
+      {/* Ask Coach */}
+      <section className="mb-6">
+        <AskCoach analysisId={saved?.id} movementSlug={movement.slug} sport={movement.sport} />
+      </section>
 
       {unmeasured?.length > 0 && (
         <p className="text-xs text-ink-soft">

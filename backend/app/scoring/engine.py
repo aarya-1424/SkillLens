@@ -235,8 +235,12 @@ def score_movement(movement: Movement, values: dict[str, float]) -> MovementResu
         (r for r in out.results if r.severity != "none"),
         key=lambda r: (r.score, -r.metric.weight),
     )
+    # Only praise what is genuinely inside the target zone. A check can sit a
+    # whisker outside and still score ~99 (severity "none"); listing that as a
+    # strength put a "you are doing this wrong" cue under the heading "what
+    # you are doing well", which reads as a contradiction.
     out.strengths = sorted(
-        (r for r in out.results if r.severity == "none"),
+        (r for r in out.results if r.severity == "none" and r.guidance.status == GOOD),
         key=lambda r: -r.metric.weight,
     )[:3]
 

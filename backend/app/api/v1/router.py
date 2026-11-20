@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 
 from app.api.v1.health.router import router as health_router
+from app.api.v1.analyses.router import router as analyses_router
+from app.api.v1.coach.router import router as coach_router
 from app.api.v1.me.router import router as me_router
 from app.api.v1.movements.router import router as movements_router
 from app.api.v1.sports.router import router as sports_router
@@ -10,3 +12,5 @@ api_router.include_router(health_router)
 api_router.include_router(me_router)
 api_router.include_router(sports_router)
 api_router.include_router(movements_router)
+api_router.include_router(analyses_router)
+api_router.include_router(coach_router)
