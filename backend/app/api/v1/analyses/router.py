@@ -10,6 +10,7 @@ from app.ai import coach
 from app.core.auth import CurrentUser
 from app.db.session import get_db
 from app.history import service
+from app.profiles import service as profiles
 from app.movements import library
 
 router = APIRouter(prefix="/analyses", tags=["analyses"])
@@ -87,7 +88,8 @@ def summary(analysis_id: str, user: CurrentUser = Depends(get_current_user),
     if found.ai_summary:
         return {"summary": found.ai_summary, "from_cache": True}
 
-    text, cached = coach.summarise(db, found)
+    athlete = profiles.coaching_context(profiles.get(db, user.id))
+    text, cached = coach.summarise(db, found, athlete)
     if text is None:
         # Every model provider is down. The report is still complete without this.
         return {"summary": None, "from_cache": False, "unavailable": True}

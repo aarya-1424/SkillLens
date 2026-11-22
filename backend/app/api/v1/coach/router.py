@@ -8,6 +8,7 @@ from app.api.deps import get_current_user
 from app.core.auth import CurrentUser
 from app.db.session import get_db
 from app.history import service
+from app.profiles import service as profiles
 from app.history.models import ChatMessage
 
 router = APIRouter(prefix="/coach", tags=["coach"])
@@ -52,8 +53,9 @@ def ask(body: AskRequest, user: CurrentUser = Depends(get_current_user),
                             "target": m.target_label} for m in worst],
         }
 
+    athlete = profiles.coaching_context(profiles.get(db, user.id))
     result = coach_ai.ask(db, body.question, sport=body.sport,
-                          movement=body.movement, report_facts=facts)
+                          movement=body.movement, report_facts=facts, athlete=athlete)
 
     db.add(ChatMessage(user_id=user.id, analysis_id=body.analysis_id,
                        role="user", content=body.question))

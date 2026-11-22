@@ -23,7 +23,10 @@ SUMMARY_SYSTEM = (
     "Three or four short sentences, no jargon, no bullet points, no emoji. "
     "Say what went well first, then the single most important thing to fix and why "
     "it matters for their body or their performance. Use only the numbers given. "
-    "Never invent measurements. Do not give medical advice."
+    "Never invent measurements. Do not give medical advice. "
+    "If an 'athlete' section is given, pitch the advice to their age group, level and goal. "
+    "If they are sore somewhere the fix puts load on, tell them to ease in and to see a "
+    "physio or doctor if it keeps hurting."
 )
 
 COACH_SYSTEM = (
@@ -32,7 +35,9 @@ COACH_SYSTEM = (
     "say plainly that SkillLens's library does not cover it yet and suggest they ask a "
     "qualified coach — do not fall back on your own sports knowledge. "
     "Keep it under 120 words. No medical advice, no diagnosis. "
-    "Never claim a measurement the passages do not contain."
+    "Never claim a measurement the passages do not contain. "
+    "If you are told about the athlete (age group, level, goal, sore areas), fit the answer "
+    "to them, and be careful with anything that loads a sore area."
 )
 
 NO_AI_MESSAGE = "The coaching assistant is unavailable right now. Your scores and drills are unaffected."
@@ -57,7 +62,16 @@ def _to_cache(db: Session, key: str, kind: str, text: str, model: str, sources: 
     db.commit()
 
 
-def summarise(db: Session, analysis) -> tuple[str | None, bool]:
+def _athlete_key(athlete: dict | None) -> str:
+    """The parts of the athlete context that change the wording, for the cache key."""
+    if not athlete:
+        return ""
+    return json.dumps({k: athlete.get(k) for k in
+                       ("age_group", "level", "main_goal", "sore_right_now", "pain_level")},
+                      sort_keys=True)
+
+
+def summarise(db: Session, analysis, athlete: dict | None = None) -> tuple[str | None, bool]:
     """A few friendly sentences about one report. Returns (text, from_cache)."""
     worst = sorted(analysis.metrics, key=lambda m: m.score)[:2]
     best = sorted(analysis.metrics, key=lambda m: -m.score)[:2]
@@ -66,6 +80,7 @@ def summarise(db: Session, analysis) -> tuple[str | None, bool]:
     key = _fingerprint("summary", [
         analysis.movement_slug, str(int(analysis.total // 5)), analysis.injury_risk,
         *[f"{m.metric_id}:{int(m.score // 10)}" for m in worst],
+        _athlete_key(athlete),
     ])
     cached = _from_cache(db, key)
     if cached:
@@ -84,6 +99,8 @@ def summarise(db: Session, analysis) -> tuple[str | None, bool]:
             for m in worst
         ],
     }
+    if athlete:
+        facts["athlete"] = athlete
 
     try:
         result = llm.chat(
@@ -99,14 +116,16 @@ def summarise(db: Session, analysis) -> tuple[str | None, bool]:
 
 
 def ask(db: Session, question: str, *, sport: str | None = None,
-        movement: str | None = None, report_facts: dict | None = None) -> dict:
+        movement: str | None = None, report_facts: dict | None = None,
+        athlete: dict | None = None) -> dict:
     """Ask Coach. Returns {answer, sources, from_cache, grounded}."""
     question = question.strip()
     passages = knowledge.search(question, sport=sport, movement=movement)
     sources = [p.cite() for p in passages]
 
     key = _fingerprint("ask", [question.lower(), sport or "", movement or "",
-                               json.dumps(report_facts, sort_keys=True) if report_facts else ""])
+                               json.dumps(report_facts, sort_keys=True) if report_facts else "",
+                               _athlete_key(athlete)])
     cached = _from_cache(db, key)
     if cached:
         return {"answer": cached.response, "sources": cached.sources,
@@ -125,6 +144,8 @@ def ask(db: Session, question: str, *, sport: str | None = None,
     user = f"Library passages:\n{context}\n\nAthlete's question: {question}"
     if report_facts:
         user += f"\n\nTheir latest report: {json.dumps(report_facts, ensure_ascii=False)}"
+    if athlete:
+        user += f"\n\nAbout the athlete: {json.dumps(athlete, ensure_ascii=False)}"
 
     try:
         result = llm.chat(

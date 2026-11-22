@@ -10,7 +10,7 @@ import uuid
 from datetime import datetime, timezone
 
 from sqlalchemy import (
-    JSON, Boolean, DateTime, Float, ForeignKey, Index, Integer, String, Text, func,
+    JSON, Boolean, Date, DateTime, Float, ForeignKey, Index, Integer, String, Text, func,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -42,6 +42,62 @@ class Profile(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
     analyses: Mapped[list["Analysis"]] = relationship(back_populates="profile")
+    athlete: Mapped["AthleteProfile | None"] = relationship(
+        back_populates="profile", uselist=False, cascade="all, delete-orphan")
+
+
+class AthleteProfile(Base):
+    """The answers to the setup questionnaire. One row per person.
+
+    Kept apart from `profiles` (which mirrors the Google account) because
+    these are the athlete's own answers, change over time, and include
+    health details that deserve their own clearly named home.
+    """
+
+    __tablename__ = "athlete_profiles"
+
+    user_id: Mapped[str] = mapped_column(String(64), ForeignKey("profiles.id"), primary_key=True)
+
+    # About you
+    display_name: Mapped[str] = mapped_column(String(60))
+    birth_year: Mapped[int] = mapped_column(Integer)
+    birth_month: Mapped[int] = mapped_column(Integer)
+    gender: Mapped[str] = mapped_column(String(16))
+
+    # Your sport
+    sport_slug: Mapped[str] = mapped_column(String(64))
+    role: Mapped[str | None] = mapped_column(String(60))
+    level: Mapped[str] = mapped_column(String(24))
+    years_playing: Mapped[str] = mapped_column(String(16))
+    training_days: Mapped[int] = mapped_column(Integer)
+    dominant_hand: Mapped[str] = mapped_column(String(8))
+    dominant_foot: Mapped[str] = mapped_column(String(8))
+
+    # Your body
+    height_cm: Mapped[float] = mapped_column(Float)
+    weight_kg: Mapped[float] = mapped_column(Float)
+    fitness: Mapped[str] = mapped_column(String(16))
+    pain_now: Mapped[str] = mapped_column(String(16))
+    pain_areas: Mapped[list] = mapped_column(JSON, default=list)
+    past_injuries: Mapped[list] = mapped_column(JSON, default=list)
+    injury_note: Mapped[str | None] = mapped_column(String(300))
+
+    # Your goal
+    goal: Mapped[str] = mapped_column(String(24))
+    goal_event: Mapped[str | None] = mapped_column(String(80))
+    goal_date: Mapped[datetime | None] = mapped_column(Date)
+
+    # Consent
+    terms_version: Mapped[str] = mapped_column(String(16))
+    terms_accepted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    guardian_name: Mapped[str | None] = mapped_column(String(120))
+    guardian_email: Mapped[str | None] = mapped_column(String(320))
+    guardian_consent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
+
+    profile: Mapped[Profile] = relationship(back_populates="athlete")
 
 
 class Analysis(Base):
