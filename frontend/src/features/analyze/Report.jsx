@@ -5,6 +5,7 @@ import AskCoach from '../../components/AskCoach';
 import ProgressChart from '../../components/ProgressChart';
 import { getProgress, getSummary, saveAnalysis } from '../../services/history';
 import { clock } from '../../lib/video';
+import { Link } from 'react-router-dom';
 
 const RISK_TONE = {
   Low: 'bg-mint/20 text-mint',
@@ -38,6 +39,7 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
   const [saved, setSaved] = useState(null);      // the stored report, once kept
   const [summary, setSummary] = useState(null);  // the AI's few sentences
   const [progress, setProgress] = useState([]);
+  const [aiPaused, setAiPaused] = useState(false);
 
   // Keep the report, then fetch the written summary and the progress line.
   // All of this is optional: in demo mode there is no account, the calls come
@@ -54,6 +56,7 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
       ]);
       if (!alive) return;
       if (written?.summary) setSummary(written.summary);
+      if (written?.ai_paused) setAiPaused(true);
       setProgress(points || []);
     })();
     return () => { alive = false; };
@@ -160,6 +163,17 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
           <p className="eyebrow mb-2">Coach's read</p>
           <p className="text-lg leading-relaxed max-w-4xl">{summary}</p>
         </section>
+      )}
+
+      {aiPaused && (
+        <p className="mb-3 px-5 py-3 rounded-3xl bg-sand text-sm">
+          AI features are off in <Link to="/app/privacy" className="font-semibold underline">Privacy &amp; data</Link>, so no written summary was made.
+        </p>
+      )}
+      {saved && (
+        <p className="mb-3 text-sm text-ink-soft no-print">
+          Saved to <Link to={`/app/reports/${saved.id}`} className="font-semibold underline text-ink">My reports</Link>.
+        </p>
       )}
 
       {/* Video */}

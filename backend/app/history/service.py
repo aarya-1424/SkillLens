@@ -121,3 +121,26 @@ def stats(db: Session, user_id: str) -> dict:
         "latest_id": latest.id if latest else None,
         "change_since_last": change,
     }
+
+
+def check_trends(db: Session, user_id: str, movement: str, limit: int = 20) -> list[dict]:
+    """For each check on one movement: its score in each of the last `limit` reports."""
+    recent = db.execute(
+        select(Analysis).where(Analysis.user_id == user_id, Analysis.movement_slug == movement)
+        .options(selectinload(Analysis.metrics))
+        .order_by(Analysis.created_at.desc()).limit(limit)).scalars().all()
+    by_check: dict[str, dict] = {}
+    for a in reversed(recent):  # oldest first
+        for m in a.metrics:
+            entry = by_check.setdefault(m.metric_id, {
+                "metric_id": m.metric_id, "name": m.name, "group": m.group,
+                "target_label": m.target_label, "points": []})
+            entry["points"].append({"date": a.created_at.isoformat(), "score": m.score,
+                                    "value_label": m.value_label, "analysis_id": a.id})
+            entry["target_label"] = m.target_label
+    out = list(by_check.values())
+    for e in out:
+        pts = e["points"]
+        e["latest"] = pts[-1]["score"]
+        e["change"] = round(pts[-1]["score"] - pts[0]["score"], 1) if len(pts) > 1 else None
+    return sorted(out, key=lambda e: e["latest"])

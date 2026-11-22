@@ -9,6 +9,12 @@ import AppLayout from './layouts/AppLayout';
 import RequireAuth from './components/RequireAuth';
 import { ProfileReady, RequireProfile } from './components/RequireProfile';
 import Setup from './pages/Setup';
+import Legal from './pages/Legal';
+import Reports from './pages/Reports';
+import ReportDetail from './pages/ReportDetail';
+import Progress from './pages/Progress';
+import Coach from './pages/Coach';
+import PrivacyCenter from './pages/PrivacyCenter';
 
 // Heavy (charts, PDF, video) — only loaded when someone starts an analysis.
 const Analyze = lazy(() => import('./pages/Analyze'));
@@ -25,6 +31,8 @@ export default function App() {
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route path="/terms" element={<Legal kind="terms" />} />
+      <Route path="/privacy" element={<Legal kind="privacy" />} />
       <Route
         path="/app/setup"
         element={
@@ -46,6 +54,11 @@ export default function App() {
         }
       >
         <Route index element={<Dashboard />} />
+        <Route path="reports" element={<Reports />} />
+        <Route path="reports/:id" element={<ReportDetail />} />
+        <Route path="progress" element={<Progress />} />
+        <Route path="coach" element={<Coach />} />
+        <Route path="privacy" element={<PrivacyCenter />} />
         <Route path="analyze" element={<Suspense fallback={<Spinner />}><Analyze /></Suspense>} />
       </Route>
       <Route path="*" element={<NotFound />} />

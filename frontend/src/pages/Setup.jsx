@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../context/ProfileContext';
 import { saveProfile } from '../services/profile';
 import { SPORTS } from '../data/landing';
+import { POLICY_VERSION } from '../data/legal';
 import {
   ADULT_AGE, AREAS, FITNESS, GENDERS, GOALS, LEVELS, MONTHS, PAIN, ROLES, SIDES, STEPS, WHY, YEARS, ageFrom,
 } from '../data/profileQuestions';
@@ -93,7 +94,9 @@ function fromProfile(p) {
     ...blank(), ...p,
     injury_note: p.injury_note || '', goal_event: p.goal_event || '', goal_date: p.goal_date || '',
     guardian_name: p.guardian_name || '', guardian_email: p.guardian_email || '',
-    guardian_consent: Boolean(p.guardian_name), accept_terms: true,
+    guardian_consent: Boolean(p.guardian_name),
+    // Only counts as agreed if they agreed to the CURRENT version.
+    accept_terms: p.terms_version === POLICY_VERSION,
   };
 }
 
@@ -163,6 +166,8 @@ export default function Setup() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const editing = Boolean(profile);
+  // Agreed to an older version of the Terms: they must agree again, so no way out without it.
+  const mustReagree = editing && profile.terms_version !== POLICY_VERSION;
   const firstName = (displayName || '').split(' ')[0];
 
   const [a, setA] = useState(() => {
@@ -269,14 +274,14 @@ export default function Setup() {
         <div className="w-full max-w-2xl mx-auto px-2 sm:px-6 pt-4 lg:pt-10 pb-32 flex-1">
           <div className="lg:hidden flex items-center justify-between mb-6">
             <Logo compact />
-            {editing && <Link to="/app" className="text-sm font-semibold text-ink-soft">Close</Link>}
+            {editing && !mustReagree && <Link to="/app" className="text-sm font-semibold text-ink-soft">Close</Link>}
           </div>
           <div className="lg:hidden h-1.5 rounded-full bg-sand mb-6 overflow-hidden">
             <div className="h-full bg-brand rounded-full transition-all" style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} />
           </div>
           <div className="flex items-center justify-between">
             <p className="eyebrow">Step {step + 1} of {STEPS.length}</p>
-            {editing && <Link to="/app" className="hidden lg:inline text-sm font-semibold text-ink-soft hover:text-ink">Close without saving</Link>}
+            {editing && !mustReagree && <Link to="/app" className="hidden lg:inline text-sm font-semibold text-ink-soft hover:text-ink">Close without saving</Link>}
           </div>
           <h1 className="font-display text-3xl sm:text-[2.4rem] leading-[1.05] mt-3 mb-2">
             {step === 0 && <>Hi{a.display_name ? `, ${a.display_name.split(' ')[0]}` : ''}. <em>Tell us about you.</em></>}
@@ -440,6 +445,11 @@ export default function Setup() {
 
           {step === 4 && (
             <>
+              {mustReagree && (
+                <div className="mt-6 px-5 py-4 rounded-3xl bg-amber/15 border border-amber/40 text-sm leading-relaxed">
+                  <strong>We have updated our Terms and Privacy Policy.</strong> Please read them and agree again to carry on.
+                </div>
+              )}
               <div className="mt-6 p-7 rounded-[2rem] bg-sand">
                 <p className={`${LABEL} text-ink-soft mb-4`}>What we keep, and why</p>
                 <ul className="space-y-3 text-sm">
@@ -447,7 +457,8 @@ export default function Setup() {
                     'Your videos are read on your own device to track your body. They are not uploaded for that.',
                     'Your answers and your reports are saved privately to your account. Only you can see them.',
                     'We use your answers only to fit your reports and coaching to you. We do not sell them.',
-                    'You can change your answers at any time.',
+                    'The AI that writes summaries gets your numbers, never your name, email, exact age or weight. You can switch it off.',
+                    'You can download, correct or delete everything yourself, any time, in Privacy & data.',
                     'SkillLens gives coaching guidance, not medical advice. It never diagnoses injuries.',
                   ].map((t) => (
                     <li key={t} className="flex gap-3">
@@ -460,9 +471,13 @@ export default function Setup() {
 
               <Question label="Your agreement" error={errors.accept_terms}>
                 <label className="flex items-start gap-3 cursor-pointer">
-                  <input type="checkbox" aria-label="I agree to how SkillLens uses my information" checked={a.accept_terms} onChange={(e) => set('accept_terms')(e.target.checked)}
+                  <input type="checkbox" aria-label="I agree to the Terms of Service and Privacy Policy" checked={a.accept_terms} onChange={(e) => set('accept_terms')(e.target.checked)}
                     className="mt-1 w-5 h-5 accent-[#d7282f]" />
-                  <span className="text-sm leading-relaxed">I understand and agree to how SkillLens uses my information, as described above.</span>
+                  <span className="text-sm leading-relaxed">
+                    I have read and agree to the{' '}
+                    <a href="/terms" target="_blank" rel="noreferrer" className="font-semibold underline">Terms of Service</a> and the{' '}
+                    <a href="/privacy" target="_blank" rel="noreferrer" className="font-semibold underline">Privacy Policy</a>.
+                  </span>
                 </label>
               </Question>
 
@@ -486,7 +501,8 @@ export default function Setup() {
                       <input type="checkbox" aria-label="Parent or guardian agrees" checked={a.guardian_consent}
                         onChange={(e) => set('guardian_consent')(e.target.checked)} className="mt-1 w-5 h-5 accent-[#d7282f]" />
                       <span className="text-sm leading-relaxed">
-                        I am this athlete's parent or guardian, and I agree to them using SkillLens as described above.
+                        I am this athlete's parent or guardian. I have read the Terms of Service and Privacy Policy, and I
+                        agree to them using SkillLens.
                       </span>
                     </label>
                   </Question>

@@ -159,10 +159,13 @@ export default function Dashboard() {
           {recent.length > 0 && (
             <section className={`${hasHistory ? 'lg:col-span-5' : 'lg:col-span-12'} p-7 sm:p-8 rounded-[2rem] bg-paper border border-line`}>
               <p className="eyebrow mb-2">History</p>
-              <h2 className="font-display text-xl sm:text-2xl mb-4">Recent reports</h2>
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <h2 className="font-display text-xl sm:text-2xl">Recent reports</h2>
+                <Link to="/app/reports" className="text-[13px] font-semibold text-brand hover:text-brand-deep">See all →</Link>
+              </div>
               <div className="space-y-2">
                 {recent.map((a) => (
-                  <div key={a.id} className="flex items-center gap-4 px-4 py-3 rounded-2xl bg-canvas">
+                  <Link key={a.id} to={`/app/reports/${a.id}`} className="flex items-center gap-4 px-4 py-3 rounded-2xl bg-canvas hover:bg-sand transition">
                     <span className="w-12 h-12 shrink-0 rounded-full bg-ink text-white font-display text-sm flex items-center justify-center tabular-nums">
                       {Math.round(a.total)}
                     </span>
@@ -173,7 +176,7 @@ export default function Dashboard() {
                     <span className={`shrink-0 text-[11px] font-semibold px-3 py-1 rounded-full ${RISK_TONE[a.injury_risk]}`}>
                       {a.injury_risk} risk
                     </span>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </section>
