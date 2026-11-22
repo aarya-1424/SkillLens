@@ -7,6 +7,8 @@ import Dashboard from './pages/Dashboard';
 import NotFound from './pages/NotFound';
 import AppLayout from './layouts/AppLayout';
 import RequireAuth from './components/RequireAuth';
+import { ProfileReady, RequireProfile } from './components/RequireProfile';
+import Setup from './pages/Setup';
 
 // Heavy (charts, PDF, video) — only loaded when someone starts an analysis.
 const Analyze = lazy(() => import('./pages/Analyze'));
@@ -24,10 +26,22 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
       <Route
+        path="/app/setup"
+        element={
+          <RequireAuth>
+            <ProfileReady>
+              <Setup />
+            </ProfileReady>
+          </RequireAuth>
+        }
+      />
+      <Route
         path="/app"
         element={
           <RequireAuth>
-            <AppLayout />
+            <RequireProfile>
+              <AppLayout />
+            </RequireProfile>
           </RequireAuth>
         }
       >

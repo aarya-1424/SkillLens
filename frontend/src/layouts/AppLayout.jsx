@@ -2,6 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { useAuth } from '../context/AuthContext';
 import { signOut } from '../services/auth';
+import { clearGuestProfile } from '../services/profile';
 
 const linkClass = ({ isActive }) =>
   `px-3 sm:px-4 py-2 rounded-full text-[13px] font-semibold whitespace-nowrap transition ${isActive ? 'bg-ink text-white' : 'text-ink-soft hover:text-ink'}`;
@@ -12,6 +13,7 @@ export default function AppLayout() {
 
   const handleSignOut = async () => {
     await signOut();
+    if (guest) clearGuestProfile();
     endGuest();
     navigate('/', { replace: true });
   };

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useProfile } from '../context/ProfileContext';
+import { AREAS, GOALS, LEVELS, labelOf } from '../data/profileQuestions';
 import { SPORTS } from '../data/landing';
 import ProgressChart from '../components/ProgressChart';
 import { getProgress, getStats, listAnalyses } from '../services/history';
@@ -18,7 +20,8 @@ const when = (iso) =>
 
 export default function Dashboard() {
   const { displayName, guest } = useAuth();
-  const firstName = (displayName || '').split(' ')[0];
+  const { profile } = useProfile();
+  const firstName = (profile?.display_name || (guest ? '' : displayName) || '').split(' ')[0];
   const [stats, setStats] = useState(null);
   const [recent, setRecent] = useState([]);
   const [progress, setProgress] = useState([]);
@@ -138,6 +141,8 @@ export default function Dashboard() {
         </div>
       </div>
 
+      <ProfileStrip profile={profile} guest={guest} />
+
       {/* Progress + recent reports */}
       {(hasHistory || recent.length > 0) && (
         <div className="grid lg:grid-cols-12 gap-3 mb-3">
@@ -196,5 +201,70 @@ export default function Dashboard() {
 
       {loading && <p className="sr-only">Loading your history…</p>}
     </main>
+  );
+}
+
+const daysUntil = (iso) => Math.ceil((new Date(`${iso}T00:00:00`) - new Date()) / 86_400_000);
+
+/** What we know about the athlete, and the way to change it. */
+function ProfileStrip({ profile, guest }) {
+  if (!profile) {
+    return (
+      <section className="mb-3 p-7 rounded-[2rem] bg-paper border border-line flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <p className="eyebrow mb-2">Quick setup</p>
+          <p className="font-display text-lg">Make the advice fit you</p>
+          <p className="text-sm text-ink-soft mt-1">
+            5 short steps, about 2 minutes: your sport, level, body and goal.
+            {guest && ' In demo mode it stays in this browser.'}
+          </p>
+        </div>
+        <Link to="/app/setup" className="shrink-0 px-6 py-3 rounded-full bg-ink text-white font-semibold hover:bg-brand transition text-center">
+          Set up my profile
+        </Link>
+      </section>
+    );
+  }
+
+  const sport = SPORTS.find((s) => s.slug === profile.sport_slug);
+  const goal = GOALS.find((g) => g.key === profile.goal);
+  const days = profile.goal_date ? daysUntil(profile.goal_date) : null;
+  const sore = profile.pain_now !== 'none' ? profile.pain_areas : [];
+
+  const facts = [
+    { label: 'Main sport', value: `${sport?.icon ?? ''} ${sport?.name ?? ''}`, sub: profile.role || sport?.movement },
+    { label: 'Level', value: labelOf(LEVELS, profile.level), sub: `Trains ${profile.training_days} day${profile.training_days === 1 ? '' : 's'} a week` },
+    {
+      label: 'Goal', value: `${goal?.icon ?? ''} ${goal?.label ?? ''}`,
+      sub: profile.goal_event
+        ? `${profile.goal_event}${days != null && days >= 0 ? ` · in ${days} day${days === 1 ? '' : 's'}` : ''}`
+        : goal?.hint,
+    },
+    {
+      label: sore.length ? 'Go easy on' : 'Body',
+      value: sore.length ? sore.map((k) => labelOf(AREAS, k)).join(', ') : 'No pain right now',
+      sub: `${Math.round(profile.height_cm)} cm · ${Math.round(profile.weight_kg)} kg`,
+      warn: sore.length > 0,
+    },
+  ];
+
+  return (
+    <section className="mb-3 p-7 rounded-[2rem] bg-paper border border-line">
+      <div className="flex items-center justify-between gap-4 mb-5">
+        <p className="eyebrow">Your profile</p>
+        <Link to="/app/setup" className="px-4 py-2 rounded-full border border-line text-[13px] font-semibold hover:border-ink/40 transition">
+          Edit
+        </Link>
+      </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {facts.map((f) => (
+          <div key={f.label} className={`p-5 rounded-3xl ${f.warn ? 'bg-amber/15' : 'bg-canvas'}`}>
+            <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-ink-soft">{f.label}</div>
+            <div className="font-semibold mt-2 leading-snug">{f.value}</div>
+            {f.sub && <div className="text-xs text-ink-soft mt-1">{f.sub}</div>}
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
