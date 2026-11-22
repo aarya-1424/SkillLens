@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import hashlib
 import logging
+import time
 from datetime import datetime, timedelta, timezone
 
 import httpx
@@ -183,6 +184,35 @@ def cancel_deletion(db: Session, user: CurrentUser) -> None:
         profile.deletion_due_at = None
         record(db, user.id, "delete_cancelled", commit=False)
     db.commit()
+
+
+_KEY_CHECK = {"at": 0.0, "result": None}
+
+
+def sign_in_erasure_status() -> str:
+    """Can erasure also remove the Supabase sign-in record? Never reveals the key.
+
+    "ready"        - the key is set and Supabase accepts it
+    "key_missing"  - SUPABASE_SERVICE_ROLE_KEY is not set
+    "key_rejected" - set, but Supabase refused it (wrong or anon key)
+    "unreachable"  - could not reach Supabase to check
+    Checked at most once an hour.
+    """
+    key = settings.SUPABASE_SERVICE_ROLE_KEY
+    if not key:
+        return "key_missing"
+    now = time.time()
+    if _KEY_CHECK["result"] and now - _KEY_CHECK["at"] < 3600:
+        return _KEY_CHECK["result"]
+    try:
+        res = httpx.get(f"{settings.SUPABASE_URL}/auth/v1/admin/users",
+                        params={"page": 1, "per_page": 1},
+                        headers={"apikey": key, "Authorization": f"Bearer {key}"}, timeout=5)
+        result = "ready" if res.status_code == 200 else "key_rejected"
+    except httpx.HTTPError:
+        result = "unreachable"
+    _KEY_CHECK.update(at=now, result=result)
+    return result
 
 
 def _delete_sign_in_record(user_id: str) -> bool:

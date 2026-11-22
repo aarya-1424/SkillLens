@@ -139,3 +139,24 @@ def test_check_trends_show_what_moved(client, report):
     knee = next(t for t in trends if t["metric_id"] == "cricket-bowling.front_knee")
     assert [p["score"] for p in knee["points"]] == [48.0, 70.0]
     assert knee["change"] == 22.0
+
+
+def test_health_says_whether_erasure_can_remove_sign_in_records(client, monkeypatch):
+    from app.core.config import settings
+    monkeypatch.setattr(settings, "SUPABASE_SERVICE_ROLE_KEY", None)
+    body = client.get("/api/v1/health").json()
+    assert body["account_erasure"] == "key_missing"
+    assert "SUPABASE" not in json.dumps(body)   # never shows the key or its name
+
+
+def test_a_rejected_key_is_reported_without_revealing_it(monkeypatch):
+    from app.core.config import settings
+
+    class Res:
+        status_code = 401
+
+    monkeypatch.setattr(settings, "SUPABASE_SERVICE_ROLE_KEY", "not-a-real-key")
+    monkeypatch.setattr(service.httpx, "get", lambda *a, **k: Res())
+    service._KEY_CHECK.update(at=0.0, result=None)
+    assert service.sign_in_erasure_status() == "key_rejected"
+    service._KEY_CHECK.update(at=0.0, result=None)
