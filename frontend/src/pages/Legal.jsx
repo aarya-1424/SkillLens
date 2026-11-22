@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { useAuth } from '../context/AuthContext';
 import {
-  COMPANY, EFFECTIVE, GRIEVANCE_OFFICER, POLICY_LABEL, PRIVACY, RESPONSE_DAYS, TERMS,
+  EFFECTIVE, OWNER, POLICY_LABEL, PRIVACY, RESPONSE_DAYS, TERMS,
 } from '../data/legal';
 
 function Body({ parts }) {
@@ -30,10 +30,8 @@ function Body({ parts }) {
 
 function GrievanceCard() {
   const rows = [
-    ['Name', GRIEVANCE_OFFICER.name],
-    ['Role', GRIEVANCE_OFFICER.role],
-    ['Organisation', COMPANY.name],
-    ['Address', COMPANY.address.join(', ')],
+    ['Who', OWNER.name ? `${OWNER.name}, creator of SkillLens` : 'The creator of SkillLens, who runs it personally'],
+    ['How to reach', 'Privacy & data → Raise a privacy complaint, inside the App. Every complaint is recorded with its date straight away.'],
   ];
   return (
     <div className="rounded-[2rem] bg-stage stage-grid text-white p-7 sm:p-8 relative overflow-hidden">
@@ -48,12 +46,15 @@ function GrievanceCard() {
             <dd className="font-semibold">{v}</dd>
           </div>
         ))}
-        <dt className="text-white/50">Email</dt>
-        <dd><a href={`mailto:${COMPANY.privacyEmail}`} className="font-semibold text-brand-soft underline">{COMPANY.privacyEmail}</a></dd>
+        {OWNER.email && (
+          <>
+            <dt className="text-white/50">Email</dt>
+            <dd><a href={`mailto:${OWNER.email}`} className="font-semibold text-brand-soft underline">{OWNER.email}</a></dd>
+          </>
+        )}
         <dt className="text-white/50">Response time</dt>
         <dd className="text-white/80 leading-relaxed">
-          We acknowledge complaints within 48 hours and resolve them within {RESPONSE_DAYS} days. The fastest way is
-          Privacy &amp; data → Raise a privacy complaint, inside the App, which records it with its date straight away.
+          We acknowledge complaints within 48 hours and resolve them within {RESPONSE_DAYS} days.
         </dd>
       </dl>
       <p className="relative mt-6 text-xs text-white/50 leading-relaxed">
@@ -147,9 +148,8 @@ export default function Legal({ kind }) {
 
         <footer className="mt-3 rounded-[2rem] bg-paper border border-line p-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
           <p className="text-ink-soft">
-            Questions? <a href={`mailto:${kind === 'privacy' ? COMPANY.privacyEmail : COMPANY.contactEmail}`} className="font-semibold text-ink underline">
-              {kind === 'privacy' ? COMPANY.privacyEmail : COMPANY.contactEmail}
-            </a>
+            Questions? Use <Link to="/app/privacy" className="font-semibold text-ink underline">Privacy &amp; data</Link> inside the App
+            {OWNER.email && <> or write to <a href={`mailto:${OWNER.email}`} className="font-semibold text-ink underline">{OWNER.email}</a></>}.
           </p>
           <Link to={kind === 'privacy' ? '/terms' : '/privacy'} className="font-semibold text-brand hover:text-brand-deep">
             {kind === 'privacy' ? 'Terms of Service →' : 'Privacy Policy →'}

@@ -261,7 +261,7 @@ export default function Landing() {
             <Link to="/terms" className="hover:text-ink">Terms</Link>
             <Link to="/privacy" className="hover:text-ink">Privacy</Link>
           </nav>
-          <p>© {new Date().getFullYear()} GoXL · SkillLens · Coaching guidance, not medical advice.</p>
+          <p>© {new Date().getFullYear()} SkillLens · Coaching guidance, not medical advice.</p>
         </div>
       </footer>
     </div>
