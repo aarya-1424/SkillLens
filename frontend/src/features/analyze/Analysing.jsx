@@ -4,7 +4,7 @@ import { analyse, STAGES } from '../../services/analysis';
 const ORDER = ['model', 'track', 'measure', 'score'];
 
 /** Real progress, driven by the tracker — not a fake timer. */
-export default function Analysing({ videoUrl, slug, onDone, onError, onCancel }) {
+export default function Analysing({ videoUrl, slug, start = 0, length, onDone, onError, onCancel }) {
   const [stage, setStage] = useState('model');
   const [progress, setProgress] = useState(0);
   const started = useRef(false);
@@ -21,6 +21,8 @@ export default function Analysing({ videoUrl, slug, onDone, onError, onCancel })
 
     analyse(videoUrl, slug, {
       signal: abort.current.signal,
+      start,
+      length,
       onStage: (key, p) => { setStage(key); setProgress(p ?? 0); },
     })
       .then(onDone)
@@ -28,7 +30,7 @@ export default function Analysing({ videoUrl, slug, onDone, onError, onCancel })
         if (err.name === 'AbortError') return;
         onError(err.message || 'Something went wrong while analysing that video.');
       });
-  }, [videoUrl, slug, onDone, onError]);
+  }, [videoUrl, slug, start, length, onDone, onError]);
 
   const cancel = () => { abort.current?.abort(); onCancel(); };
 

@@ -1,39 +1,41 @@
 import { useCallback, useEffect, useState } from 'react';
 import { HomePage } from './HomePage';
+import CheckVideo from './CheckVideo';
 import Analysing from './Analysing';
 import Report from './Report';
 import { WebcamRecorder } from '../../components/WebcamRecorder';
 import { SPORTS } from '../../data/landing';
 
 /**
- * The analysis flow: pick sport → record or upload → analysing → report.
+ * The analysis flow:
+ *   pick sport → record or upload → check the clip → analysing → report.
  * Kept as one state machine so the video blob never has to survive a page change.
  */
 export default function AnalyzeFlow({ initialSport }) {
   const [view, setView] = useState('home');
-  const [videoUrl, setVideoUrl] = useState(null);
+  const [clip, setClip] = useState(null); // { url, source, knownDuration, start, length }
   const [sportName, setSportName] = useState(initialSport || 'Cricket');
   const [analysis, setAnalysis] = useState(null);
   const [error, setError] = useState('');
 
-  const slug = (SPORTS.find((s) => s.name === sportName) || SPORTS[0]).slug;
+  const sport = SPORTS.find((s) => s.name === sportName) || SPORTS[0];
+  const videoUrl = clip?.url;
 
   // Free the video blob when we are finished with it.
   useEffect(() => () => { if (videoUrl) URL.revokeObjectURL(videoUrl); }, [videoUrl]);
 
-  const start = (url, name) => {
+  const check = (url, name, source, knownDuration) => {
     setError('');
-    setVideoUrl(url);
     setSportName(name);
-    setView('analysing');
+    setClip({ url, source, knownDuration });
+    setView('check');
   };
 
   const handleDone = useCallback((result) => { setAnalysis(result); setView('report'); }, []);
   const handleError = useCallback((message) => { setError(message); setView('home'); }, []);
 
   const startOver = () => {
-    if (videoUrl) URL.revokeObjectURL(videoUrl);
-    setVideoUrl(null);
+    setClip(null);
     setAnalysis(null);
     setError('');
     setView('home');
@@ -42,16 +44,27 @@ export default function AnalyzeFlow({ initialSport }) {
   if (view === 'recorder') {
     return (
       <WebcamRecorder
-        onRecordingComplete={(blob, url) => start(url, sportName)}
+        sport={sport}
+        onRecordingComplete={(blob, url, seconds) => check(url, sportName, 'record', seconds)}
         onCancel={() => setView('home')}
       />
     );
   }
 
-  if (view === 'analysing') {
+  if (view === 'check' && clip) {
+    return (
+      <CheckVideo
+        sport={sport} videoUrl={clip.url} knownDuration={clip.knownDuration} source={clip.source}
+        onAnalyse={({ start, length }) => { setClip({ ...clip, start, length }); setView('analysing'); }}
+        onBack={() => { setClip(null); setView(clip.source === 'record' ? 'recorder' : 'home'); }}
+      />
+    );
+  }
+
+  if (view === 'analysing' && clip) {
     return (
       <Analysing
-        videoUrl={videoUrl} slug={slug}
+        videoUrl={clip.url} slug={sport.slug} start={clip.start} length={clip.length}
         onDone={handleDone} onError={handleError} onCancel={startOver}
       />
     );
@@ -64,7 +77,7 @@ export default function AnalyzeFlow({ initialSport }) {
   return (
     <>
       {error && (
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6">
           <div className="px-5 py-3 rounded-3xl bg-alert/10 border border-alert/30 text-red-800 text-sm">
             {error}
           </div>
@@ -72,8 +85,9 @@ export default function AnalyzeFlow({ initialSport }) {
       )}
       <HomePage
         initialSport={sportName}
-        onVideoSelect={(file, name) => start(URL.createObjectURL(file), name)}
+        onVideoSelect={(file, name) => check(URL.createObjectURL(file), name, 'upload')}
         onRecordClick={(name) => { setSportName(name); setView('recorder'); }}
+        onError={setError}
       />
     </>
   );

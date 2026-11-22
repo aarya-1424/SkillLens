@@ -4,6 +4,7 @@ import SkeletonVideo from '../../components/SkeletonVideo';
 import AskCoach from '../../components/AskCoach';
 import ProgressChart from '../../components/ProgressChart';
 import { getProgress, getSummary, saveAnalysis } from '../../services/history';
+import { clock } from '../../lib/video';
 
 const RISK_TONE = {
   Low: 'bg-mint/20 text-mint',
@@ -31,8 +32,8 @@ function ScoreRing({ value }) {
 }
 
 export default function Report({ analysis, videoUrl, onStartOver }) {
-  const { report, movement, tracked, moments, confidence, lowConfidence, unmeasured } = analysis;
-  const [jumpTo, setJumpTo] = useState(null);
+  const { report, movement, tracked, moments, confidence, lowConfidence, unmeasured, window: part } = analysis;
+  const [jumpTo, setJumpTo] = useState(analysis.window?.start || null);
   const [showAll, setShowAll] = useState(false);
   const [saved, setSaved] = useState(null);      // the stored report, once kept
   const [summary, setSummary] = useState(null);  // the AI's few sentences
@@ -226,6 +227,12 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
       <section className="mb-6">
         <AskCoach analysisId={saved?.id} movementSlug={movement.slug} sport={movement.sport} />
       </section>
+
+      {part && part.start > 0 && (
+        <p className="text-xs text-ink-soft mb-2">
+          Analysed {clock(part.start)} to {clock(part.end)} of your video.
+        </p>
+      )}
 
       {unmeasured?.length > 0 && (
         <p className="text-xs text-ink-soft">

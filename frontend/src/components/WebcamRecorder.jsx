@@ -1,140 +1,180 @@
-import React, { useState, useRef, useCallback } from 'react';
-export const WebcamRecorder = ({ onRecordingComplete, onCancel }) => {
-    const [isRecording, setIsRecording] = useState(false);
-    const [recordingTime, setRecordingTime] = useState(0);
-    const [stream, setStream] = useState(null);
-    const [error, setError] = useState('');
-    const videoRef = useRef(null);
-    const mediaRecorderRef = useRef(null);
-    const chunksRef = useRef([]);
-    const timerRef = useRef(null);
-    const startWebcam = useCallback(async () => {
-        try {
-            const mediaStream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 },
-                    facingMode: 'user'
-                },
-                audio: false
-            });
-            setStream(mediaStream);
-            if (videoRef.current) {
-                videoRef.current.srcObject = mediaStream;
-            }
-            setError('');
-        }
-        catch (err) {
-            console.error('Error accessing webcam:', err);
-            setError('Unable to access webcam. Please check your permissions.');
-        }
-    }, []);
-    const stopWebcam = useCallback(() => {
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-            setStream(null);
-        }
-    }, [stream]);
-    const startRecording = useCallback(() => {
-        if (!stream)
-            return;
-        try {
-            const mimeType = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm', 'video/mp4']
-                .find((t) => MediaRecorder.isTypeSupported(t));
-            const mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
-            chunksRef.current = [];
-            mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    chunksRef.current.push(event.data);
-                }
-            };
-            mediaRecorder.onstop = () => {
-                const blob = new Blob(chunksRef.current, { type: mediaRecorder.mimeType || 'video/webm' });
-                const videoUrl = URL.createObjectURL(blob);
-                onRecordingComplete(blob, videoUrl);
-            };
-            mediaRecorder.start();
-            mediaRecorderRef.current = mediaRecorder;
-            setIsRecording(true);
-            setRecordingTime(0);
-            // Start timer
-            timerRef.current = setInterval(() => {
-                setRecordingTime(prev => prev + 1);
-            }, 1000);
-        }
-        catch (err) {
-            console.error('Error starting recording:', err);
-            setError('Failed to start recording. Please try again.');
-        }
-    }, [stream, onRecordingComplete]);
-    const stopRecording = useCallback(() => {
-        if (mediaRecorderRef.current && isRecording) {
-            mediaRecorderRef.current.stop();
-            setIsRecording(false);
-            if (timerRef.current) {
-                clearInterval(timerRef.current);
-                timerRef.current = null;
-            }
-            stopWebcam();
-        }
-    }, [isRecording, stopWebcam]);
-    const handleCancel = () => {
-        stopWebcam();
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
-        }
-        onCancel();
-    };
-    React.useEffect(() => {
-        startWebcam();
-        return () => {
-            stopWebcam();
-            if (timerRef.current) {
-                clearInterval(timerRef.current);
-            }
-        };
-    }, []);
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    };
-    return (<div className="min-h-screen bg-canvas p-4 flex items-center justify-center">
-      <div className="w-full max-w-4xl bg-paper rounded-[2.2rem] border border-line p-6 sm:p-8">
-        <h2 className="text-3xl font-display text-ink mb-6 text-center">
-          Record Your Performance
-        </h2>
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { FILMING, MAX_CLIP_SECONDS } from '../data/filming';
+import { clock } from '../lib/video';
 
-        {error && (<div className="mb-4 px-5 py-3 bg-alert/10 border border-alert/30 rounded-3xl text-red-800">
-            {error}
-          </div>)}
+const COUNTDOWN = 5; // seconds to walk back and get into position
 
-        <div className="relative bg-black rounded-[1.6rem] overflow-hidden mb-6" style={{ aspectRatio: '16/9' }}>
-          <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover"/>
-          
-          {isRecording && (<div className="absolute top-4 left-4 flex items-center space-x-2">
-              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="text-white font-mono text-lg bg-black/50 px-3 py-1 rounded-full">
-                {formatTime(recordingTime)}
-              </span>
-            </div>)}
+/**
+ * Records one clip from the camera.
+ *
+ * A short countdown gives the player time to step into frame, the
+ * instruction stays on screen while recording, and recording stops by
+ * itself at the analysis limit so no one films a minute we will not read.
+ */
+export function WebcamRecorder({ sport, onRecordingComplete, onCancel }) {
+  const [phase, setPhase] = useState('idle'); // idle | countdown | recording
+  const [count, setCount] = useState(COUNTDOWN);
+  const [elapsed, setElapsed] = useState(0);
+  const [error, setError] = useState('');
+  const [ready, setReady] = useState(false);
+
+  const videoRef = useRef(null);
+  const streamRef = useRef(null);
+  const recorderRef = useRef(null);
+  const chunksRef = useRef([]);
+  const timerRef = useRef(null);
+  const startedAtRef = useRef(0);
+  const film = FILMING[sport?.slug];
+
+  const stopCamera = useCallback(() => {
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    streamRef.current = null;
+  }, []);
+
+  const clearTimer = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = null;
+  };
+
+  useEffect(() => {
+    let alive = true;
+    navigator.mediaDevices?.getUserMedia({
+      video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' },
+      audio: false,
+    }).then((stream) => {
+      if (!alive) { stream.getTracks().forEach((t) => t.stop()); return; }
+      streamRef.current = stream;
+      if (videoRef.current) videoRef.current.srcObject = stream;
+      setReady(true);
+    }).catch(() => {
+      setError('We could not open your camera. Allow camera access in your browser, or upload a video instead.');
+    });
+    return () => { alive = false; clearTimer(); stopCamera(); };
+  }, [stopCamera]);
+
+  const stop = useCallback(() => {
+    clearTimer();
+    const recorder = recorderRef.current;
+    if (recorder && recorder.state !== 'inactive') recorder.stop();
+  }, []);
+
+  const beginRecording = useCallback(() => {
+    const stream = streamRef.current;
+    if (!stream) return;
+    try {
+      const mimeType = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm', 'video/mp4']
+        .find((t) => window.MediaRecorder?.isTypeSupported(t));
+      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      chunksRef.current = [];
+      recorder.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data); };
+      recorder.onstop = () => {
+        const seconds = (Date.now() - startedAtRef.current) / 1000;
+        const blob = new Blob(chunksRef.current, { type: recorder.mimeType || 'video/webm' });
+        stopCamera();
+        onRecordingComplete(blob, URL.createObjectURL(blob), seconds);
+      };
+      recorder.start();
+      recorderRef.current = recorder;
+      startedAtRef.current = Date.now();
+      setElapsed(0);
+      setPhase('recording');
+      timerRef.current = setInterval(() => {
+        const s = (Date.now() - startedAtRef.current) / 1000;
+        setElapsed(s);
+        if (s >= MAX_CLIP_SECONDS) stop();
+      }, 200);
+    } catch {
+      setError('Recording could not start on this browser. Try uploading a video instead.');
+    }
+  }, [onRecordingComplete, stop, stopCamera]);
+
+  const startCountdown = () => {
+    setPhase('countdown');
+    setCount(COUNTDOWN);
+    let n = COUNTDOWN;
+    timerRef.current = setInterval(() => {
+      n -= 1;
+      if (n <= 0) { clearTimer(); beginRecording(); } else setCount(n);
+    }, 1000);
+  };
+
+  const cancel = () => { clearTimer(); stopCamera(); onCancel(); };
+
+  return (
+    <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <p className="eyebrow mb-3">Step 1 of 3 · Record</p>
+      <h1 className="font-display text-3xl sm:text-[2.6rem] mb-8">{film?.do || 'Record'} <em>on camera</em></h1>
+
+      {error && (
+        <div className="mb-3 px-5 py-3 rounded-3xl bg-alert/10 border border-alert/30 text-red-800 text-sm">{error}</div>
+      )}
+
+      <div className="grid lg:grid-cols-12 gap-3">
+        <div className="lg:col-span-8 rounded-[2rem] bg-stage p-3">
+          <div className="relative rounded-[1.5rem] overflow-hidden bg-black aspect-video">
+            <video ref={videoRef} autoPlay playsInline muted className="absolute inset-0 w-full h-full object-cover -scale-x-100" />
+
+            {phase === 'countdown' && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/55 text-white">
+                <span className="font-display text-[7rem] leading-none">{count}</span>
+                <span className="mt-4 text-sm text-white/80">Get into position, side-on, whole body in frame</span>
+              </div>
+            )}
+
+            {phase === 'recording' && (
+              <>
+                <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 text-white text-sm font-semibold tabular-nums">
+                  <span className="w-2.5 h-2.5 rounded-full bg-brand animate-pulse" />
+                  {clock(elapsed)} / {clock(MAX_CLIP_SECONDS)}
+                </div>
+                <div className="absolute top-4 right-4 px-4 py-1.5 rounded-full bg-black/60 text-white text-sm font-semibold">
+                  {film?.do}
+                </div>
+                <div className="absolute inset-x-0 bottom-0 h-1.5 bg-white/15">
+                  <div className="h-full bg-brand transition-[width] duration-200"
+                    style={{ width: `${Math.min(100, (elapsed / MAX_CLIP_SECONDS) * 100)}%` }} />
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
-        <div className="flex gap-4">
-          <button onClick={handleCancel} className="flex-1 px-6 py-3 text-lg font-semibold bg-paper border border-line text-ink rounded-full hover:border-ink/40 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-ink/20">
-            Cancel
-          </button>
-          
-          {!isRecording ? (<button onClick={startRecording} disabled={!stream} className="flex-1 px-6 py-3 text-lg font-semibold text-white bg-brand rounded-full hover:bg-brand-deep transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-500 disabled:bg-ink/30 disabled:cursor-not-allowed">
-              Start Recording
-            </button>) : (<button onClick={stopRecording} className="flex-1 px-6 py-3 text-lg font-semibold text-white bg-ink rounded-full hover:bg-stage-soft transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-ink/30">
-              Stop & Analyze
-            </button>)}
-        </div>
+        <div className="lg:col-span-4 rounded-[2rem] bg-paper border border-line p-7 flex flex-col">
+          <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-ink-soft mb-2">What to do</p>
+          <p className="font-display text-lg leading-tight mb-2">{film?.do}</p>
+          <p className="text-sm text-ink-soft leading-relaxed mb-5">{film?.detail}</p>
+          <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-ink-soft mb-2">Camera</p>
+          <p className="text-sm text-ink-soft leading-relaxed mb-5">{film?.camera} Prop the phone up so it stays still.</p>
+          <p className="text-xs text-ink-soft mb-6">
+            You get {COUNTDOWN} seconds to get into position. Recording stops by itself at {MAX_CLIP_SECONDS} seconds.
+          </p>
 
-        <p className="text-center text-sm text-ink-soft mt-4">
-          <strong>Tip:</strong> Record for at least 10 seconds to get accurate analysis. Make sure your entire body is visible.
-        </p>
+          <div className="mt-auto flex flex-col gap-2">
+            {phase === 'idle' && (
+              <button onClick={startCountdown} disabled={!ready}
+                className="w-full px-6 py-4 rounded-full bg-brand text-white font-semibold hover:bg-brand-deep transition shadow-xl shadow-brand/25 disabled:opacity-40">
+                Start recording
+              </button>
+            )}
+            {phase === 'countdown' && (
+              <button onClick={() => { clearTimer(); setPhase('idle'); }}
+                className="w-full px-6 py-4 rounded-full bg-ink text-white font-semibold">
+                Starting in {count}… (tap to stop)
+              </button>
+            )}
+            {phase === 'recording' && (
+              <button onClick={stop}
+                className="w-full px-6 py-4 rounded-full bg-ink text-white font-semibold hover:bg-stage-soft transition">
+                Stop recording
+              </button>
+            )}
+            <button onClick={cancel}
+              className="w-full px-6 py-4 rounded-full border border-line font-semibold hover:border-ink/40 transition">
+              Cancel
+            </button>
+          </div>
+        </div>
       </div>
-    </div>);
-};
+    </main>
+  );
+}
