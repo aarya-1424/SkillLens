@@ -11,18 +11,16 @@ export const EFFECTIVE = '22 November 2026';
 export const DELETION_GRACE_DAYS = 30;
 export const RESPONSE_DAYS = 30;
 
-export const COMPANY = {
-  name: 'GoXL Consulting Solutions Pvt. Ltd.',
-  short: 'GoXL',
-  address: ['513, National Plaza, RC Dutt Road, Alkapuri', 'Vadodara, Gujarat, India 390007'],
-  contactEmail: 'info@goxl.in',
-  privacyEmail: 'privacy@goxl.in',
+// SkillLens is an independent, personal project. It is not run by, or part
+// of, any company. Fill these in when there is a published name and contact
+// address for the person running it; until then the pages point people to the
+// complaint form inside the App, which is recorded and dated.
+export const OWNER = {
+  name: null, // e.g. 'Your full name'
+  email: null, // e.g. a dedicated SkillLens contact address
 };
 
-export const GRIEVANCE_OFFICER = {
-  name: 'Ayush Kumar',
-  role: 'Founder & Chief Data Officer',
-};
+const CONTACT = 'Privacy & data in the App ("Ask about my data", or "Raise a privacy complaint")';
 
 // A paragraph is a string. A list is { list: [...] }. A note is { note: '...' }.
 
@@ -39,7 +37,7 @@ export const PRIVACY = {
     {
       id: 'overview', title: '1. Overview',
       body: [
-        `${COMPANY.name} ("GoXL", "we", "us") runs SkillLens ("the App"), an AI sports coach that measures your technique from a short video. This policy explains what we collect, why, who we share it with, how long we keep it, and how you use your rights. It follows India's Digital Personal Data Protection Act, 2023 ("DPDP Act") and the Information Technology Act, 2000. Under the DPDP Act you are the "Data Principal" and GoXL is the "Data Fiduciary".`,
+        'SkillLens ("the App") is an independent, personal project, run by its creator ("we", "us"). It is not a product of any company. It is an AI sports coach that measures your technique from a short video. This policy explains what we collect, why, who we share it with, how long we keep it, and how you use your rights. It follows India\'s Digital Personal Data Protection Act, 2023 ("DPDP Act") and the Information Technology Act, 2000. Under the DPDP Act you are the "Data Principal" and the person who runs SkillLens is the "Data Fiduciary".',
       ],
     },
     {
@@ -159,7 +157,7 @@ export const PRIVACY = {
     {
       id: 'contact', title: '13. Contact us',
       body: [
-        `For general questions write to ${COMPANY.contactEmail}. For complaints and data requests, use Privacy & data in the App or contact our Grievance Officer (section 11).`,
+        `For any question, complaint or data request, use ${CONTACT}${OWNER.email ? `, or write to ${OWNER.email}` : ''}. See also section 11.`,
       ],
     },
   ],
@@ -167,12 +165,12 @@ export const PRIVACY = {
 
 export const TERMS = {
   title: 'Terms of Service',
-  intro: 'The agreement between you and GoXL for using SkillLens. Please read it before you start.',
+  intro: 'The agreement between you and SkillLens for using the App. Please read it before you start.',
   sections: [
     {
       id: 'acceptance', title: '1. Agreeing to these terms',
       body: [
-        `By using SkillLens ("the App"), run by ${COMPANY.name} ("GoXL", "we", "us"), you agree to these Terms and to our Privacy Policy. SkillLens is for athletes aged 5 and over. If you are under 18, your parent or guardian must agree to these Terms for you during setup. If you do not agree, please do not use the App.`,
+        `SkillLens ("the App") is an independent, personal project run by its creator ("we", "us"); it is not a product of any company. By using it, you agree to these Terms and to our Privacy Policy. SkillLens is for athletes aged 5 and over. If you are under 18, your parent or guardian must agree to these Terms for you during setup. If you do not agree, please do not use the App.`,
       ],
     },
     {
@@ -197,7 +195,7 @@ export const TERMS = {
     {
       id: 'accounts', title: '4. Your account',
       body: [
-        'You sign in with your Google account. Keep that account secure: you are responsible for what happens under your SkillLens account. Tell us straight away at ' + COMPANY.contactEmail + ' if you think someone else has used it. Demo mode needs no account; anything you enter there stays in your own browser.',
+        `You sign in with your Google account. Keep that account secure: you are responsible for what happens under your SkillLens account. Tell us straight away through ${CONTACT} if you think someone else has used it. Demo mode needs no account; anything you enter there stays in your own browser.`,
       ],
     },
     {
@@ -209,7 +207,7 @@ export const TERMS = {
     {
       id: 'data', title: '6. Your information',
       body: [
-        'You own the information you give SkillLens and the reports made from it. You allow GoXL to use it only to provide the App to you, as described in the Privacy Policy. We do not sell it, and we do not currently use it to train AI models. You can download or delete it at any time from Privacy & data.',
+        'You own the information you give SkillLens and the reports made from it. You allow us to use it only to provide the App to you, as described in the Privacy Policy. We do not sell it, and we do not currently use it to train AI models. You can download or delete it at any time from Privacy & data.',
       ],
     },
     {
@@ -227,7 +225,7 @@ export const TERMS = {
     {
       id: 'ip', title: '8. Our intellectual property',
       body: [
-        'The App, including its scoring rules, measurement library, report formats, design and technology, belongs to GoXL. You may use it for your own training. The SkillLens and GoXL names and logos are GoXL\'s.',
+        'The App, including its scoring rules, measurement library, report formats, design and technology, belongs to its creator. You may use it for your own training. The SkillLens name and logo belong to its creator.',
       ],
     },
     {
@@ -239,7 +237,7 @@ export const TERMS = {
     {
       id: 'liability', title: '10. Disclaimers and limits of liability',
       body: [
-        'The App is provided "as is" and "as available". We do not promise that every measurement, score or AI-written explanation is accurate or right for you. As far as the law allows, GoXL\'s total liability to you for any claim about the App is limited to the amount you paid us in the three months before the claim (currently nothing, as the App is free), and we are not liable for indirect or consequential loss. Nothing here limits liability that cannot be limited by law.',
+        'The App is provided "as is" and "as available". We do not promise that every measurement, score or AI-written explanation is accurate or right for you. As far as the law allows, our total liability to you for any claim about the App is limited to the amount you paid us in the three months before the claim (currently nothing, as the App is free), and we are not liable for indirect or consequential loss. Nothing here limits liability that cannot be limited by law.',
       ],
     },
     {
@@ -251,7 +249,7 @@ export const TERMS = {
     {
       id: 'law', title: '12. Governing law',
       body: [
-        'These Terms are governed by the laws of India. We will first try to settle any dispute through good-faith discussion. If it is not settled within 30 days, the courts of Bangalore, Karnataka, India have exclusive jurisdiction.',
+        'These Terms are governed by the laws of India. We will first try to settle any dispute through good-faith discussion. If it is not settled within 30 days, it will be decided by the courts in India that have jurisdiction.',
       ],
     },
     {
@@ -263,7 +261,7 @@ export const TERMS = {
     {
       id: 'contact', title: '14. Contact',
       body: [
-        `Questions about these Terms: ${COMPANY.contactEmail}. Privacy questions and complaints: see the Privacy Policy and our Grievance Officer.`,
+        `Questions about these Terms: use ${CONTACT}${OWNER.email ? `, or write to ${OWNER.email}` : ''}. Privacy questions and complaints: see the Privacy Policy, section 11.`,
       ],
     },
   ],
