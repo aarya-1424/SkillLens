@@ -9,6 +9,7 @@ from app.core.auth import CurrentUser
 from app.history.models import AthleteProfile
 from app.history.service import ensure_profile
 from app.movements import library
+from app.privacy import service as privacy
 from app.profiles.schemas import ADULT_AGE, TERMS_VERSION, ProfileIn, ProfileOut, age_on
 
 LEVEL_WORDS = {
@@ -46,6 +47,8 @@ def save(db: Session, user: CurrentUser, body: ProfileIn) -> AthleteProfile:
     if first_time or row.terms_version != TERMS_VERSION:
         row.terms_version = TERMS_VERSION
         row.terms_accepted_at = now
+        privacy.record(db, user.id, "consent", commit=False,
+                       details="With parent or guardian agreement" if body.guardian_consent else None)
     if body.guardian_consent:
         row.guardian_consent_at = row.guardian_consent_at or now
     else:

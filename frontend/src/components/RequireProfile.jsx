@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../context/ProfileContext';
+import { POLICY_VERSION } from '../data/legal';
 
 const Spinner = () => (
   <div className="min-h-screen flex items-center justify-center bg-canvas">
@@ -27,5 +28,9 @@ export function RequireProfile({ children }) {
   const { profile, status } = useProfile();
   if (status === 'idle' || status === 'loading') return <Spinner />;
   if (status === 'ready' && !profile && !guest) return <Navigate to="/app/setup" replace />;
+  // The Terms or Privacy Policy changed since they agreed: ask again before going on.
+  if (!guest && profile?.terms_version && profile.terms_version !== POLICY_VERSION) {
+    return <Navigate to="/app/setup?step=4" replace />;
+  }
   return children;
 }

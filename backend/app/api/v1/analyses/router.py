@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
@@ -10,6 +10,7 @@ from app.ai import coach
 from app.core.auth import CurrentUser
 from app.db.session import get_db
 from app.history import service
+from app.privacy import service as privacy
 from app.profiles import service as profiles
 from app.movements import library
 
@@ -69,6 +70,23 @@ def my_progress(movement: str = Query(...), limit: int = Query(20, ge=2, le=100)
     return [ProgressPoint(**p) for p in service.progress(db, user.id, movement, limit)]
 
 
+@router.get("/checks")
+def check_trends(movement: str = Query(...), limit: int = Query(20, ge=2, le=100),
+                 user: CurrentUser = Depends(get_current_user),
+                 db: Session = Depends(get_db)) -> list[dict]:
+    """Each check's score over time for one movement, so a player sees what moved."""
+    return service.check_trends(db, user.id, movement, limit)
+
+
+@router.delete("/{analysis_id}", status_code=status.HTTP_204_NO_CONTENT)
+def remove(analysis_id: str, user: CurrentUser = Depends(get_current_user),
+           db: Session = Depends(get_db)) -> Response:
+    """Delete one report and the Ask Coach messages about it, for good."""
+    if not privacy.delete_report(db, user.id, analysis_id):
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Report not found")
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
 @router.get("/{analysis_id}", response_model=AnalysisDetail)
 def one(analysis_id: str, user: CurrentUser = Depends(get_current_user),
         db: Session = Depends(get_db)) -> AnalysisDetail:
@@ -87,6 +105,9 @@ def summary(analysis_id: str, user: CurrentUser = Depends(get_current_user),
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Report not found")
     if found.ai_summary:
         return {"summary": found.ai_summary, "from_cache": True}
+    if privacy.ai_paused(db, user.id):
+        # They switched AI off: nothing about them goes to the model.
+        return {"summary": None, "from_cache": False, "ai_paused": True}
 
     athlete = profiles.coaching_context(profiles.get(db, user.id))
     text, cached = coach.summarise(db, found, athlete)

@@ -13,8 +13,9 @@ from typing import Literal
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 from app.movements import library
+from app.privacy.policy import POLICY_VERSION
 
-TERMS_VERSION = "2026-11"
+TERMS_VERSION = POLICY_VERSION
 _EMAIL = re.compile(r"[^@\s]+@[^@\s]+\.[^@\s]+")
 ADULT_AGE = 18
 

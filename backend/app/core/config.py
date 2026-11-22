@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     SUPABASE_URL: str = "https://jujiyzbnqezajuapwjbv.supabase.co"
     # Only needed if the project still signs tokens with the legacy shared secret.
     SUPABASE_JWT_SECRET: str | None = None
+    # Only needed to delete a person's Supabase sign-in record when their
+    # account is erased. Server-side only; never sent to the browser.
+    SUPABASE_SERVICE_ROLE_KEY: str | None = None
 
     # Postgres connection (Supabase). Must start with postgresql+psycopg://
     DATABASE_URL: str | None = None

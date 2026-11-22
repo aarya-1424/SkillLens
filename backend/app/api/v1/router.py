@@ -5,6 +5,7 @@ from app.api.v1.analyses.router import router as analyses_router
 from app.api.v1.coach.router import router as coach_router
 from app.api.v1.me.router import router as me_router
 from app.api.v1.movements.router import router as movements_router
+from app.api.v1.privacy.router import router as privacy_router
 from app.api.v1.sports.router import router as sports_router
 
 api_router = APIRouter()
@@ -14,3 +15,4 @@ api_router.include_router(sports_router)
 api_router.include_router(movements_router)
 api_router.include_router(analyses_router)
 api_router.include_router(coach_router)
+api_router.include_router(privacy_router)

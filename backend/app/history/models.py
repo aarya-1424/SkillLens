@@ -10,7 +10,7 @@ import uuid
 from datetime import datetime, timezone
 
 from sqlalchemy import (
-    JSON, Boolean, Date, DateTime, Float, ForeignKey, Index, Integer, String, Text, func,
+    JSON, Boolean, Date, DateTime, Float, ForeignKey, Index, Integer, String, Text, false, func,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -40,6 +40,14 @@ class Profile(Base):
     name: Mapped[str | None] = mapped_column(String(200))
     avatar_url: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+    # Privacy controls (see the Privacy Policy, sections 7 and 8).
+    # AI paused: nothing about this person is sent to an outside AI model.
+    ai_paused: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
+    # Account deletion: asked for at `deletion_requested_at`, carried out on
+    # `deletion_due_at` unless they cancel first (a 30-day change-of-mind window).
+    deletion_requested_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    deletion_due_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), index=True)
 
     analyses: Mapped[list["Analysis"]] = relationship(back_populates="profile")
     athlete: Mapped["AthleteProfile | None"] = relationship(
@@ -196,3 +204,29 @@ class AiCache(Base):
     library_version: Mapped[str] = mapped_column(String(32), default="")
     hit_count: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+
+class PrivacyRequest(Base):
+    """A record of every privacy right used, every consent given, and every complaint.
+
+    This is our proof that we did what the Privacy Policy promises: when
+    someone downloaded their data, paused AI, asked for deletion, or raised a
+    complaint, and when we must answer by. After an account is erased, the
+    rows stay but `user_id` is replaced by a one-way fingerprint and any free
+    text is removed, so the record no longer identifies anyone.
+    """
+
+    __tablename__ = "privacy_requests"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(String(80), index=True)
+    kind: Mapped[str] = mapped_column(String(32))
+    # open -> resolved for things a person must answer (complaints, requests);
+    # done for things the app carries out straight away.
+    status: Mapped[str] = mapped_column(String(16), default="done")
+    details: Mapped[str | None] = mapped_column(Text)
+    policy_version: Mapped[str | None] = mapped_column(String(16))
+    due_by: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    resolution: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, index=True)

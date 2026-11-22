@@ -95,7 +95,12 @@ export default function Login() {
               <p className="mt-3 text-xs text-ink-soft text-center">Demo mode doesn't save anything.</p>
             </>
           )}
-          <p className="mt-10 text-xs text-ink-soft text-center">Coaching guidance, not medical advice.</p>
+          <p className="mt-10 text-xs text-ink-soft text-center leading-relaxed">
+            Before you start, we ask you to agree to our{' '}
+            <Link to="/terms" className="font-semibold underline">Terms</Link> and{' '}
+            <Link to="/privacy" className="font-semibold underline">Privacy Policy</Link>.
+            Coaching guidance, not medical advice.
+          </p>
         </div>
       </div>
     </div>

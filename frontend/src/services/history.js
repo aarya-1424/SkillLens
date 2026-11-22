@@ -51,3 +51,10 @@ export const getStats = () => soft(get('/analyses/stats'));
 export const getProgress = (movement) =>
   soft(get(`/analyses/progress?movement=${encodeURIComponent(movement)}`), []);
 export const getSummary = (id) => soft(post(`/analyses/${id}/summary`, {}));
+
+/** Delete one saved report for good (and the Ask Coach messages about it). */
+export const deleteAnalysis = (id) => del(`/analyses/${id}`);
+export const getCheckTrends = (movement) =>
+  soft(get(`/analyses/checks?movement=${encodeURIComponent(movement)}`), []);
+export const getCoachHistory = (analysisId) =>
+  soft(get(`/coach/history${analysisId ? `?analysis_id=${encodeURIComponent(analysisId)}` : ''}`), []);

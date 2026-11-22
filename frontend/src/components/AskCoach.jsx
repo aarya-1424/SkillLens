@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { get, post } from '../services/api';
+import { getCoachHistory } from '../services/history';
 
 /**
  * Ask Coach.
@@ -8,14 +10,19 @@ import { get, post } from '../services/api';
  * where it came from. When the library has nothing on a question, the coach
  * says so plainly instead of making something up — and we show that honestly
  * rather than dressing it up.
+ *
+ * withHistory: show the earlier conversation (for this report, or overall).
+ * tall: a taller conversation area, for the full Ask Coach page.
  */
-export default function AskCoach({ analysisId, movementSlug, sport }) {
+export default function AskCoach({ analysisId, movementSlug, sport, withHistory = false, tall = false }) {
   const [thread, setThread] = useState([]);
   const [question, setQuestion] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const [aiOff, setAiOff] = useState(false);
   const [ideas, setIdeas] = useState([]);
   const endRef = useRef(null);
+  const boxRef = useRef(null);
 
   useEffect(() => {
     let alive = true;
@@ -25,7 +32,23 @@ export default function AskCoach({ analysisId, movementSlug, sport }) {
     return () => { alive = false; };
   }, [movementSlug]);
 
-  useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [thread, busy]);
+  useEffect(() => {
+    if (!withHistory) return undefined;
+    let alive = true;
+    getCoachHistory(analysisId).then((rows) => {
+      if (!alive || !rows?.length) return;
+      setThread(rows.map((r) => (r.role === 'user'
+        ? { role: 'user', content: r.content }
+        : { role: 'assistant', answer: r.content, sources: r.sources, from_cache: r.from_cache, grounded: r.sources.length > 0 })));
+    });
+    return () => { alive = false; };
+  }, [withHistory, analysisId]);
+
+  // Scroll inside the conversation box only, never the whole page.
+  useEffect(() => {
+    const box = boxRef.current;
+    if (box) box.scrollTop = box.scrollHeight;
+  }, [thread, busy]);
 
   const send = async (text) => {
     const asked = (text ?? question).trim();
@@ -40,10 +63,12 @@ export default function AskCoach({ analysisId, movementSlug, sport }) {
       });
       setThread((t) => [...t, { role: 'assistant', ...res }]);
     } catch (err) {
-      setError(err.status === 401 || err.status === 503
+      setThread((t) => t.slice(0, -1));
+      setQuestion(asked);
+      if (err.status === 403) setAiOff(true);
+      else setError(err.status === 401 || err.status === 503
         ? 'Ask Coach needs you to be signed in.'
         : 'Could not reach the coach just now.');
-      setThread((t) => t.slice(0, -1));
     } finally {
       setBusy(false);
     }
@@ -60,8 +85,8 @@ export default function AskCoach({ analysisId, movementSlug, sport }) {
         </p>
       </div>
 
-      <div className="px-7 py-5 space-y-4 max-h-96 overflow-y-auto">
-        {!thread.length && (
+      <div ref={boxRef} className={`px-7 py-5 space-y-4 overflow-y-auto ${tall ? 'h-[28rem]' : 'max-h-96'}`}>
+        {!thread.length && !aiOff && (
           <div className="space-y-2">
             <p className="text-sm text-ink-soft">Not sure what to ask?</p>
             {ideas.map((idea) => (
@@ -75,7 +100,7 @@ export default function AskCoach({ analysisId, movementSlug, sport }) {
 
         {thread.map((m, i) => (
           m.role === 'user' ? (
-            <div key={i} className="ml-auto max-w-[85%] px-4 py-2.5 rounded-3xl rounded-br-md bg-ink text-white text-sm">
+            <div key={i} className="ml-auto max-w-[85%] w-fit px-4 py-2.5 rounded-3xl rounded-br-md bg-ink text-white text-sm">
               {m.content}
             </div>
           ) : (
@@ -101,6 +126,13 @@ export default function AskCoach({ analysisId, movementSlug, sport }) {
 
         {busy && <p className="text-sm text-ink-soft">Looking it up…</p>}
         {error && <p className="text-sm text-red-600">{error}</p>}
+        {aiOff && (
+          <div className="px-5 py-4 rounded-3xl bg-amber/15 border border-amber/40 text-sm">
+            <strong>AI features are switched off.</strong> You turned them off in{' '}
+            <Link to="/app/privacy" className="font-semibold underline">Privacy &amp; data</Link>, so nothing is sent to the AI model.
+            Switch them back on there to use Ask Coach.
+          </div>
+        )}
         <div ref={endRef} />
       </div>
 

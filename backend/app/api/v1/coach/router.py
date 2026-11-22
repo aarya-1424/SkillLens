@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.ai import coach as coach_ai
@@ -8,6 +9,7 @@ from app.api.deps import get_current_user
 from app.core.auth import CurrentUser
 from app.db.session import get_db
 from app.history import service
+from app.privacy import service as privacy
 from app.profiles import service as profiles
 from app.history.models import ChatMessage
 
@@ -40,6 +42,9 @@ class AskResponse(BaseModel):
 def ask(body: AskRequest, user: CurrentUser = Depends(get_current_user),
         db: Session = Depends(get_db)) -> AskResponse:
     """Ask Coach: answered from our own library, with its sources shown."""
+    if privacy.ai_paused(db, user.id):
+        raise HTTPException(status.HTTP_403_FORBIDDEN,
+                            "AI features are switched off in your Privacy & data settings.")
     facts = None
     if body.analysis_id:
         found = service.get_analysis(db, user.id, body.analysis_id)
@@ -65,6 +70,20 @@ def ask(body: AskRequest, user: CurrentUser = Depends(get_current_user),
     db.commit()
 
     return AskResponse(**{"unavailable": False, **result})
+
+
+@router.get("/history")
+def history(analysis_id: str | None = None, limit: int = 100,
+            user: CurrentUser = Depends(get_current_user), db: Session = Depends(get_db)) -> list[dict]:
+    """Your past Ask Coach conversation, oldest first."""
+    stmt = select(ChatMessage).where(ChatMessage.user_id == user.id)
+    if analysis_id:
+        stmt = stmt.where(ChatMessage.analysis_id == analysis_id)
+    rows = db.execute(stmt.order_by(ChatMessage.created_at.desc(), ChatMessage.id.desc())
+                    .limit(min(limit, 200))).scalars().all()
+    return [{"role": r.role, "content": r.content, "sources": r.sources or [],
+             "from_cache": r.from_cache, "analysis_id": r.analysis_id,
+             "created_at": r.created_at.isoformat()} for r in reversed(rows)]
 
 
 @router.get("/suggestions", response_model=list[str])

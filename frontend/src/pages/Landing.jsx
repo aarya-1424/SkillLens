@@ -256,7 +256,13 @@ export default function Landing() {
       {/* ---------- Footer ---------- */}
       <footer className="max-w-6xl mx-auto px-5 sm:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-ink-soft">
         <Logo />
-        <p>© {new Date().getFullYear()} SkillLens · Coaching guidance, not medical advice.</p>
+        <div className="flex flex-col sm:items-end gap-2">
+          <nav className="flex gap-4 font-semibold" aria-label="Legal">
+            <Link to="/terms" className="hover:text-ink">Terms</Link>
+            <Link to="/privacy" className="hover:text-ink">Privacy</Link>
+          </nav>
+          <p>© {new Date().getFullYear()} GoXL · SkillLens · Coaching guidance, not medical advice.</p>
+        </div>
       </footer>
     </div>
   );
