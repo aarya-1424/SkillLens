@@ -46,7 +46,7 @@ export const FEATURES = [
 ];
 
 export const STEPS = [
-  { n: '01', title: 'Record', text: 'Film 5–15 seconds of your movement from the side. A phone on a chair is enough.' },
+  { n: '01', title: 'Record', text: 'Film one movement, 3 times, from the side. About 10–15 seconds. A phone on a chair is enough.' },
   { n: '02', title: 'Track', text: 'SkillLens follows every joint in your body, frame by frame, right in your browser.' },
   { n: '03', title: 'Compare', text: 'Your joint angles at the key moments are checked against correct form for your sport.' },
   { n: '04', title: 'Improve', text: 'You get your score, your mistakes, drills, injury risk and a weekly plan.' },
@@ -55,7 +55,7 @@ export const STEPS = [
 export const JOURNEY = [
   { n: '01', title: 'Sign in', tag: 'Google, 10 seconds', text: 'Or explore the demo without an account.' },
   { n: '02', title: 'Quick setup', tag: 'First time only', text: 'Age, height, sport, level, old injuries.' },
-  { n: '03', title: 'First video', tag: 'Under a minute', text: 'Record or upload. Tips show you where to put the camera.' },
+  { n: '03', title: 'First video', tag: 'Under a minute', text: 'A guide shows exactly what to do and where to put the camera.' },
   { n: '04', title: 'Your report', tag: 'About 30 seconds', text: 'Score, mistakes, drills, injury risk, plan.' },
   { n: '05', title: 'Weekly progress', tag: 'Ongoing', text: 'Practise, record again, watch the chart climb.' },
 ];
@@ -123,7 +123,8 @@ export const TRUST = [
 export const FAQ = [
   { q: 'Do I need any sensors or special equipment?', a: 'No. A phone or laptop camera is all you need. SkillLens tracks your body from the video itself.' },
   { q: 'How accurate is the score?', a: 'Scores come from measured joint angles compared with correct ranges for your sport, so the same video always gets the same score. Good lighting and a clear side view give the best results — the app tells you when it could not see you clearly.' },
-  { q: 'Which sports work today?', a: 'Nine: cricket, basketball, soccer, tennis, baseball, volleyball, swimming (beta), running and cycling — one key movement each, with more movements being added.' },
+  { q: 'Which sports work today?', a: 'Ten: cricket, basketball, football, tennis, baseball, volleyball, badminton, running, cycling and gym (squat). One key movement each, with more movements being added.' },
+  { q: 'How long should my video be?', a: 'About 10 to 15 seconds: one movement, repeated 3 times, filmed from the side. We analyse up to 20 seconds. If your video is longer, you choose which 20 seconds to use.' },
   { q: 'Is it free?', a: 'Yes while we are in the prototype stage. You can also explore the demo without creating an account.' },
   { q: 'Who sees my videos?', a: 'Only you. Videos are stored privately. Coaches can see them later only if you invite them.' },
   { q: 'Can it replace my coach?', a: 'No — it gives your coach eyes on every session, and gives players without a coach a place to start. It is guidance, not medical advice.' },

@@ -37,8 +37,10 @@ export async function listMovements() {
  * @param videoUrl  object URL of the recorded or uploaded clip
  * @param slug      movement slug, e.g. "cricket-bowling"
  * @param onStage   (stageKey, progress 0..1) => void
+ * @param start     where in the video to begin (seconds)
+ * @param length    real length of the video from `start`, when known
  */
-export async function analyse(videoUrl, slug, { onStage, signal } = {}) {
+export async function analyse(videoUrl, slug, { onStage, signal, start = 0, length } = {}) {
   const stage = (key, p = 0) => onStage?.(key, p);
 
   stage('model');
@@ -47,6 +49,8 @@ export async function analyse(videoUrl, slug, { onStage, signal } = {}) {
   stage('track');
   const tracked = await trackVideo(videoUrl, {
     signal,
+    start,
+    length,
     onProgress: (p) => stage('track', p),
   });
 
@@ -76,6 +80,7 @@ export async function analyse(videoUrl, slug, { onStage, signal } = {}) {
     sides,
     unmeasured: skipped,
     confidence: tracked.confidence,
+    window: { start: tracked.start, end: tracked.start + tracked.duration },
     lowConfidence: tracked.confidence < LOW_CONFIDENCE,
   };
 }

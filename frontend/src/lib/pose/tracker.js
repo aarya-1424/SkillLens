@@ -14,6 +14,7 @@ const MODEL =
 
 /** Frames per second we sample. Enough for technique, kind to slow phones. */
 export const SAMPLE_FPS = 15;
+/** Keep in step with MAX_CLIP_SECONDS in data/filming.js. */
 const MAX_SECONDS = 20;
 
 let landmarkerPromise = null;
@@ -88,13 +89,22 @@ function seek(video, time) {
  * @returns {Promise<{frames: Array, times: number[], fps: number,
  *                    duration: number, confidence: number, seen: number}>}
  *   `frames[i]` is the array of 33 landmarks at `times[i]` seconds, or null
- *   if no body was found in that frame.
+ *   if no body was found in that frame. Times are positions in the original
+ *   video, so the skeleton lines up when the full video plays back.
+ *
+ * @param start   where to begin, in seconds (the user can pick the part of a
+ *                long video to analyse)
+ * @param length  how long the video really is from `start`, if already known.
+ *                Browser recordings often report their length as Infinity, so
+ *                the caller passes the real one when it has it.
  */
-export async function trackVideo(url, { onProgress, signal } = {}) {
+export async function trackVideo(url, { onProgress, signal, start = 0, length } = {}) {
   const landmarker = await loadTracker();
   const video = await videoFrom(url);
-  const duration = Math.min(video.duration || 0, MAX_SECONDS);
-  if (!duration || !Number.isFinite(duration)) {
+  const reported = Number.isFinite(video.duration) ? video.duration - start : NaN;
+  const available = length ?? reported;
+  const duration = Math.min(available || 0, MAX_SECONDS);
+  if (!duration || !Number.isFinite(duration) || duration <= 0) {
     throw new Error('That video has no length we can read.');
   }
 
@@ -104,7 +114,8 @@ export async function trackVideo(url, { onProgress, signal } = {}) {
   let visibilitySum = 0;
   let seen = 0;
 
-  for (let t = 0; t < duration; t += step) {
+  for (let k = 0; k * step < duration; k += 1) {
+    const t = start + k * step;
     if (signal?.aborted) throw new DOMException('Cancelled', 'AbortError');
     await seek(video, t);
     const result = landmarker.detect(video);
@@ -117,7 +128,7 @@ export async function trackVideo(url, { onProgress, signal } = {}) {
       const core = [11, 12, 23, 24, 25, 26, 27, 28];
       visibilitySum += core.reduce((s, i) => s + (marks[i]?.visibility ?? 0), 0) / core.length;
     }
-    onProgress?.(Math.min(1, t / duration));
+    onProgress?.(Math.min(1, (k * step) / duration));
   }
 
   video.src = '';
@@ -127,6 +138,7 @@ export async function trackVideo(url, { onProgress, signal } = {}) {
     frames,
     times,
     fps: SAMPLE_FPS,
+    start,
     duration,
     seen,
     // How clearly we could see the body: 0 when we never found it.
