@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { signOut } from '../services/auth';
 
 const linkClass = ({ isActive }) =>
-  `px-3 py-2 rounded-lg text-sm font-medium transition ${isActive ? 'bg-brand text-white' : 'text-ink-soft hover:text-ink'}`;
+  `px-3 sm:px-4 py-2 rounded-full text-[13px] font-semibold whitespace-nowrap transition ${isActive ? 'bg-ink text-white' : 'text-ink-soft hover:text-ink'}`;
 
 export default function AppLayout() {
   const { displayName, avatarUrl, guest, endGuest } = useAuth();
@@ -18,27 +18,29 @@ export default function AppLayout() {
 
   return (
     <div className="min-h-screen bg-canvas">
-      <header className="no-print sticky top-0 z-20 backdrop-blur bg-white/70 border-b border-line">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <Logo to="/app" />
+      <header className="no-print sticky top-4 z-20 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4 rounded-full bg-paper/95 backdrop-blur border border-line shadow-[0_12px_40px_-22px_rgba(0,0,0,0.4)] pl-3 pr-2 py-2">
+          <Logo to="/app" compact />
           <nav className="flex items-center gap-1">
             <NavLink to="/app" end className={linkClass}>Dashboard</NavLink>
             <NavLink to="/app/analyze" className={linkClass}>New analysis</NavLink>
           </nav>
           <div className="flex items-center gap-3">
-            {guest && <span className="hidden sm:inline text-xs px-2 py-1 rounded-md bg-amber-100 text-amber-800">Demo mode</span>}
+            {guest && <span className="hidden sm:inline text-xs font-medium px-3 py-1 rounded-full bg-amber/20 text-amber-800">Demo mode</span>}
             {avatarUrl ? (
-              <img src={avatarUrl} alt="" className="w-8 h-8 rounded-full" referrerPolicy="no-referrer" />
+              <img src={avatarUrl} alt="" className="w-9 h-9 rounded-full" referrerPolicy="no-referrer" />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-teal-500 to-blue-600 flex items-center justify-center text-sm font-bold">
+              <div className="w-9 h-9 rounded-full bg-ink text-white flex items-center justify-center text-sm font-bold">
                 {(displayName || '?').charAt(0).toUpperCase()}
               </div>
             )}
-            <button onClick={handleSignOut} className="text-sm text-ink-soft hover:text-ink">Sign out</button>
+            <button onClick={handleSignOut} className="hidden sm:block text-[13px] font-medium text-ink-soft hover:text-ink pr-3">Sign out</button>
           </div>
         </div>
       </header>
-      <Outlet />
+      <div className="pt-6">
+        <Outlet />
+      </div>
     </div>
   );
 }

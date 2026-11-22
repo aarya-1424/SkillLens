@@ -50,21 +50,23 @@ export default function AskCoach({ analysisId, movementSlug, sport }) {
   };
 
   return (
-    <section className="rounded-2xl border border-line bg-white overflow-hidden no-print">
-      <div className="px-5 py-4 border-b border-line">
-        <h2 className="font-serif text-2xl">Ask Coach</h2>
-        <p className="text-sm text-ink-soft mt-0.5">
+    <section className="rounded-[2rem] border border-line bg-paper overflow-hidden no-print">
+      <div className="relative overflow-hidden px-7 py-6 bg-stage stage-grid text-white">
+        <div className="pointer-events-none absolute -top-20 -right-16 w-56 h-56 rounded-full bg-brand/30 blur-3xl" />
+        <p className="relative eyebrow mb-1">Your AI coach</p>
+        <h2 className="relative font-display text-xl sm:text-2xl">Ask <em>Coach</em></h2>
+        <p className="relative text-sm text-white/60 mt-1">
           Answers come from SkillLens's own library, with sources shown.
         </p>
       </div>
 
-      <div className="px-5 py-4 space-y-4 max-h-96 overflow-y-auto">
+      <div className="px-7 py-5 space-y-4 max-h-96 overflow-y-auto">
         {!thread.length && (
           <div className="space-y-2">
             <p className="text-sm text-ink-soft">Not sure what to ask?</p>
             {ideas.map((idea) => (
               <button key={idea} onClick={() => send(idea)}
-                className="block w-full text-left text-sm px-3 py-2 rounded-xl border border-line hover:border-brand hover:bg-sky/50 transition">
+                className="block w-full text-left text-sm px-4 py-2.5 rounded-full border border-line hover:border-ink/40 hover:bg-sand/50 transition">
                 {idea}
               </button>
             ))}
@@ -73,19 +75,19 @@ export default function AskCoach({ analysisId, movementSlug, sport }) {
 
         {thread.map((m, i) => (
           m.role === 'user' ? (
-            <div key={i} className="ml-auto max-w-[85%] px-3.5 py-2.5 rounded-2xl rounded-br-sm bg-brand text-white text-sm">
+            <div key={i} className="ml-auto max-w-[85%] px-4 py-2.5 rounded-3xl rounded-br-md bg-ink text-white text-sm">
               {m.content}
             </div>
           ) : (
             <div key={i} className="max-w-[92%]">
-              <div className={`px-3.5 py-2.5 rounded-2xl rounded-bl-sm border text-sm leading-relaxed ${
-                m.grounded ? 'bg-sky/60 border-line' : 'bg-amber-50 border-amber-200'}`}>
+              <div className={`px-4 py-3 rounded-3xl rounded-bl-md border text-sm leading-relaxed ${
+                m.grounded ? 'bg-sand/60 border-line' : 'bg-amber/10 border-amber/30'}`}>
                 {m.answer}
               </div>
               <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
                 {m.sources?.map((s) => (
                   <span key={s.id} title={s.verified ? 'Coach-verified' : 'Not yet coach-verified'}
-                    className="text-[10px] px-1.5 py-0.5 rounded bg-white border border-line text-ink-soft">
+                    className="text-[10px] px-2.5 py-0.5 rounded-full bg-paper border border-line text-ink-soft">
                     {s.verified ? '✓' : '○'} {s.title}
                   </span>
                 ))}
@@ -103,14 +105,14 @@ export default function AskCoach({ analysisId, movementSlug, sport }) {
       </div>
 
       <form onSubmit={(e) => { e.preventDefault(); send(); }}
-        className="flex gap-2 px-5 py-4 border-t border-line bg-canvas">
+        className="flex gap-2 px-7 py-4 border-t border-line bg-canvas">
         <input
           value={question} onChange={(e) => setQuestion(e.target.value)}
           placeholder="Ask about your technique…" aria-label="Ask Coach a question"
-          className="flex-1 px-4 py-2.5 rounded-full border border-line bg-white text-sm focus:outline-none focus:border-brand"
+          className="flex-1 px-4 py-2.5 rounded-full border border-line bg-paper text-sm focus:outline-none focus:border-brand"
         />
         <button type="submit" disabled={busy || question.trim().length < 3}
-          className="px-5 py-2.5 rounded-full bg-brand text-white text-sm font-medium hover:bg-brand-deep transition disabled:opacity-40">
+          className="px-5 py-2.5 rounded-full bg-brand text-white text-sm font-semibold hover:bg-brand-deep transition disabled:opacity-40">
           Ask
         </button>
       </form>

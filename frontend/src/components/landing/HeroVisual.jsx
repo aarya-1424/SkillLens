@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
 /**
- * The hero picture: a looping figure with the body-tracking skeleton drawn on top,
- * and live angle readouts that are really computed from the drawing.
+ * The tracked figure: a looping skeleton on a dark stage, with angle
+ * readouts that are really measured from the drawing as it moves.
  *
- * Pass `videoSrc` to play a real clip underneath (our own recording, never stock
- * footage). Without one, a stylised field is drawn instead.
+ * `bare` drops the frame so the figure can sit directly on a dark block
+ * (the home page hero). Otherwise it brings its own rounded stage.
+ * Pass `videoSrc` to play a real clip underneath (our own footage only).
  */
 
 // 14 joints, side view, in a 100x100 box.
@@ -37,7 +38,7 @@ function angleAt(a, b, c) {
 
 const CYCLE_MS = 1400;
 
-export default function HeroVisual({ videoSrc, compact = false }) {
+export default function HeroVisual({ videoSrc, bare = false, className = '' }) {
   const [pose, setPose] = useState(POSES[0]);
   const frame = useRef(null);
 
@@ -62,40 +63,38 @@ export default function HeroVisual({ videoSrc, compact = false }) {
   const elbow = angleAt(pose[3], pose[5], pose[7]);
   const kneeOk = knee > 120;
 
-  return (
-    <div className={`relative w-full ${compact ? 'aspect-[4/3]' : 'aspect-[4/5] max-w-md'} rounded-3xl overflow-hidden border border-line bg-white shadow-[0_30px_80px_-30px_rgba(37,99,235,0.35)]`}>
-      {videoSrc ? (
-        <video src={videoSrc} className="absolute inset-0 w-full h-full object-cover" autoPlay muted loop playsInline />
-      ) : (
-        <>
-          <div className="absolute inset-0 bg-gradient-to-b from-sky via-white to-[#e4f3ea]" />
-          <div className="absolute inset-x-0 bottom-0 h-[28%] bg-gradient-to-t from-[#cfe8d8] to-transparent" />
-          <div className="absolute inset-x-6 bottom-[22%] h-px bg-ink/10" />
-        </>
-      )}
+  const shell = bare
+    ? 'relative w-full h-full'
+    : 'relative w-full aspect-[4/3] rounded-[2rem] overflow-hidden bg-stage stage-grid';
 
+  return (
+    <div className={`${shell} ${className}`}>
+      {videoSrc && (
+        <video src={videoSrc} className="absolute inset-0 w-full h-full object-cover opacity-70" autoPlay muted loop playsInline />
+      )}
+      {!bare && <div className="pointer-events-none absolute -bottom-20 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full bg-brand/30 blur-3xl" />}
       <div className="scan-line absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand to-transparent" />
 
       <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" aria-hidden="true">
         {BONES.map(([a, b], i) => (
-          <line key={i} x1={pose[a][0]} y1={pose[a][1]} x2={pose[b][0]} y2={pose[b][1]} stroke="#2563eb" strokeWidth="1.3" strokeLinecap="round" />
+          <line key={i} x1={pose[a][0]} y1={pose[a][1]} x2={pose[b][0]} y2={pose[b][1]} stroke="#ffffff" strokeOpacity="0.92" strokeWidth="1.25" strokeLinecap="round" />
         ))}
         {pose.map(([x, y], i) => (
-          <circle key={i} cx={x} cy={y} r={i === 0 ? 4.2 : 1.6} fill={i === 0 ? 'none' : '#fff'} stroke="#2563eb" strokeWidth={i === 0 ? 1.3 : 0.9} />
+          <circle key={i} cx={x} cy={y} r={i === 0 ? 4.2 : 1.55} fill={i === 0 ? 'none' : '#d7282f'} stroke="#ffffff" strokeWidth={i === 0 ? 1.25 : 0.7} />
         ))}
-        {/* Knee angle arc on the right leg */}
-        <circle cx={pose[11][0]} cy={pose[11][1]} r="4.5" fill="none" stroke={kneeOk ? '#10b981' : '#f59e0b'} strokeWidth="0.8" strokeDasharray="3 2" />
+        {/* Angle ring on the knee being measured */}
+        <circle cx={pose[11][0]} cy={pose[11][1]} r="4.6" fill="none" stroke={kneeOk ? '#10b981' : '#f59e0b'} strokeWidth="0.8" strokeDasharray="3 2" />
       </svg>
 
-      {/* Readouts */}
-      <div className="absolute left-3 top-3 flex items-center gap-2 text-[11px] font-medium">
-        <span className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-white/90 text-ink border border-line">
-          <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" /> Tracking every joint
-        </span>
+      {/* Floating readouts */}
+      <div className="absolute left-4 top-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur border border-white/15 text-white text-[11px] font-medium">
+        <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" /> Tracking every joint
       </div>
-      <div className="absolute right-3 bottom-3 flex flex-col items-end gap-1.5 text-[11px] font-medium tabular-nums">
-        <span className={`px-2 py-1 rounded-md bg-white/90 border border-line ${kneeOk ? 'text-emerald-700' : 'text-amber-700'}`}>Knee {knee}°</span>
-        <span className="px-2 py-1 rounded-md bg-white/90 border border-line text-ink">Elbow {elbow}°</span>
+      <div className="absolute right-4 bottom-4 flex flex-col items-end gap-2 text-[11px] font-semibold tabular-nums">
+        <span className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-paper text-ink shadow-lg">
+          <span className={`w-2 h-2 rounded-full ${kneeOk ? 'bg-mint' : 'bg-amber'}`} /> Knee {knee}°
+        </span>
+        <span className="px-3 py-1.5 rounded-full bg-paper text-ink shadow-lg">Elbow {elbow}°</span>
       </div>
     </div>
   );

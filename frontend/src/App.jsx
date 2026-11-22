@@ -13,7 +13,7 @@ const Analyze = lazy(() => import('./pages/Analyze'));
 
 const Spinner = () => (
   <div className="min-h-[60vh] flex items-center justify-center">
-    <div className="w-10 h-10 border-4 border-teal-400 border-t-transparent rounded-full animate-spin" />
+    <div className="w-10 h-10 border-4 border-brand border-t-transparent rounded-full animate-spin" />
   </div>
 );
 

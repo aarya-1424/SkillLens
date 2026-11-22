@@ -9,7 +9,7 @@ const Bar = ({ label, pct, tone = 'brand' }) => (
       <span className="text-ink-soft">{label}</span>
       <span className="font-medium tabular-nums">{pct}%</span>
     </div>
-    <div className="h-2 rounded-full bg-sky overflow-hidden">
+    <div className="h-2 rounded-full bg-sand overflow-hidden">
       <div className={`h-full rounded-full ${tone === 'amber' ? 'bg-amber' : tone === 'mint' ? 'bg-mint' : 'bg-brand'}`} style={{ width: `${pct}%` }} />
     </div>
   </div>
@@ -21,8 +21,8 @@ const Ring = ({ value }) => {
   return (
     <div className="relative w-24 h-24 shrink-0">
       <svg viewBox="0 0 80 80" className="w-full h-full -rotate-90">
-        <circle cx="40" cy="40" r={r} fill="none" stroke="#eaf1ff" strokeWidth="8" />
-        <circle cx="40" cy="40" r={r} fill="none" stroke="#2563eb" strokeWidth="8" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - value / 100)} />
+        <circle cx="40" cy="40" r={r} fill="none" stroke="#e9e6de" strokeWidth="8" />
+        <circle cx="40" cy="40" r={r} fill="none" stroke="#d7282f" strokeWidth="8" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - value / 100)} />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-2xl font-semibold tabular-nums">{value}</span>
@@ -58,11 +58,11 @@ function SampleMistakes() {
         <p className="text-xs text-ink-soft mt-1">Legal limit is 15°. Work on keeping the arm fixed from horizontal to release.</p>
         <div className="flex flex-wrap gap-1.5 mt-2">
           {['Wall-hold delivery drill', 'Towel-under-arm bowling'].map((d) => (
-            <span key={d} className="text-[11px] px-2 py-0.5 rounded-full bg-white border border-line">↳ {d}</span>
+            <span key={d} className="text-[11px] px-2 py-0.5 rounded-full bg-paper border border-line">↳ {d}</span>
           ))}
         </div>
       </div>
-      <div className="p-3 rounded-xl border border-line bg-white">
+      <div className="p-3 rounded-xl border border-line bg-paper">
         <div className="flex justify-between text-sm font-medium">
           <span>Front knee collapses at landing</span>
           <span className="text-ink-soft tabular-nums">142°</span>
@@ -108,11 +108,11 @@ function SampleCoach() {
   return (
     <div className="space-y-3 text-sm">
       <div className="ml-auto max-w-[85%] px-3 py-2 rounded-2xl rounded-br-sm bg-brand text-white">Why does my lower back hurt after bowling?</div>
-      <div className="max-w-[92%] px-3 py-2 rounded-2xl rounded-bl-sm bg-white border border-line">
+      <div className="max-w-[92%] px-3 py-2 rounded-2xl rounded-bl-sm bg-paper border border-line">
         Your report shows an 18° elbow change and a 14° trunk lean at release. A mixed action like this loads the lower back on every ball. Start with the core-bracing drill, and keep your hips and shoulders facing the same way at release.
         <div className="mt-2 flex flex-wrap gap-1.5">
           {['Mixed bowling action', 'Lower back stress', 'Core bracing drill'].map((s) => (
-            <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-sky text-brand-deep">Source · {s}</span>
+            <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-sand text-brand-deep">Source · {s}</span>
           ))}
         </div>
       </div>
@@ -132,13 +132,13 @@ export default function FeatureTabs() {
   return (
     <section id="features" className="relative">
       {/* Pinned tab bar */}
-      <div className="sticky top-16 z-10 bg-sky/85 backdrop-blur border-y border-line">
-        <div role="tablist" aria-label="What you get" className="max-w-6xl mx-auto px-4 sm:px-6 flex gap-2 overflow-x-auto py-3 [scrollbar-width:none]">
+      <div className="sticky top-[5.25rem] z-10">
+        <div role="tablist" aria-label="What you get" className="w-fit max-w-[calc(100%-1.5rem)] mx-auto flex gap-1 overflow-x-auto p-1.5 rounded-full bg-paper/95 backdrop-blur border border-line shadow-[0_12px_40px_-22px_rgba(0,0,0,0.4)] [scrollbar-width:none]">
           {FEATURES.map((f) => {
             const on = f.key === active;
             return (
               <button key={f.key} role="tab" aria-selected={on} onClick={() => setActive(f.key)}
-                className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium border transition ${on ? 'bg-brand text-white border-brand shadow-md shadow-brand/25' : 'bg-white text-ink-soft border-line hover:border-brand hover:text-brand-deep'}`}>
+                className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium border transition ${on ? 'bg-brand text-white border-brand' : 'bg-transparent text-ink-soft border-transparent hover:text-ink'}`}>
                 {f.tab}
               </button>
             );
@@ -150,15 +150,15 @@ export default function FeatureTabs() {
         <div key={active} className="fade-up grid md:grid-cols-2 gap-10 items-center">
           <div>
             <p className="eyebrow mb-4">{feature.tab}</p>
-            <h3 className="font-serif text-4xl sm:text-5xl leading-[1.05] mb-5">{feature.title}</h3>
+            <h3 className="font-display text-2xl sm:text-[2rem] mb-5">{feature.title}</h3>
             <p className="text-ink-soft text-lg leading-relaxed">{feature.body}</p>
           </div>
-          <div className="rounded-3xl border border-line bg-gradient-to-br from-sky to-sky-deep p-5 sm:p-7">
+          <div className="rounded-[2rem] bg-sand p-5 sm:p-7">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-semibold tracking-wider uppercase text-ink-soft">Sample · Cricket bowling</span>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-brand-soft text-brand-dark">Sample data</span>
             </div>
-            <div className="rounded-2xl bg-white border border-line p-4 sm:p-5">
+            <div className="rounded-2xl bg-paper border border-line p-4 sm:p-5">
               <Sample />
             </div>
           </div>

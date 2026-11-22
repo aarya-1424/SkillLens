@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
+import HeroVisual from '../components/landing/HeroVisual';
 import { useAuth } from '../context/AuthContext';
 import { guestAllowed, signInWithGoogle, supabaseConfigured } from '../services/auth';
 
@@ -12,6 +13,8 @@ const GoogleIcon = () => (
     <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z" />
   </svg>
 );
+
+const POINTS = ['10 sports, 65 technique checks', 'A score, your mistakes and the drills that fix them', 'No sensors. Just your phone camera'];
 
 export default function Login() {
   const { signedIn, loading, startGuest } = useAuth();
@@ -39,41 +42,62 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-b from-sky to-canvas text-ink overflow-hidden">
-      <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-brand/20 blur-3xl glow" />
-      <div className="pointer-events-none absolute bottom-0 right-[-10%] w-[500px] h-[500px] rounded-full bg-accent/20 blur-3xl" />
-      <Link to="/" className="absolute top-6 left-6 text-sm text-ink-soft hover:text-ink">← Back</Link>
-
-      <div className="relative w-full max-w-sm p-8 rounded-3xl bg-white border border-line shadow-[0_30px_80px_-40px_rgba(11,31,75,0.35)] fade-up">
-        <div className="flex justify-center mb-6"><Logo size="lg" /></div>
-        <h1 className="font-serif text-3xl text-center mb-1">Welcome back</h1>
-        <p className="text-sm text-ink-soft text-center mb-8">Sign in to save your videos and track your progress.</p>
-
-        <button
-          onClick={handleGoogle}
-          disabled={busy || !supabaseConfigured}
-          className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-full bg-brand text-white font-medium hover:bg-brand-deep transition shadow-md shadow-brand/25 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <span className="bg-white rounded-full p-1"><GoogleIcon /></span>
-          {busy ? 'Opening Google…' : 'Continue with Google'}
-        </button>
-
-        {!supabaseConfigured && <p className="mt-3 text-xs text-amber-700 text-center">Google sign-in is being set up.</p>}
-        {error && <p className="mt-3 text-sm text-red-600 text-center">{error}</p>}
-
-        {guestAllowed && (
-          <>
-            <div className="flex items-center gap-3 my-6 text-xs text-ink-soft">
-              <div className="flex-1 h-px bg-line" /> or <div className="flex-1 h-px bg-line" />
-            </div>
-            <button onClick={handleGuest} className="w-full px-4 py-3 rounded-full border border-line font-medium hover:border-ink/40 transition">
-              Explore the demo
-            </button>
-            <p className="mt-2 text-xs text-ink-soft text-center">Demo mode doesn't save anything.</p>
-          </>
-        )}
+    <div className="min-h-screen bg-canvas text-ink p-3 sm:p-4 grid lg:grid-cols-2 gap-3">
+      {/* Left: the dark stage */}
+      <div className="hidden lg:flex relative overflow-hidden rounded-[2.2rem] bg-stage stage-grid text-white p-10 flex-col justify-between">
+        <div className="pointer-events-none absolute -bottom-40 -left-32 w-[32rem] h-[32rem] rounded-full bg-brand/30 blur-3xl glow" />
+        <div className="relative"><Logo tone="dark" /></div>
+        <div className="absolute inset-x-0 top-20 bottom-64">
+          <HeroVisual bare />
+        </div>
+        <div className="relative">
+          <h2 className="font-display text-[2.4rem] leading-[1.02]">Every joint.<br /><em>Every rep.</em></h2>
+          <ul className="mt-6 space-y-2.5">
+            {POINTS.map((p) => (
+              <li key={p} className="flex items-center gap-3 text-sm text-white/70">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand shrink-0" />{p}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <p className="relative mt-6 text-xs text-ink-soft">Coaching guidance, not medical advice.</p>
+
+      {/* Right: sign in */}
+      <div className="relative flex flex-col items-center justify-center px-4 py-16">
+        <Link to="/" className="absolute top-4 left-4 px-4 py-2 rounded-full border border-line bg-paper text-[13px] font-semibold text-ink-soft hover:text-ink transition">← Back</Link>
+
+        <div className="w-full max-w-sm fade-up">
+          <div className="lg:hidden mb-8"><Logo size="lg" /></div>
+          <p className="eyebrow mb-3">Sign in</p>
+          <h1 className="font-display text-3xl sm:text-[2.6rem] leading-[1.02] mb-3">Welcome <em>back</em></h1>
+          <p className="text-ink-soft mb-9">Sign in to save your videos and track your progress.</p>
+
+          <button
+            onClick={handleGoogle}
+            disabled={busy || !supabaseConfigured}
+            className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-full bg-ink text-white font-semibold hover:bg-brand transition shadow-xl shadow-black/15 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span className="bg-white rounded-full p-1"><GoogleIcon /></span>
+            {busy ? 'Opening Google…' : 'Continue with Google'}
+          </button>
+
+          {!supabaseConfigured && <p className="mt-3 text-xs text-amber-700 text-center">Google sign-in is being set up.</p>}
+          {error && <p className="mt-3 text-sm text-red-600 text-center">{error}</p>}
+
+          {guestAllowed && (
+            <>
+              <div className="flex items-center gap-3 my-6 text-xs text-ink-soft">
+                <div className="flex-1 h-px bg-line" /> or <div className="flex-1 h-px bg-line" />
+              </div>
+              <button onClick={handleGuest} className="w-full px-4 py-3.5 rounded-full border border-line bg-paper font-semibold hover:border-ink/40 transition">
+                Explore the demo
+              </button>
+              <p className="mt-3 text-xs text-ink-soft text-center">Demo mode doesn't save anything.</p>
+            </>
+          )}
+          <p className="mt-10 text-xs text-ink-soft text-center">Coaching guidance, not medical advice.</p>
+        </div>
+      </div>
     </div>
   );
 }
