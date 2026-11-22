@@ -65,7 +65,7 @@ export default function AnalyzeFlow({ initialSport }) {
     <>
       {error && (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-6">
-          <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm">
+          <div className="px-5 py-3 rounded-3xl bg-alert/10 border border-alert/30 text-red-800 text-sm">
             {error}
           </div>
         </div>

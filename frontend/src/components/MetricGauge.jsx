@@ -11,10 +11,10 @@
 const pct = (v, min, max) => Math.min(100, Math.max(0, ((v - min) / (max - min || 1)) * 100));
 
 const TONE = {
-  good: { bar: 'bg-mint', text: 'text-emerald-700', chip: 'bg-emerald-50 border-emerald-200' },
-  minor: { bar: 'bg-amber', text: 'text-amber-700', chip: 'bg-amber-50 border-amber-200' },
-  major: { bar: 'bg-amber', text: 'text-amber-800', chip: 'bg-amber-50 border-amber-300' },
-  critical: { bar: 'bg-red-500', text: 'text-red-700', chip: 'bg-red-50 border-red-200' },
+  good: { bar: 'bg-mint', text: 'text-emerald-700', chip: 'bg-mint/10 border-mint/30' },
+  minor: { bar: 'bg-amber', text: 'text-amber-700', chip: 'bg-amber/10 border-amber/30' },
+  major: { bar: 'bg-amber', text: 'text-amber-800', chip: 'bg-amber/15 border-amber/40' },
+  critical: { bar: 'bg-alert', text: 'text-red-700', chip: 'bg-alert/10 border-alert/30' },
 };
 
 export default function MetricGauge({ result, compact = false }) {
@@ -26,17 +26,17 @@ export default function MetricGauge({ result, compact = false }) {
   const inZone = result.status === 'good';
 
   return (
-    <div className={compact ? '' : 'rounded-2xl border border-line bg-white p-5'}>
+    <div className={compact ? '' : 'rounded-[1.75rem] border border-line bg-paper p-6'}>
       <div className="flex items-start justify-between gap-4 mb-1">
         <div>
-          <h4 className="font-medium leading-tight">{result.name}</h4>
+          <h4 className="font-semibold leading-tight">{result.name}</h4>
           {!compact && <p className="text-xs text-ink-soft mt-0.5">{result.means}</p>}
         </div>
         <span className={`shrink-0 text-lg font-semibold tabular-nums ${tone.text}`}>{valueLabel}</span>
       </div>
 
       {/* The bar */}
-      <div className="relative mt-4 mb-1 h-2.5 rounded-full bg-sky" role="img"
+      <div className="relative mt-4 mb-1 h-2.5 rounded-full bg-sand" role="img"
         aria-label={`${result.name}: ${valueLabel}, target ${targetLabel}. ${result.headline}`}>
         <div
           className={`absolute inset-y-0 ${tone.bar} opacity-25`}
@@ -64,7 +64,7 @@ export default function MetricGauge({ result, compact = false }) {
       </div>
 
       {/* What to do about it */}
-      <div className={`rounded-xl border px-3 py-2.5 ${tone.chip}`}>
+      <div className={`rounded-2xl border px-4 py-3 ${tone.chip}`}>
         <p className={`text-sm font-medium ${tone.text} flex items-center gap-1.5`}>
           {result.direction === 'increase' && <span aria-hidden="true">▲</span>}
           {result.direction === 'decrease' && <span aria-hidden="true">▼</span>}

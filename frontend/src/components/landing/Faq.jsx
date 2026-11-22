@@ -5,7 +5,7 @@ export default function Faq() {
     <section id="faq" className="max-w-3xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
       <div className="text-center mb-10">
         <p className="eyebrow mb-4">Questions</p>
-        <h2 className="font-serif text-4xl sm:text-5xl leading-[1.05]">Things people <em className="text-brand">ask first.</em></h2>
+        <h2 className="font-display text-3xl sm:text-[2.6rem] leading-[1.05]">Things people <em className="text-brand">ask first.</em></h2>
       </div>
       <div className="divide-y divide-line border-y border-line">
         {FAQ.map((item) => (

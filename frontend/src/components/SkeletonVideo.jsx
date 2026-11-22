@@ -54,14 +54,14 @@ export default function SkeletonVideo({ videoUrl, tracked, jumpTo = null, title 
   }, [jumpTo]);
 
   return (
-    <div className="rounded-2xl border border-line bg-white overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-line">
-        <h3 className="font-medium">{title}</h3>
+    <div className="rounded-[2rem] border border-line bg-paper overflow-hidden">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-line">
+        <h3 className="font-semibold">{title}</h3>
         <button
           onClick={() => setShowSkeleton((v) => !v)}
           aria-pressed={showSkeleton}
-          className={`text-xs px-3 py-1.5 rounded-full border transition ${
-            showSkeleton ? 'bg-brand text-white border-brand' : 'bg-white text-ink-soft border-line'}`}
+          className={`text-xs font-semibold px-4 py-1.5 rounded-full border transition ${
+            showSkeleton ? 'bg-ink text-white border-ink' : 'bg-paper text-ink-soft border-line'}`}
         >
           Skeleton {showSkeleton ? 'on' : 'off'}
         </button>

@@ -136,7 +136,7 @@ export async function trackVideo(url, { onProgress, signal } = {}) {
 
 /** Draws the skeleton for one frame onto a canvas sized to the video. */
 export function drawSkeleton(ctx, frame, width, height, bones, opts = {}) {
-  const { line = '#2563eb', dot = '#ffffff', ring = '#1d4ed8' } = opts;
+  const { line = '#d7282f', dot = '#ffffff', ring = '#b81f26' } = opts;
   ctx.clearRect(0, 0, width, height);
   if (!frame) return;
 

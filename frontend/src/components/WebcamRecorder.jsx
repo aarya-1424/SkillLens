@@ -100,34 +100,34 @@ export const WebcamRecorder = ({ onRecordingComplete, onCancel }) => {
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
     return (<div className="min-h-screen bg-canvas p-4 flex items-center justify-center">
-      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-xl border border-line p-8">
-        <h2 className="text-3xl font-serif text-ink mb-6 text-center">
+      <div className="w-full max-w-4xl bg-paper rounded-[2.2rem] border border-line p-6 sm:p-8">
+        <h2 className="text-3xl font-display text-ink mb-6 text-center">
           Record Your Performance
         </h2>
 
-        {error && (<div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-800">
+        {error && (<div className="mb-4 px-5 py-3 bg-alert/10 border border-alert/30 rounded-3xl text-red-800">
             {error}
           </div>)}
 
-        <div className="relative bg-black rounded-lg overflow-hidden mb-6" style={{ aspectRatio: '16/9' }}>
+        <div className="relative bg-black rounded-[1.6rem] overflow-hidden mb-6" style={{ aspectRatio: '16/9' }}>
           <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover"/>
           
           {isRecording && (<div className="absolute top-4 left-4 flex items-center space-x-2">
               <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="text-white font-mono text-lg bg-black/50 px-3 py-1 rounded">
+              <span className="text-white font-mono text-lg bg-black/50 px-3 py-1 rounded-full">
                 {formatTime(recordingTime)}
               </span>
             </div>)}
         </div>
 
         <div className="flex gap-4">
-          <button onClick={handleCancel} className="flex-1 px-6 py-3 text-lg font-semibold text-white bg-white border border-line text-ink rounded-full hover:border-ink/40 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-gray-500">
+          <button onClick={handleCancel} className="flex-1 px-6 py-3 text-lg font-semibold bg-paper border border-line text-ink rounded-full hover:border-ink/40 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-ink/20">
             Cancel
           </button>
           
-          {!isRecording ? (<button onClick={startRecording} disabled={!stream} className="flex-1 px-6 py-3 text-lg font-semibold text-white bg-red-600 rounded-full hover:bg-red-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-500 disabled:bg-gray-700 disabled:cursor-not-allowed">
+          {!isRecording ? (<button onClick={startRecording} disabled={!stream} className="flex-1 px-6 py-3 text-lg font-semibold text-white bg-brand rounded-full hover:bg-brand-deep transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-500 disabled:bg-ink/30 disabled:cursor-not-allowed">
               Start Recording
-            </button>) : (<button onClick={stopRecording} className="flex-1 px-6 py-3 text-lg font-semibold text-white bg-brand rounded-full hover:bg-brand-deep transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500">
+            </button>) : (<button onClick={stopRecording} className="flex-1 px-6 py-3 text-lg font-semibold text-white bg-ink rounded-full hover:bg-stage-soft transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-ink/30">
               Stop & Analyze
             </button>)}
         </div>
