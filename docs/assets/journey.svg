@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="300" viewBox="0 0 1280 300" role="img" aria-label="The SkillLens journey in seven steps">
+  <rect width="1280" height="300" rx="24" fill="#141414"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <!-- row 1 -->
+    <g>
+      <rect x="40" y="40" width="280" height="96" rx="18" fill="#2a1a1b" stroke="#d7282f" stroke-opacity="0.35"/>
+      <text x="64" y="74" fill="#f6d5d2" font-size="14" font-weight="700">01</text>
+      <text x="64" y="106" fill="#ffffff" font-size="22" font-weight="700">Tell us about you</text>
+    </g>
+    <text x="326" y="96" fill="#d7282f" font-size="26">›</text>
+    <g>
+      <rect x="340" y="40" width="280" height="96" rx="18" fill="#2a1a1b" stroke="#d7282f" stroke-opacity="0.35"/>
+      <text x="364" y="74" fill="#f6d5d2" font-size="14" font-weight="700">02</text>
+      <text x="364" y="106" fill="#ffffff" font-size="22" font-weight="700">Film one movement</text>
+    </g>
+    <text x="626" y="96" fill="#d7282f" font-size="26">›</text>
+    <g>
+      <rect x="640" y="40" width="280" height="96" rx="18" fill="#3a1a1c" stroke="#d7282f" stroke-opacity="0.5"/>
+      <text x="664" y="74" fill="#f6d5d2" font-size="14" font-weight="700">03</text>
+      <text x="664" y="106" fill="#ffffff" font-size="22" font-weight="700">Body tracked on device</text>
+    </g>
+    <text x="926" y="96" fill="#d7282f" font-size="26">›</text>
+    <g>
+      <rect x="940" y="40" width="300" height="96" rx="18" fill="#4a1a1d" stroke="#d7282f" stroke-opacity="0.6"/>
+      <text x="964" y="74" fill="#f6d5d2" font-size="14" font-weight="700">04</text>
+      <text x="964" y="106" fill="#ffffff" font-size="22" font-weight="700">Scored against targets</text>
+    </g>
+    <!-- row 2 -->
+    <g>
+      <rect x="40" y="164" width="380" height="96" rx="18" fill="#6a1a1f"/>
+      <text x="64" y="198" fill="#f6d5d2" font-size="14" font-weight="700">05</text>
+      <text x="64" y="230" fill="#ffffff" font-size="22" font-weight="700">Report: score, mistakes, risk</text>
+    </g>
+    <text x="426" y="220" fill="#d7282f" font-size="26">›</text>
+    <g>
+      <rect x="440" y="164" width="380" height="96" rx="18" fill="#b81f26"/>
+      <text x="464" y="198" fill="#ffd9d6" font-size="14" font-weight="700">06</text>
+      <text x="464" y="230" fill="#ffffff" font-size="22" font-weight="700">Drills and a weekly plan</text>
+    </g>
+    <text x="826" y="220" fill="#d7282f" font-size="26">›</text>
+    <g>
+      <rect x="840" y="164" width="400" height="96" rx="18" fill="#f2f0eb"/>
+      <text x="864" y="198" fill="#b81f26" font-size="14" font-weight="700">07</text>
+      <text x="864" y="230" fill="#141414" font-size="22" font-weight="700">Film again, watch it improve</text>
+    </g>
+  </g>
+</svg>

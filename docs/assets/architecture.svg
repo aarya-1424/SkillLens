@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420" role="img" aria-label="How SkillLens is built">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#d7282f"/>
+    </marker>
+  </defs>
+  <rect width="1280" height="420" rx="24" fill="#141414"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <!-- Phone / browser -->
+    <rect x="40" y="40" width="420" height="340" rx="22" fill="#211819" stroke="#d7282f" stroke-opacity="0.45"/>
+    <text x="68" y="80" fill="#f6d5d2" font-size="14" font-weight="700" letter-spacing="3">YOUR PHONE OR LAPTOP</text>
+    <text x="68" y="116" fill="#ffffff" font-size="24" font-weight="700">SkillLens website</text>
+    <text x="68" y="144" fill="#ffffff" fill-opacity="0.6" font-size="16">React · Vite · Tailwind · Vercel</text>
+    <rect x="68" y="170" width="364" height="86" rx="16" fill="#d7282f"/>
+    <text x="90" y="204" fill="#ffffff" font-size="18" font-weight="700">MediaPipe body tracking</text>
+    <text x="90" y="232" fill="#ffffff" fill-opacity="0.85" font-size="15">The video never leaves the device</text>
+    <text x="68" y="296" fill="#ffffff" fill-opacity="0.75" font-size="16">Only the measurements (angles, timings)</text>
+    <text x="68" y="320" fill="#ffffff" fill-opacity="0.75" font-size="16">are sent on, never the video.</text>
+
+    <path d="M470 210 H556" stroke="#d7282f" stroke-width="3" marker-end="url(#arrow)"/>
+
+    <!-- API -->
+    <rect x="566" y="40" width="340" height="340" rx="22" fill="#2a1a1b" stroke="#d7282f" stroke-opacity="0.45"/>
+    <text x="594" y="80" fill="#f6d5d2" font-size="14" font-weight="700" letter-spacing="3">SKILLLENS API</text>
+    <text x="594" y="116" fill="#ffffff" font-size="24" font-weight="700">FastAPI on Render</text>
+    <g font-size="16" fill="#ffffff" fill-opacity="0.85">
+      <text x="594" y="160">• Scoring engine: 65 checks</text>
+      <text x="594" y="190">• Injury risk and rep detection</text>
+      <text x="594" y="220">• 57 drills and weekly plans</text>
+      <text x="594" y="250">• Progress, compare, alerts</text>
+      <text x="594" y="280">• Coach teams with consent</text>
+      <text x="594" y="310">• Privacy: export, delete, AI pause</text>
+    </g>
+
+    <path d="M916 140 H1002" stroke="#d7282f" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M916 290 H1002" stroke="#d7282f" stroke-width="3" marker-end="url(#arrow)"/>
+
+    <!-- Supabase -->
+    <rect x="1012" y="40" width="228" height="190" rx="22" fill="#f2f0eb"/>
+    <text x="1034" y="80" fill="#b81f26" font-size="14" font-weight="700" letter-spacing="3">DATA + SIGN-IN</text>
+    <text x="1034" y="116" fill="#141414" font-size="22" font-weight="700">Supabase</text>
+    <text x="1034" y="146" fill="#625f58" font-size="15">Postgres database</text>
+    <text x="1034" y="170" fill="#625f58" font-size="15">Google sign-in</text>
+    <text x="1034" y="194" fill="#625f58" font-size="15">Reports, not videos</text>
+
+    <!-- AI -->
+    <rect x="1012" y="250" width="228" height="130" rx="22" fill="#b81f26"/>
+    <text x="1034" y="288" fill="#ffd9d6" font-size="14" font-weight="700" letter-spacing="3">OPTIONAL AI</text>
+    <text x="1034" y="322" fill="#ffffff" font-size="22" font-weight="700">Ask Coach</text>
+    <text x="1034" y="352" fill="#ffffff" fill-opacity="0.85" font-size="15">Answers only from our library</text>
+  </g>
+</svg>
