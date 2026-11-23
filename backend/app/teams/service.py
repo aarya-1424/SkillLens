@@ -123,6 +123,8 @@ def join(db: Session, athlete: CurrentUser, code: str, consent: bool, guardian_c
         raise TeamError(400, "Set up your profile before joining a team")
     age = _age(db, athlete.id)
     minor = age is not None and age < ADULT_AGE
+    from app.guardian import service as guardian  # imported here to keep start-up order simple
+    guardian.require_allowed(db, athlete.id)
     if minor and not guardian_consent:
         raise TeamError(400, "Under 18s need their parent or guardian to agree to this sharing")
     existing = is_member(db, team.id, athlete.id)

@@ -62,7 +62,7 @@ export const PRIVACY = {
       id: 'basis', title: '3. Why we are allowed to use it',
       body: [
         'Consent: you agree during setup, after reading this policy. You can withdraw consent at any time (see section 8); this does not undo what was lawfully done before.',
-        'Children: for anyone under 18, the DPDP Act requires a parent or guardian\'s consent. The App will not let an under-18 finish setup without a parent or guardian\'s name, email and agreement, and we record when they agreed.',
+        'Children: for anyone under 18, the DPDP Act requires a parent or guardian\'s consent. We email the parent or guardian a private link and save nothing about the child until they agree through it (see section 7).',
         'Legitimate uses: keeping the App secure, and meeting our legal duties.',
       ],
     },
@@ -113,7 +113,7 @@ export const PRIVACY = {
     {
       id: 'children', title: '7. Children',
       body: [
-        'SkillLens is for athletes aged 5 and over. Anyone under 18 needs a parent or guardian to agree before they can use it, and we record that agreement. A parent or guardian can use any of the rights below on their child\'s behalf, from the child\'s account or by sending a "Request from a parent or guardian" in Privacy & data, or by writing to our Grievance Officer.',
+        'SkillLens is for athletes aged 5 and over. For anyone under 18 we email their parent or guardian a private link, and save nothing about the child (no reports, no Ask Coach, no sharing with a coach) until the parent opens it and agrees. We record when they agreed. The only thing kept before then is the sign-up answers, so we know whom to email; they can be deleted at any time. A parent or guardian can use any of the rights below on their child\'s behalf, from the child\'s account or by sending a "Request from a parent or guardian" in Privacy & data, or by writing to our Grievance Officer.',
       ],
     },
     {

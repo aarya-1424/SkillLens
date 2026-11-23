@@ -21,6 +21,7 @@ import TeamSquad from './pages/TeamSquad';
 import TeamPlayer from './pages/TeamPlayer';
 import JoinTeam from './pages/JoinTeam';
 import Compare from './pages/Compare';
+import ParentConfirm from './pages/ParentConfirm';
 
 // Heavy (charts, PDF, video) — only loaded when someone starts an analysis.
 const Analyze = lazy(() => import('./pages/Analyze'));
@@ -39,6 +40,7 @@ export default function App() {
       <Route path="/auth/callback" element={<AuthCallback />} />
       <Route path="/terms" element={<Legal kind="terms" />} />
       <Route path="/privacy" element={<Legal kind="privacy" />} />
+      <Route path="/parent/:token" element={<ParentConfirm />} />
       <Route
         path="/app/setup"
         element={

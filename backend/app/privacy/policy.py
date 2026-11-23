@@ -34,4 +34,6 @@ ACTION_KINDS = {
     "erased": "Account erased",
     "team_joined": "Joined a team and shared my reports with its coach",
     "team_left": "Left a team; the coach can no longer see my reports",
+    "guardian_confirmed": "My parent or guardian confirmed by email",
+    "guardian_declined": "My parent or guardian did not agree",
 }

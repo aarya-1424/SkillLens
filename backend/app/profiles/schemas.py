@@ -152,10 +152,13 @@ class ProfileOut(BaseModel):
     terms_version: str
     terms_accepted_at: datetime
     updated_at: datetime
+    guardian_status: str = "not_needed"
 
     # Worked out, not stored
     age: int
     is_minor: bool
     bmi: float
+    guardian_email_hint: str | None = None
+    guardian_email_sent: bool = False
 
     model_config = {"from_attributes": True}

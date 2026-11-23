@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import MetricGauge from '../../components/MetricGauge';
 import { DrillList } from '../../components/DrillCard';
 import RepStrip from '../../components/RepStrip';
+import { useProfile } from '../../context/ProfileContext';
 import SkeletonVideo from '../../components/SkeletonVideo';
 import AskCoach from '../../components/AskCoach';
 import ProgressChart from '../../components/ProgressChart';
@@ -42,6 +43,8 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
   const [summary, setSummary] = useState(null);  // the AI's few sentences
   const [progress, setProgress] = useState([]);
   const [aiPaused, setAiPaused] = useState(false);
+  const { profile } = useProfile();
+  const waitingForParent = ['pending', 'declined'].includes(profile?.guardian_status);
 
   // Keep the report, then fetch the written summary and the progress line.
   // All of this is optional: in demo mode there is no account, the calls come
@@ -176,6 +179,11 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
       {aiPaused && (
         <p className="mb-3 px-5 py-3 rounded-3xl bg-sand text-sm">
           AI features are off in <Link to="/app/privacy" className="font-semibold underline">Privacy &amp; data</Link>, so no written summary was made.
+        </p>
+      )}
+      {waitingForParent && (
+        <p className="mb-3 px-5 py-3 rounded-3xl bg-amber/15 border border-amber/40 text-sm no-print">
+          <strong>Not saved.</strong> Your parent or guardian has not confirmed by email yet, so this report will be gone when you leave the page.
         </p>
       )}
       {saved && (

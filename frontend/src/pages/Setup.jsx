@@ -487,7 +487,7 @@ export default function Setup() {
                   <p className="font-display text-lg">Parent or guardian</p>
                   <p className="text-sm text-ink-soft mt-1 mb-2 leading-relaxed">
                     You are {age}, so the law asks for a parent or guardian to agree before you use SkillLens.
-                    Ask them to fill this in with you.
+                    We will email them a private link to confirm. Until they do, you can try the app, but nothing is saved.
                   </p>
                   <Question label="Their full name" error={errors.guardian_name}>
                     <input className={inputClass} value={a.guardian_name} maxLength={120} aria-label="Parent or guardian's full name"

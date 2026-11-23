@@ -123,7 +123,7 @@ def export(db: Session, user: CurrentUser) -> dict:
         "exported_at": _now().isoformat(),
         "policy_version": POLICY_VERSION,
         "account": cols(profile),
-        "athlete_profile": cols(athlete, skip=("user_id",)) if athlete else None,
+        "athlete_profile": cols(athlete, skip=("user_id", "guardian_token_hash")) if athlete else None,
         "reports": [{**cols(a, skip=("user_id",)),
                      "checks": [cols(m, skip=("id", "analysis_id")) for m in a.metrics]} for a in analyses],
         "ask_coach_messages": [cols(c, skip=("user_id",)) for c in chats],

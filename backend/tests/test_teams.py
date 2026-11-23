@@ -40,11 +40,17 @@ def test_a_player_must_agree_and_have_a_profile_to_join(client, as_bob):
     assert preview["name"] == "Under-19 squad" and preview["players"] == 1
 
 
-def test_under_18s_need_a_guardians_agreement_to_share(client, as_bob):
+def test_under_18s_need_a_guardians_agreement_to_share(client, as_bob, monkeypatch):
+    from app.core import mailer
+    sent = []
+    monkeypatch.setattr(mailer, "send", lambda to, subject, text, html=None: sent.append(text) or True)
     team = make_team(client)
     setup_player(as_bob, birth_year=date.today().year - 15, guardian_name="Parent",
                  guardian_email="parent@example.com", guardian_consent=True)
     body = {"code": team["invite_code"], "consent": True}
+    assert as_bob.post("/api/v1/teams/join", json={**body, "guardian_consent": True}).status_code == 403  # parent not confirmed yet
+    token = sent[-1].split("/parent/")[1].split()[0]
+    as_bob.post(f"/api/v1/guardian/{token}", json={"agree": True})
     assert as_bob.post("/api/v1/teams/join", json=body).status_code == 400
     assert as_bob.post("/api/v1/teams/join", json={**body, "guardian_consent": True}).status_code == 200
 

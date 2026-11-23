@@ -9,6 +9,7 @@ from app.api.deps import get_current_user
 from app.core.auth import CurrentUser
 from app.db.session import get_db
 from app.history import service
+from app.guardian import service as guardian
 from app.privacy import service as privacy
 from app.profiles import service as profiles
 from app.history.models import ChatMessage
@@ -42,6 +43,7 @@ class AskResponse(BaseModel):
 def ask(body: AskRequest, user: CurrentUser = Depends(get_current_user),
         db: Session = Depends(get_db)) -> AskResponse:
     """Ask Coach: answered from our own library, with its sources shown."""
+    guardian.require_allowed(db, user.id)
     if privacy.ai_paused(db, user.id):
         raise HTTPException(status.HTTP_403_FORBIDDEN,
                             "AI features are switched off in your Privacy & data settings.")

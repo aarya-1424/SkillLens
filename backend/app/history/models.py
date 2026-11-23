@@ -101,6 +101,12 @@ class AthleteProfile(Base):
     guardian_name: Mapped[str | None] = mapped_column(String(120))
     guardian_email: Mapped[str | None] = mapped_column(String(320))
     guardian_consent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Parent confirmation by email (under-18s): not_needed | pending | confirmed | declined.
+    guardian_status: Mapped[str] = mapped_column(String(16), default="not_needed", server_default="not_needed")
+    guardian_token_hash: Mapped[str | None] = mapped_column(String(64), index=True)
+    guardian_token_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    guardian_email_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    guardian_decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)

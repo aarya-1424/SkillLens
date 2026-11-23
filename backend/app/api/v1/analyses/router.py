@@ -11,6 +11,7 @@ from app.drills.library import as_dict, for_check
 from app.core.auth import CurrentUser
 from app.db.session import get_db
 from app.history import service
+from app.guardian import service as guardian
 from app.privacy import service as privacy
 from app.profiles import service as profiles
 from app.movements import library
@@ -45,6 +46,7 @@ def save(body: SaveAnalysisRequest, user: CurrentUser = Depends(get_current_user
                             f"Unknown movement '{body.movement_slug}'")
     if not body.results:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "A report needs at least one check")
+    guardian.require_allowed(db, user.id)
     saved = service.save_analysis(db, user, body)
     return _detail(service.get_analysis(db, user.id, saved.id))
 
