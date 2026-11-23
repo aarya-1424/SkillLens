@@ -41,16 +41,16 @@ function GuestPrivacy() {
   const [cleared, setCleared] = useState(false);
   return (
     <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      <PageHeader eyebrow="Privacy & data" title={<>Demo mode keeps <em>nothing</em></>}>
-        In demo mode nothing about you is saved on our servers. Your setup answers, if you filled them in, are kept only in
+      <PageHeader eyebrow="Privacy & data" title={<>The tour keeps <em>nothing</em></>}>
+        In the tour nothing about you is saved on our servers. Your setup answers, if you filled them in, are kept only in
         this browser.
       </PageHeader>
       <div className="grid gap-3">
-        <Card title="Clear my demo data">
-          <p className="text-sm text-ink-soft mb-4">Removes your demo setup answers from this browser.</p>
+        <Card title="Clear my tour data">
+          <p className="text-sm text-ink-soft mb-4">Removes any setup answers you changed in the tour from this browser.</p>
           {cleared
-            ? <p className="text-sm font-semibold text-emerald-700">Done. Nothing from your demo is left in this browser.</p>
-            : <ConfirmButton label="Clear demo data" question="Clear it now?" confirmLabel="Yes, clear"
+            ? <p className="text-sm font-semibold text-emerald-700">Done. Nothing from your tour is left in this browser.</p>
+            : <ConfirmButton label="Clear tour data" question="Clear it now?" confirmLabel="Yes, clear"
                 onConfirm={async () => { clearGuestProfile(); setCleared(true); }} />}
         </Card>
         <Card title="Read how we handle information" tone="sand">

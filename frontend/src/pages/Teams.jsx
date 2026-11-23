@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ConfirmButton, EmptyState, LABEL, PageHeader, shortDate } from '../components/Bits';
+import { ConfirmButton, LABEL, PageHeader, shortDate } from '../components/Bits';
 import { useAuth } from '../context/AuthContext';
 import { SPORTS } from '../data/landing';
 import { createTeam, leaveTeam, myTeams } from '../services/teams';
@@ -17,16 +17,7 @@ export default function Teams() {
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(() => myTeams().then(setData).catch(() => setError('Could not load your teams just now.')), []);
-  useEffect(() => { if (!guest) load(); }, [guest, load]);
-
-  if (guest) {
-    return (
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <PageHeader eyebrow="Teams" title={<>Coach a <em>squad</em></>} />
-        <EmptyState title="Teams need an account" text="Sign in with Google to coach a team or join your coach's team." to="/login" cta="Sign in" />
-      </main>
-    );
-  }
+  useEffect(() => { load(); }, [load]);
 
   const start = async (e) => {
     e.preventDefault();
@@ -71,6 +62,7 @@ export default function Teams() {
                 );
               })}
             </div>
+            {guest ? <p className="relative text-sm text-white/60">In the tour you can look at the squad but not change it. Sign in to start your own team.</p> : (
             <form onSubmit={start} className="relative space-y-2">
               <p className={`${LABEL} text-white/50`}>Start a team</p>
               <input value={name} onChange={(e) => setName(e.target.value)} maxLength={80} placeholder="Team name, e.g. Under-17 squad"
@@ -85,6 +77,7 @@ export default function Teams() {
                 Create team
               </button>
             </form>
+            )}
           </section>
 
           <div className="space-y-3">
@@ -108,8 +101,10 @@ export default function Teams() {
                       <span className="block font-semibold">{t.name}</span>
                       <span className="block text-xs text-ink-soft">Coach: {t.coach} · sharing since {shortDate(t.joined_at)}</span>
                     </span>
-                    <ConfirmButton label="Leave" question="Stop sharing with this coach?" confirmLabel="Yes, leave"
-                      onConfirm={async () => { await leaveTeam(t.id); await load(); }} />
+                    {!guest && (
+                      <ConfirmButton label="Leave" question="Stop sharing with this coach?" confirmLabel="Yes, leave"
+                        onConfirm={async () => { await leaveTeam(t.id); await load(); }} />
+                    )}
                   </div>
                 ))}
               </div>

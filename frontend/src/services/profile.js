@@ -7,6 +7,7 @@
 import { get, put } from './api';
 import { isGuest } from './auth';
 import { ADULT_AGE, ageFrom } from '../data/profileQuestions';
+import { loadTour } from './tour';
 
 const GUEST_KEY = 'skilllens.guestProfile';
 
@@ -36,7 +37,7 @@ function withDerived(a) {
  * "not set up" apart from "could not check".
  */
 export async function getProfile() {
-  if (isGuest()) return readGuest();
+  if (isGuest()) return readGuest() || (await loadTour().then((t) => t.profile).catch(() => null));
   try {
     return await get('/me/profile');
   } catch (err) {

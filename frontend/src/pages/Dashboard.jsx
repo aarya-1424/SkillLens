@@ -7,6 +7,7 @@ import { SPORTS } from '../data/landing';
 import ProgressChart from '../components/ProgressChart';
 import DemoTools from '../components/DemoTools';
 import TodayPlan from '../components/TodayPlan';
+import { TourChecklist } from '../components/Tour';
 import Insights from '../components/Insights';
 import { getProgress, getStats, listAnalyses } from '../services/history';
 
@@ -54,11 +55,6 @@ export default function Dashboard() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-      {guest && (
-        <div className="mb-3 px-5 py-3 rounded-3xl bg-amber/15 border border-amber/40 text-ink text-sm">
-          <strong>Demo mode.</strong> Reports are not saved here. Sign in with Google to keep your history.
-        </div>
-      )}
 
       {/* Top: dark stage with the score, next to two cards */}
       <div className="grid lg:grid-cols-12 gap-3 mb-3">
@@ -117,7 +113,7 @@ export default function Dashboard() {
             <div>
               <div className="font-display text-5xl mt-3">{stats?.count ?? 0}</div>
               <div className="text-xs text-ink-soft mt-2">
-                {guest ? 'Demo mode does not save history.'
+                {guest ? 'Example athlete in the tour.'
                   : hasHistory ? `Best so far: ${Math.round(stats.best)}` : 'Record one to get started.'}
               </div>
             </div>
@@ -145,6 +141,7 @@ export default function Dashboard() {
         </div>
       </div>
 
+      <TourChecklist />
       <DemoTools onChange={() => setReloadKey((k) => k + 1)} />
       <TodayPlan reloadKey={reloadKey} />
       <Insights limit={2} reloadKey={reloadKey} />
@@ -227,7 +224,7 @@ function ProfileStrip({ profile, guest }) {
           <p className="font-display text-lg">Make the advice fit you</p>
           <p className="text-sm text-ink-soft mt-1">
             5 short steps, about 2 minutes: your sport, level, body and goal.
-            {guest && ' In demo mode it stays in this browser.'}
+            {guest && ' In the tour it stays in this browser.'}
           </p>
         </div>
         <Link to="/app/setup" className="shrink-0 px-6 py-3 rounded-full bg-ink text-white font-semibold hover:bg-brand transition text-center">

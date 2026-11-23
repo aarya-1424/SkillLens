@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { get, post } from '../services/api';
 import { getCoachHistory } from '../services/history';
+import { isGuest } from '../services/auth';
 
 /**
  * Ask Coach.
@@ -14,7 +15,24 @@ import { getCoachHistory } from '../services/history';
  * withHistory: show the earlier conversation (for this report, or overall).
  * tall: a taller conversation area, for the full Ask Coach page.
  */
-export default function AskCoach({ analysisId, movementSlug, sport, withHistory = false, tall = false }) {
+export default function AskCoach(props) {
+  if (isGuest()) {
+    return (
+      <section className="p-7 rounded-[2rem] bg-paper border border-line">
+        <p className="eyebrow mb-2">Ask Coach</p>
+        <h2 className="font-display text-xl mb-2">Questions about your technique, answered</h2>
+        <p className="text-sm text-ink-soft">
+          With an account you can ask things like "why does my elbow drop?" and get an answer from SkillLens's own
+          checked coaching library, with its source shown. It is off in the tour because it uses AI and saves your
+          questions. <Link to="/login" className="font-semibold underline text-ink">Sign in</Link> to try it.
+        </p>
+      </section>
+    );
+  }
+  return <AskCoachChat {...props} />;
+}
+
+function AskCoachChat({ analysisId, movementSlug, sport, withHistory = false, tall = false }) {
   const [thread, setThread] = useState([]);
   const [question, setQuestion] = useState('');
   const [busy, setBusy] = useState(false);

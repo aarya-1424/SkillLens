@@ -90,9 +90,9 @@ export default function Login() {
                 <div className="flex-1 h-px bg-line" /> or <div className="flex-1 h-px bg-line" />
               </div>
               <button onClick={handleGuest} className="w-full px-4 py-3.5 rounded-full border border-line bg-paper font-semibold hover:border-ink/40 transition">
-                Explore the demo
+                Take the tour, no sign-in
               </button>
-              <p className="mt-3 text-xs text-ink-soft text-center">Demo mode doesn't save anything.</p>
+              <p className="mt-3 text-xs text-ink-soft text-center">See a full example account. Nothing is saved.</p>
             </>
           )}
           <p className="mt-10 text-xs text-ink-soft text-center leading-relaxed">

@@ -77,7 +77,7 @@ export default function Progress() {
       {rows === null && <p className="text-ink-soft">Loading…</p>}
       {rows?.length === 0 && (
         guest
-          ? <EmptyState title="Demo mode doesn't keep progress" text="Sign in with Google and every analysis you save becomes a point on your progress line." to="/login" cta="Sign in" />
+          ? <EmptyState title="The tour has no progress yet" text="Sign in with Google and every analysis you save becomes a point on your progress line." to="/login" cta="Sign in" />
           : <EmptyState title="No progress yet" text="Analyse a movement twice and you will see your score move here." />
       )}
 
