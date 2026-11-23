@@ -236,7 +236,7 @@ export default function Setup() {
   };
 
   return (
-    <div className="min-h-screen bg-canvas text-ink p-3 sm:p-4 grid lg:grid-cols-12 gap-3">
+    <div className="min-h-screen text-ink p-3 sm:p-4 grid lg:grid-cols-12 gap-3">
       {/* Left: where you are */}
       <aside className="hidden lg:flex lg:col-span-4 relative overflow-hidden rounded-[2.2rem] bg-stage stage-grid text-white p-10 flex-col">
         <div className="pointer-events-none absolute -bottom-40 -left-32 w-[30rem] h-[30rem] rounded-full bg-brand/30 blur-3xl" />

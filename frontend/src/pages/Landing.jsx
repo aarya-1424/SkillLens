@@ -36,7 +36,7 @@ export default function Landing() {
   const cta = signedIn ? '/app' : '/login';
 
   return (
-    <div className="min-h-screen bg-canvas text-ink">
+    <div className="min-h-screen text-ink">
       {/* ---------- Floating nav ---------- */}
       <header className="fixed top-5 inset-x-0 z-30 px-5 sm:px-8">
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-4 rounded-full glass shadow-[0_12px_40px_-18px_rgba(0,0,0,0.45)] pl-3 pr-2 py-2">

@@ -42,7 +42,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-canvas text-ink p-3 sm:p-4 grid lg:grid-cols-2 gap-3">
+    <div className="min-h-screen text-ink p-3 sm:p-4 grid lg:grid-cols-2 gap-3">
       {/* Left: the dark stage */}
       <div className="hidden lg:flex relative overflow-hidden rounded-[2.2rem] bg-stage stage-grid text-white p-10 flex-col justify-between">
         <div className="pointer-events-none absolute -bottom-40 -left-32 w-[32rem] h-[32rem] rounded-full bg-brand/30 blur-3xl glow" />
