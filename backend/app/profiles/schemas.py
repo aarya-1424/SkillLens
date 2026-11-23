@@ -160,5 +160,6 @@ class ProfileOut(BaseModel):
     bmi: float
     guardian_email_hint: str | None = None
     guardian_email_sent: bool = False
+    guardian_email_enabled: bool = False
 
     model_config = {"from_attributes": True}

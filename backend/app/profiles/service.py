@@ -66,10 +66,11 @@ def to_out(row: AthleteProfile) -> ProfileOut:
     age = age_on(date.today(), row.birth_year, row.birth_month)
     bmi = round(row.weight_kg / ((row.height_cm / 100) ** 2), 1)
     stored = {name: getattr(row, name) for name in ProfileOut.model_fields
-              if name not in {"age", "is_minor", "bmi", "guardian_email_hint", "guardian_email_sent"}}
+              if name not in {"age", "is_minor", "bmi", "guardian_email_hint", "guardian_email_sent", "guardian_email_enabled"}}
     return ProfileOut(**stored, age=age, is_minor=age < ADULT_AGE, bmi=bmi,
                       guardian_email_hint=guardian.mask(row.guardian_email),
-                      guardian_email_sent=row.guardian_email_sent_at is not None)
+                      guardian_email_sent=row.guardian_email_sent_at is not None,
+                      guardian_email_enabled=guardian.enabled())
 
 
 def age_band(age: int) -> str:

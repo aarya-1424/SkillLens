@@ -15,15 +15,17 @@
   --font-display: "Archivo Variable", "Arial Black", ui-sans-serif, system-ui, sans-serif;
 
   --color-canvas: #f2f0eb;      /* page: warm bone, never pure white */
-  --color-paper: #fbfaf7;       /* cards */
-  --color-sand: #e9e6de;        /* section tint */
+  /* Cards and tints are see-through, frosted by the .bg-paper / .bg-sand rules
+     below, so the soft glows behind the page show through like glass. */
+  --color-paper: rgb(251 250 247 / 0.52);   /* cards */
+  --color-sand: rgb(233 230 222 / 0.5);    /* section tint */
   --color-sand-deep: #dcd8cd;   /* stronger tint, ghost words */
-  --color-line: #d8d4c9;        /* hairlines */
+  --color-line: rgb(20 20 20 / 0.09);      /* hairlines */
 
   --color-ink: #141414;         /* text */
   --color-ink-soft: #625f58;    /* muted text */
-  --color-stage: #111111;       /* dark blocks: hero, video, coaches */
-  --color-stage-soft: #1d1d1d;  /* cards on a dark block */
+  --color-stage: rgb(17 17 17 / 0.93);      /* dark blocks: hero, video, coaches (smoked glass) */
+  --color-stage-soft: rgb(29 29 29 / 0.9);  /* cards on a dark block */
 
   --color-brand: #d7282f;       /* crimson */
   --color-brand-deep: #b81f26;  /* hover */
@@ -41,7 +43,14 @@
 
 body {
   margin: 0;
-  background: var(--color-canvas);
+  /* Soft warm glows behind everything: what the glass panels blur. No blue. */
+  background:
+    radial-gradient(48rem 34rem at 92% -6%, rgb(215 40 47 / 0.24), transparent 64%),
+    radial-gradient(42rem 34rem at -8% 30%, rgb(245 158 11 / 0.17), transparent 62%),
+    radial-gradient(52rem 40rem at 60% 105%, rgb(215 40 47 / 0.16), transparent 62%),
+    radial-gradient(30rem 26rem at 40% 55%, rgb(142 22 28 / 0.07), transparent 70%),
+    var(--color-canvas);
+  background-attachment: fixed;
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -67,6 +76,33 @@ body {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--color-brand);
+}
+
+/* ---------- Glass ----------
+   Cards (bg-paper) and tints (bg-sand) frost whatever is behind them.
+   .glass is the stronger version for things that float: nav bars, menus. */
+.bg-paper, .bg-sand {
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+}
+/* A bright top edge on cards, like light catching the rim of a glass. */
+.bg-paper.border-line { border-color: rgb(255 255 255 / 0.7); }
+.bg-stage, .bg-stage-soft {
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+@utility glass {
+  background: rgb(251 250 247 / 0.62);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgb(255 255 255 / 0.75);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.7);
+}
+@utility glass-strong {
+  background: rgb(251 250 247 / 0.78);
+  -webkit-backdrop-filter: blur(26px) saturate(170%);
+  backdrop-filter: blur(26px) saturate(170%);
+  border: 1px solid rgb(255 255 255 / 0.75);
 }
 
 /* Faint measuring grid on the dark stage blocks */
@@ -115,4 +151,5 @@ body {
 @media print {
   .no-print { display: none !important; }
   body { background: #fff; }
+  .bg-paper, .bg-sand, .glass, .glass-strong { background: #fff !important; backdrop-filter: none !important; }
 }

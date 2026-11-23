@@ -44,7 +44,7 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
   const [progress, setProgress] = useState([]);
   const [aiPaused, setAiPaused] = useState(false);
   const { profile } = useProfile();
-  const waitingForParent = ['pending', 'declined'].includes(profile?.guardian_status);
+  const waitingForParent = Boolean(profile?.guardian_email_enabled) && ['pending', 'declined'].includes(profile?.guardian_status);
 
   // Keep the report, then fetch the written summary and the progress line.
   // All of this is optional: in demo mode there is no account, the calls come

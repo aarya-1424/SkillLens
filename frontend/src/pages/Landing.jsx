@@ -39,7 +39,7 @@ export default function Landing() {
     <div className="min-h-screen bg-canvas text-ink">
       {/* ---------- Floating nav ---------- */}
       <header className="fixed top-5 inset-x-0 z-30 px-5 sm:px-8">
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-4 rounded-full bg-paper/95 backdrop-blur border border-line shadow-[0_12px_40px_-18px_rgba(0,0,0,0.45)] pl-3 pr-2 py-2">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-4 rounded-full glass shadow-[0_12px_40px_-18px_rgba(0,0,0,0.45)] pl-3 pr-2 py-2">
           <Logo />
           <nav className="hidden md:flex items-center gap-7 text-[13px] font-medium text-ink-soft">
             {NAV.map(([label, href]) => (
@@ -116,7 +116,7 @@ export default function Landing() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             {STATS.map((s) => (
-              <div key={s.label} className="rounded-[1.8rem] bg-paper/90 backdrop-blur border border-line p-6">
+              <div key={s.label} className="rounded-[1.8rem] glass p-6">
                 <div className="font-display text-4xl sm:text-5xl">
                   <CountUp value={s.value} prefix={s.prefix} suffix={s.suffix} />
                 </div>

@@ -160,7 +160,16 @@ def decide(db: Session, token: str, agree: bool) -> dict:
     return {"status": row.guardian_status}
 
 
+def enabled() -> bool:
+    """Parent confirmation by email is on only when the server can send email.
+    Until then ("coming soon") we rely on the agreement given at sign-up, and
+    the Privacy Policy says exactly that."""
+    return mailer.configured()
+
+
 def blocked(db: Session, user_id: str) -> bool:
+    if not enabled():
+        return False
     row = db.get(AthleteProfile, user_id)
     return bool(row and row.guardian_status in (PENDING, DECLINED))
 

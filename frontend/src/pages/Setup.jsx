@@ -487,7 +487,7 @@ export default function Setup() {
                   <p className="font-display text-lg">Parent or guardian</p>
                   <p className="text-sm text-ink-soft mt-1 mb-2 leading-relaxed">
                     You are {age}, so the law asks for a parent or guardian to agree before you use SkillLens.
-                    We will email them a private link to confirm. Until they do, you can try the app, but nothing is saved.
+                    Coming soon: we will also email them a private link to confirm.
                   </p>
                   <Question label="Their full name" error={errors.guardian_name}>
                     <input className={inputClass} value={a.guardian_name} maxLength={120} aria-label="Parent or guardian's full name"
@@ -522,7 +522,7 @@ export default function Setup() {
 
         {/* Buttons stay in reach on a phone */}
         <div className="sticky bottom-3 w-full max-w-2xl mx-auto px-2 sm:px-6">
-          <div className="flex gap-2 p-2 rounded-full bg-paper/95 backdrop-blur border border-line shadow-[0_12px_40px_-22px_rgba(0,0,0,0.4)]">
+          <div className="flex gap-2 p-2 rounded-full glass shadow-[0_12px_40px_-22px_rgba(0,0,0,0.4)]">
             {step > 0 && (
               <button type="button" onClick={back} className="px-6 py-3.5 rounded-full font-semibold text-ink-soft hover:text-ink">
                 Back

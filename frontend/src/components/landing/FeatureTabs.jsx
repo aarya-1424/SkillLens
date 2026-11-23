@@ -133,7 +133,7 @@ export default function FeatureTabs() {
     <section id="features" className="relative">
       {/* Pinned tab bar */}
       <div className="sticky top-[5.25rem] z-10">
-        <div role="tablist" aria-label="What you get" className="w-fit max-w-[calc(100%-1.5rem)] mx-auto flex gap-1 overflow-x-auto p-1.5 rounded-full bg-paper/95 backdrop-blur border border-line shadow-[0_12px_40px_-22px_rgba(0,0,0,0.4)] [scrollbar-width:none]">
+        <div role="tablist" aria-label="What you get" className="w-fit max-w-[calc(100%-1.5rem)] mx-auto flex gap-1 overflow-x-auto p-1.5 rounded-full glass shadow-[0_12px_40px_-22px_rgba(0,0,0,0.4)] [scrollbar-width:none]">
           {FEATURES.map((f) => {
             const on = f.key === active;
             return (
