@@ -255,9 +255,11 @@ function wholeClipValue(metric, ctx) {
  * @param tracked  from trackVideo()
  * @returns {{values: Object, moments: Object, sides: Object, skipped: string[]}}
  */
-export function measureAll(metrics, tracked) {
+export function measureAll(metrics, tracked, { sides: knownSides } = {}) {
   const { frames, times } = tracked;
-  const sides = resolveSides(frames);
+  // Which arm and leg is which is decided once from the whole clip, so every
+  // repetition is measured on the same side.
+  const sides = knownSides || resolveSides(frames);
   const moments = findMoments(frames, times, sides);
   const ctx = { frames, times, sides, moments };
 

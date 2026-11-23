@@ -109,3 +109,13 @@ def test_history_says_so_plainly_when_no_database_is_configured(monkeypatch):
         assert "not switched on" in res.json()["detail"]
     finally:
         app.dependency_overrides.clear()
+
+
+def test_each_repetitions_score_is_kept_with_the_report(client, report):
+    reps = [{"number": 1, "total": 70.1, "grade": "Good", "typical": False, "best": False},
+            {"number": 2, "total": 74.2, "grade": "Good", "typical": True, "best": False},
+            {"number": 3, "total": 78.0, "grade": "Good", "typical": False, "best": True}]
+    saved = save(client, report, reps=reps)
+    again = client.get(f"/api/v1/analyses/{saved['id']}").json()
+    assert [r["total"] for r in again["reps"]] == [70.1, 74.2, 78.0]
+    assert save(client, report)["reps"] is None     # single-rep clips have none

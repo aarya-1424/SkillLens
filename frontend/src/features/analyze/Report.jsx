@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import MetricGauge from '../../components/MetricGauge';
 import { DrillList } from '../../components/DrillCard';
+import RepStrip from '../../components/RepStrip';
 import SkeletonVideo from '../../components/SkeletonVideo';
 import AskCoach from '../../components/AskCoach';
 import ProgressChart from '../../components/ProgressChart';
@@ -157,6 +158,12 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
           </div>
         </div>
       </section>
+
+      <RepStrip reps={analysis.reps} consistency={analysis.consistency}
+        onPick={(r) => {
+          setJumpTo(r.peak_time);
+          document.getElementById('report-video')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }} />
 
       {/* What the coach makes of it */}
       {summary && (

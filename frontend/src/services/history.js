@@ -35,6 +35,7 @@ export function toSavePayload(analysis) {
     groups: report.groups,
     scoring_version: report.scoring_version,
     unverified: report.unverified,
+    reps: analysis.reps ? analysis.reps.map((r) => ({ number: r.number, total: r.total, grade: r.grade, typical: r.typical, best: r.best })) : null,
     results: report.all_results.map((r) => ({
       id: r.id, name: r.name, group: r.group, layer: r.layer, unit: r.unit,
       value: r.value, value_label: r.value_label, target_label: r.target_label,
