@@ -44,6 +44,7 @@ def test_under_18s_need_a_guardians_agreement_to_share(client, as_bob, monkeypat
     from app.core import mailer
     sent = []
     monkeypatch.setattr(mailer, "send", lambda to, subject, text, html=None: sent.append(text) or True)
+    monkeypatch.setattr(mailer, "configured", lambda: True)
     team = make_team(client)
     setup_player(as_bob, birth_year=date.today().year - 15, guardian_name="Parent",
                  guardian_email="parent@example.com", guardian_consent=True)

@@ -17,6 +17,7 @@ YOUNG = dict(birth_year=date.today().year - 15, guardian_name="Priya K",
 def outbox(monkeypatch):
     sent = []
     monkeypatch.setattr(mailer, "send", lambda to, subject, text, html=None: sent.append((to, text)) or True)
+    monkeypatch.setattr(mailer, "configured", lambda: True)
     return sent
 
 
@@ -84,7 +85,10 @@ def test_resending_too_quickly_is_refused(client, outbox):
     assert client.post("/api/v1/me/guardian/resend").status_code == 429
 
 
-def test_no_email_service_means_we_say_so(client, monkeypatch):
+def test_until_email_is_switched_on_children_are_not_blocked(client, monkeypatch, report):
     monkeypatch.setattr(mailer, "configured", lambda: False)
     out = client.put("/api/v1/me/profile", json=answers(**YOUNG)).json()
     assert out["guardian_status"] == "pending" and out["guardian_email_sent"] is False
+    assert out["guardian_email_enabled"] is False
+    assert client.post("/api/v1/analyses", json=report).status_code == 201   # "coming soon": not enforced yet
+    assert client.get("/api/v1/health").json()["parent_email"] is False

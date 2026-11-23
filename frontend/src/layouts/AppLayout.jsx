@@ -58,7 +58,7 @@ function AccountMenu({ onSignOut }) {
         <span className="hidden sm:inline text-[13px] font-semibold max-w-[8rem] truncate">{name.split(' ')[0]}</span>
       </button>
       {open && (
-        <div role="menu" className="absolute right-0 mt-2 w-64 p-2 rounded-3xl bg-paper border border-line shadow-[0_24px_60px_-24px_rgba(0,0,0,0.45)]">
+        <div role="menu" className="absolute right-0 mt-2 w-64 p-2 rounded-3xl glass-strong shadow-[0_24px_60px_-24px_rgba(0,0,0,0.45)]">
           <div className="px-4 py-3">
             <p className="font-semibold truncate">{name}</p>
             <p className="text-xs text-ink-soft truncate">{guest ? 'Demo mode' : user?.email}</p>
@@ -139,7 +139,7 @@ export default function AppLayout() {
   return (
     <div className="min-h-screen bg-canvas">
       <header className="no-print sticky top-4 z-30 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 rounded-full bg-paper/95 backdrop-blur border border-line shadow-[0_12px_40px_-22px_rgba(0,0,0,0.4)] pl-3 pr-2 py-2">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 rounded-full glass shadow-[0_12px_40px_-22px_rgba(0,0,0,0.4)] pl-3 pr-2 py-2">
           <Logo to="/app" compact />
           <nav className="hidden lg:flex items-center gap-1" aria-label="Main">
             {SECTIONS.map((s) => (
@@ -162,7 +162,7 @@ export default function AppLayout() {
 
       {/* Phones and tablets: the sections live at the bottom, in thumb reach */}
       <nav className="no-print lg:hidden fixed bottom-3 inset-x-3 z-30" aria-label="Main">
-        <div className="flex items-end justify-around rounded-[1.75rem] bg-paper/95 backdrop-blur border border-line shadow-[0_12px_40px_-18px_rgba(0,0,0,0.45)] px-2 py-2">
+        <div className="flex items-end justify-around rounded-[1.75rem] glass shadow-[0_12px_40px_-18px_rgba(0,0,0,0.45)] px-2 py-2">
           {SECTIONS.filter((s) => !s.desktopOnly).map((s) => (
             <NavLink key={s.to} to={s.to} end={s.end}
               className={({ isActive }) => (s.primary

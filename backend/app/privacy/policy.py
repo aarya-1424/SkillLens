@@ -4,7 +4,8 @@ asked to agree again."""
 
 # Shown on /terms and /privacy, stored with every consent.
 # 2026-11-24: added sharing with coaches (Privacy Policy s.5 and s.8).
-POLICY_VERSION = "2026-11-24"
+# 2026-11-24b: parent confirmation by email marked "coming soon" (Privacy s.3 and s.7).
+POLICY_VERSION = "2026-11-24b"
 
 # Privacy Policy s.6: a deleted account can be restored for this many days.
 DELETION_GRACE_DAYS = 30

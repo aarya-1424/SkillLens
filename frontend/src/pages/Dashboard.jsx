@@ -128,7 +128,7 @@ export default function Dashboard() {
               <div>
                 <div className="flex items-center gap-3 mt-3">
                   <span className="text-3xl" aria-hidden="true">{latestSport.icon}</span>
-                  <span className="font-display text-lg leading-tight">{latestSport.movement}</span>
+                  <span className="font-display text-sm sm:text-lg leading-tight min-w-0 [overflow-wrap:anywhere]">{latestSport.movement}</span>
                 </div>
                 <Link to={`/app/analyze?sport=${encodeURIComponent(latestSport.name)}`}
                   className="inline-block mt-3 text-sm font-semibold text-brand hover:text-brand-deep">

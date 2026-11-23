@@ -10,6 +10,15 @@ export default function GuardianBanner() {
   const [busy, setBusy] = useState(false);
   const status = profile?.guardian_status;
   if (status !== 'pending' && status !== 'declined') return null;
+  if (!profile.guardian_email_enabled) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 no-print">
+        <p className="px-5 py-3 rounded-3xl glass text-sm">
+          <strong>Coming soon:</strong> we will email your parent or guardian a link to confirm. For now, the agreement you gave at sign-up is recorded.
+        </p>
+      </div>
+    );
+  }
 
   const resend = async () => {
     setBusy(true);
