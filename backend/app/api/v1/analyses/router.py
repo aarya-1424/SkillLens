@@ -7,6 +7,7 @@ from app.api.v1.analyses.schemas import (
     SaveAnalysisRequest, StatsOut,
 )
 from app.ai import coach
+from app.drills.library import as_dict, for_check
 from app.core.auth import CurrentUser
 from app.db.session import get_db
 from app.history import service
@@ -29,6 +30,7 @@ def _detail(a) -> AnalysisDetail:
             value=m.value, value_label=m.value_label, target_label=m.target_label,
             score=m.score, severity=m.severity, status=m.status, direction=m.direction,
             amount=m.amount, headline=m.headline, cue=m.cue,
+            drills=[as_dict(d) for d in for_check(m.metric_id, m.status)],
         ) for m in sorted(a.metrics, key=lambda m: m.score)],
     )
 
