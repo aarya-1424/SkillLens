@@ -52,7 +52,7 @@ class AnalysisSummary(BaseModel):
 
 
 class MetricResultOut(MetricResultIn):
-    pass
+    drills: list[dict] = []
 
 
 class AnalysisDetail(AnalysisSummary):

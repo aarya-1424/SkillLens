@@ -17,7 +17,7 @@ const TONE = {
   critical: { bar: 'bg-alert', text: 'text-red-700', chip: 'bg-alert/10 border-alert/30' },
 };
 
-export default function MetricGauge({ result, compact = false }) {
+export default function MetricGauge({ result, compact = false, children }) {
   const { gauge, value_label: valueLabel, target_label: targetLabel } = result;
   const tone = TONE[result.severity] ?? TONE.good;
   const left = pct(gauge.zone_min, gauge.scale_min, gauge.scale_max);
@@ -73,6 +73,7 @@ export default function MetricGauge({ result, compact = false }) {
         </p>
         {result.cue && <p className="text-sm text-ink mt-1.5 leading-relaxed">{result.cue}</p>}
       </div>
+      {children}
     </div>
   );
 }

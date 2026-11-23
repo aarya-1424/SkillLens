@@ -53,11 +53,11 @@ export default function SampleReport({ cta }) {
               <div className="space-y-2 text-sm">
                 <div className="p-3 rounded-xl bg-amber/10 border border-amber/30">
                   <div className="font-medium">Elbow straightens 18° in delivery</div>
-                  <div className="text-xs text-ink-soft mt-0.5">↳ Wall-hold delivery drill · 5 min</div>
+                  <div className="text-xs text-ink-soft mt-0.5">↳ Straight-arm wall bowling · 3 × 8</div>
                 </div>
                 <div className="p-3 rounded-xl bg-sand border border-line">
                   <div className="font-medium">Front knee collapses to 142°</div>
-                  <div className="text-xs text-ink-soft mt-0.5">↳ Single-leg landings · 3 × 8</div>
+                  <div className="text-xs text-ink-soft mt-0.5">↳ Front-leg brace and hold · 3 × 6</div>
                 </div>
               </div>
             </div>

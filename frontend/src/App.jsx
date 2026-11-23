@@ -15,6 +15,7 @@ import ReportDetail from './pages/ReportDetail';
 import Progress from './pages/Progress';
 import Coach from './pages/Coach';
 import PrivacyCenter from './pages/PrivacyCenter';
+import Plan from './pages/Plan';
 
 // Heavy (charts, PDF, video) — only loaded when someone starts an analysis.
 const Analyze = lazy(() => import('./pages/Analyze'));
@@ -57,6 +58,7 @@ export default function App() {
         <Route path="reports" element={<Reports />} />
         <Route path="reports/:id" element={<ReportDetail />} />
         <Route path="progress" element={<Progress />} />
+        <Route path="plan" element={<Plan />} />
         <Route path="coach" element={<Coach />} />
         <Route path="privacy" element={<PrivacyCenter />} />
         <Route path="analyze" element={<Suspense fallback={<Spinner />}><Analyze /></Suspense>} />

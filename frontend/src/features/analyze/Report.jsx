@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import MetricGauge from '../../components/MetricGauge';
+import { DrillList } from '../../components/DrillCard';
 import SkeletonVideo from '../../components/SkeletonVideo';
 import AskCoach from '../../components/AskCoach';
 import ProgressChart from '../../components/ProgressChart';
@@ -197,7 +198,7 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
         <div className="grid md:grid-cols-2 gap-3">
           {visible.map((r) => (
             <div key={r.id}>
-              <MetricGauge result={r} />
+              <MetricGauge result={r}><DrillList drills={r.drills} /></MetricGauge>
               <button onClick={() => showMoment(r.id)}
                 className="mt-2 ml-4 text-xs font-semibold text-brand hover:text-brand-deep no-print">
                 See this moment in your video →

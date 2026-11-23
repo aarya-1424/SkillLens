@@ -11,8 +11,9 @@ const SECTIONS = [
   { to: '/app', label: 'Dashboard', short: 'Home', end: true, icon: 'M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z' },
   { to: '/app/reports', label: 'Reports', short: 'Reports', icon: 'M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6' },
   { to: '/app/analyze', label: 'New analysis', short: 'Analyse', primary: true, icon: 'M12 5v14M5 12h14' },
+  { to: '/app/plan', label: 'Plan', short: 'Plan', icon: 'M5 4h14v16H5zM9 2v4M15 2v4M5 9h14M9 13h2M13 13h2M9 16h2' },
   { to: '/app/progress', label: 'Progress', short: 'Progress', icon: 'M4 19l5-6 4 3 7-9M15 7h5v5' },
-  { to: '/app/coach', label: 'Ask Coach', short: 'Coach', icon: 'M5 5h14v10H9l-4 4z' },
+  { to: '/app/coach', label: 'Ask Coach', short: 'Coach', desktopOnly: true, icon: 'M5 5h14v10H9l-4 4z' },
 ];
 
 const Icon = ({ d, className = 'w-5 h-5' }) => (
@@ -63,6 +64,7 @@ function AccountMenu({ onSignOut }) {
           </div>
           <div className="h-px bg-line my-1" />
           <Link role="menuitem" to="/app/setup" className={item}>{profile ? 'Edit profile' : 'Set up profile'}</Link>
+          <Link role="menuitem" to="/app/coach" className={`${item} lg:hidden`}>Ask Coach</Link>
           <Link role="menuitem" to="/app/privacy" className={item}>Privacy &amp; data</Link>
           <div className="h-px bg-line my-1" />
           <Link role="menuitem" to="/terms" className={item}>Terms of Service</Link>
@@ -158,7 +160,7 @@ export default function AppLayout() {
       {/* Phones and tablets: the sections live at the bottom, in thumb reach */}
       <nav className="no-print lg:hidden fixed bottom-3 inset-x-3 z-30" aria-label="Main">
         <div className="flex items-end justify-around rounded-[1.75rem] bg-paper/95 backdrop-blur border border-line shadow-[0_12px_40px_-18px_rgba(0,0,0,0.45)] px-2 py-2">
-          {SECTIONS.map((s) => (
+          {SECTIONS.filter((s) => !s.desktopOnly).map((s) => (
             <NavLink key={s.to} to={s.to} end={s.end}
               className={({ isActive }) => (s.primary
                 ? 'flex flex-col items-center -mt-6'

@@ -99,9 +99,11 @@ class MetricResultOut(BaseModel):
     headline: str
     cue: str
     gauge: GaugeOut
+    drills: list[dict] = []
 
     @classmethod
     def of(cls, r: MetricResult) -> "MetricResultOut":
+        from app.drills.library import as_dict, for_check
         from app.scoring.engine import fmt
 
         m, g = r.metric, r.guidance
@@ -113,6 +115,7 @@ class MetricResultOut(BaseModel):
             score=r.score, severity=r.severity, status=g.status, direction=g.direction,
             amount=g.amount, size=g.size, headline=g.headline, cue=g.cue,
             gauge=GaugeOut(**g.gauge.__dict__),
+            drills=[as_dict(d) for d in for_check(m.id, g.status)],
         )
 
 

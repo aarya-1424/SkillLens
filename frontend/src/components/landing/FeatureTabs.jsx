@@ -57,7 +57,7 @@ function SampleMistakes() {
         </div>
         <p className="text-xs text-ink-soft mt-1">Legal limit is 15°. Work on keeping the arm fixed from horizontal to release.</p>
         <div className="flex flex-wrap gap-1.5 mt-2">
-          {['Wall-hold delivery drill', 'Towel-under-arm bowling'].map((d) => (
+          {['Straight-arm wall bowling', 'Towel whip'].map((d) => (
             <span key={d} className="text-[11px] px-2 py-0.5 rounded-full bg-paper border border-line">↳ {d}</span>
           ))}
         </div>
@@ -90,7 +90,7 @@ function SampleInjury() {
 }
 
 function SamplePlan() {
-  const days = [['Mon', 'Bowling drills · 60 min'], ['Tue', 'Legs & core strength'], ['Wed', 'Agility & sprints'], ['Thu', 'Match simulation'], ['Fri', 'Shoulder stability'], ['Sat', 'Easy session'], ['Sun', 'Rest & stretching']];
+  const days = [['Mon', 'Technique · 45 min'], ['Tue', 'Strength and body care'], ['Wed', 'Rest day'], ['Thu', 'Technique · 45 min'], ['Fri', 'Rest day'], ['Sat', 'Practise, then film again'], ['Sun', 'Rest day']];
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 text-sm">
       {days.map(([d, t]) => (

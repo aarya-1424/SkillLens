@@ -33,7 +33,7 @@ export const FEATURES = [
     key: 'plan',
     tab: 'Training plan',
     title: 'A week built around you.',
-    body: 'A seven-day plan and diet tips based on your sport, level, age, body and the mistakes we found. It changes as your scores change.',
+    body: 'A seven-day plan built from the mistakes we found and your sport, level, training days and body, with rest days built in. It goes easy on anything that hurts, and changes every time you film again.',
     sample: { kind: 'plan' },
   },
   {

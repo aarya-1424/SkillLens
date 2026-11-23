@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import AskCoach from '../components/AskCoach';
+import { DrillList } from '../components/DrillCard';
 import { ConfirmButton, LABEL, RiskChip, ScoreRing, scoreColour, shortDate } from '../components/Bits';
 import { SPORTS } from '../data/landing';
 import { deleteAnalysis, getAnalysis, getSummary } from '../services/history';
@@ -32,6 +33,7 @@ function SavedCheck({ r }) {
         <p className="text-sm font-semibold flex gap-1.5"><span aria-hidden="true">{arrow}</span>{r.headline}</p>
         {r.cue && <p className="text-sm mt-1.5 leading-relaxed">{r.cue}</p>}
       </div>
+      <DrillList drills={r.drills} />
     </div>
   );
 }
