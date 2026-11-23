@@ -4,7 +4,8 @@
 import { supabase, supabaseConfigured } from './supabaseClient';
 
 const GUEST_KEY = 'skilllens.guest';
-export const guestAllowed = import.meta.env.VITE_ALLOW_GUEST === '1';
+// The tour (no sign-in) is on unless VITE_ALLOW_GUEST is set to 0.
+export const guestAllowed = import.meta.env.VITE_ALLOW_GUEST !== '0';
 
 export { supabaseConfigured };
 

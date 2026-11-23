@@ -107,7 +107,7 @@ export const PRIVACY = {
           'Your privacy log (what you asked and what we did) is kept as proof that we kept our promises. When your account is erased it is made anonymous: it no longer links to you and any text you wrote is removed.',
           'Ask Coach answers are also kept in a shared answer store so the same question costs nothing twice. It holds the answer and a fingerprint of the question, not who asked.',
           'Server logs are kept by our hosting providers for a limited time under their own policies.',
-          'Demo mode keeps your answers only in your own browser. They are removed when you leave demo mode or clear your browser data.',
+          'The tour (no sign-in) keeps your answers only in your own browser. They are removed when you leave the tour or clear your browser data.',
         ] },
       ],
     },
@@ -148,7 +148,7 @@ export const PRIVACY = {
     {
       id: 'storage', title: '10. Cookies and browser storage',
       body: [
-        'We use no advertising or analytics cookies. The App uses your browser\'s storage only to keep you signed in, to remember demo mode, and to keep your unfinished setup answers until you finish. Because nothing optional is stored, there is nothing to switch on or off.',
+        'We use no advertising or analytics cookies. The App uses your browser\'s storage only to keep you signed in, to remember that you are taking the tour, and to keep your unfinished setup answers until you finish. Because nothing optional is stored, there is nothing to switch on or off.',
       ],
     },
     { id: 'grievance', title: '11. Grievance Officer', grievance: true },
@@ -199,7 +199,7 @@ export const TERMS = {
     {
       id: 'accounts', title: '4. Your account',
       body: [
-        `You sign in with your Google account. Keep that account secure: you are responsible for what happens under your SkillLens account. Tell us straight away through ${CONTACT} if you think someone else has used it. Demo mode needs no account; anything you enter there stays in your own browser.`,
+        `You sign in with your Google account. Keep that account secure: you are responsible for what happens under your SkillLens account. Tell us straight away through ${CONTACT} if you think someone else has used it. The tour needs no account; anything you enter there stays in your own browser.`,
       ],
     },
     {

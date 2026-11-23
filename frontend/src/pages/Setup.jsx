@@ -511,7 +511,7 @@ export default function Setup() {
               )}
 
               {guest && (
-                <p className="mt-4 text-xs text-ink-soft">Demo mode: your answers are kept in this browser only.</p>
+                <p className="mt-4 text-xs text-ink-soft">Tour: your answers are kept in this browser only.</p>
               )}
               {saveError && (
                 <div className="mt-4 px-5 py-3 rounded-3xl bg-alert/10 border border-alert/30 text-red-800 text-sm">{saveError}</div>

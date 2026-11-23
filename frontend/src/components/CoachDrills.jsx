@@ -10,7 +10,6 @@ export default function CoachDrills() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    if (guest) return;
     myAssignments().then(setItems).catch(() => {});
   }, [guest]);
 

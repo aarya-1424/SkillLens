@@ -7,6 +7,7 @@ import { ConfirmButton, LABEL, RiskChip, ScoreRing, scoreColour, shortDate } fro
 import { SPORTS } from '../data/landing';
 import { deleteAnalysis, getAnalysis, getSummary, listAnalyses } from '../services/history';
 import { getPlayerReport } from '../services/teams';
+import { isGuest } from '../services/auth';
 
 const SEVERITY_TONE = {
   none: 'bg-mint/10 border-mint/30',
@@ -64,7 +65,8 @@ export default function ReportDetail() {
   const writeSummary = async () => {
     setSummary({ text: null, state: 'loading' });
     const res = await getSummary(id).catch(() => null);
-    if (res?.ai_paused) setSummary({ text: null, state: 'paused' });
+    if (res?.tour) setSummary({ text: null, state: 'tour' });
+    else if (res?.ai_paused) setSummary({ text: null, state: 'paused' });
     else if (res?.summary) setSummary({ text: res.summary, state: 'done' });
     else setSummary({ text: null, state: 'unavailable' });
   };
@@ -175,6 +177,7 @@ export default function ReportDetail() {
           </button>
         )}
         {summary.state === 'loading' && <p className="text-ink-soft">Writing…</p>}
+        {summary.state === 'tour' && <p className="text-sm">With an account, a short coach's summary written by AI appears here, fitted to your level and goal.</p>}
         {summary.state === 'paused' && (
           <p className="text-sm">AI features are off in <Link to="/app/privacy" className="font-semibold underline">Privacy &amp; data</Link>, so no summary was written.</p>
         )}
@@ -220,8 +223,10 @@ export default function ReportDetail() {
 
       {!coachView && <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-[1.75rem] bg-paper border border-line text-sm no-print">
         <span className="text-ink-soft">Your video was never stored, so this page shows the measurements taken from it.</span>
-        <ConfirmButton label="Delete this report" question="Delete this report and its Ask Coach messages for good?"
-          onConfirm={async () => { await deleteAnalysis(report.id); navigate('/app/reports', { replace: true }); }} />
+        {!isGuest() && (
+          <ConfirmButton label="Delete this report" question="Delete this report and its Ask Coach messages for good?"
+            onConfirm={async () => { await deleteAnalysis(report.id); navigate('/app/reports', { replace: true }); }} />
+        )}
       </div>}
     </main>
   );

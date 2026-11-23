@@ -7,6 +7,7 @@ import { signOut } from '../services/auth';
 import { clearGuestProfile } from '../services/profile';
 import { cancelAccountDeletion, getPrivacyStatus } from '../services/privacy';
 import GuardianBanner from '../components/GuardianBanner';
+import { TourBanner } from '../components/Tour';
 
 const SECTIONS = [
   { to: '/app', label: 'Dashboard', short: 'Home', end: true, icon: 'M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z' },
@@ -61,7 +62,7 @@ function AccountMenu({ onSignOut }) {
         <div role="menu" className="absolute right-0 mt-2 w-64 p-2 rounded-3xl glass-strong shadow-[0_24px_60px_-24px_rgba(0,0,0,0.45)]">
           <div className="px-4 py-3">
             <p className="font-semibold truncate">{name}</p>
-            <p className="text-xs text-ink-soft truncate">{guest ? 'Demo mode' : user?.email}</p>
+            <p className="text-xs text-ink-soft truncate">{guest ? 'Tour: example account' : user?.email}</p>
           </div>
           <div className="h-px bg-line my-1" />
           <Link role="menuitem" to="/app/setup" className={item}>{profile ? 'Edit profile' : 'Set up profile'}</Link>
@@ -73,7 +74,7 @@ function AccountMenu({ onSignOut }) {
           <Link role="menuitem" to="/privacy" className={item}>Privacy Policy</Link>
           <div className="h-px bg-line my-1" />
           <button role="menuitem" type="button" onClick={onSignOut} className={`${item} text-red-700`}>
-            {guest ? 'Leave demo' : 'Sign out'}
+            {guest ? 'Leave the tour' : 'Sign out'}
           </button>
         </div>
       )}
@@ -147,12 +148,13 @@ export default function AppLayout() {
             ))}
           </nav>
           <div className="flex items-center gap-2">
-            {guest && <span className="hidden sm:inline text-xs font-semibold px-3 py-1 rounded-full bg-amber/20 text-amber-800">Demo mode</span>}
+            {guest && <span className="hidden sm:inline text-xs font-semibold px-3 py-1 rounded-full bg-amber/20 text-amber-800">Tour</span>}
             <AccountMenu onSignOut={handleSignOut} />
           </div>
         </div>
       </header>
 
+      <TourBanner />
       <DeletionBanner />
       <GuardianBanner />
 

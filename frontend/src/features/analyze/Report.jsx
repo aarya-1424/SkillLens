@@ -188,7 +188,9 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
       )}
       {saved && (
         <p className="mb-3 text-sm text-ink-soft no-print">
-          Saved to <Link to={`/app/reports/${saved.id}`} className="font-semibold underline text-ink">My reports</Link>.
+          {saved.visit_only
+            ? <>Added to <Link to={`/app/reports/${saved.id}`} className="font-semibold underline text-ink">My reports</Link> for this visit only. Nothing is saved; sign in to keep your reports.</>
+            : <>Saved to <Link to={`/app/reports/${saved.id}`} className="font-semibold underline text-ink">My reports</Link>.</>}
         </p>
       )}
 

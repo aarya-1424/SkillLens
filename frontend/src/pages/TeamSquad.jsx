@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ConfirmButton, LABEL, RiskChip, scoreColour, shortDate } from '../components/Bits';
 import { SPORTS } from '../data/landing';
+import { useAuth } from '../context/AuthContext';
 import {
   assignDrill, closeTeam, getSquad, inviteLink, listDrills, newInviteCode, removeAssignment, teamAssignments,
 } from '../services/teams';
@@ -11,6 +12,7 @@ const daysAgo = (iso) => (iso ? Math.floor((Date.now() - new Date(iso)) / 86_400
 /** A coach's view of one team. */
 export default function TeamSquad() {
   const { teamId } = useParams();
+  const { guest } = useAuth();
   const navigate = useNavigate();
   const [team, setTeam] = useState(null);
   const [tasks, setTasks] = useState([]);
@@ -24,7 +26,7 @@ export default function TeamSquad() {
     .then(([t, a]) => { setTeam(t); setTasks(a); })
     .catch((err) => setError(err.status === 404 ? 'Team not found.' : 'Could not load the team just now.')), [teamId]);
 
-  useEffect(() => { load(); listDrills().then(setDrills).catch(() => {}); }, [load]);
+  useEffect(() => { load(); if (!guest) listDrills().then(setDrills).catch(() => {}); }, [load, guest]);
 
   const sport = SPORTS.find((s) => s.slug === team?.sport_slug);
   const drillOptions = useMemo(() => {
@@ -93,9 +95,11 @@ export default function TeamSquad() {
           <p className="text-xs text-ink-soft mt-1 break-all">{link}</p>
           <div className="flex flex-wrap gap-2 mt-4">
             <button type="button" onClick={copy} className="px-4 py-2 rounded-full bg-ink text-white text-[13px] font-semibold">{copied ? 'Copied' : 'Copy invite link'}</button>
-            <ConfirmButton label="New code" question="Old code stops working. Sure?" confirmLabel="Make new code"
-              className="px-4 py-2 rounded-full border border-line text-[13px] font-semibold"
-              onConfirm={async () => { await newInviteCode(teamId); await load(); }} />
+            {!guest && (
+              <ConfirmButton label="New code" question="Old code stops working. Sure?" confirmLabel="Make new code"
+                className="px-4 py-2 rounded-full border border-line text-[13px] font-semibold"
+                onConfirm={async () => { await newInviteCode(teamId); await load(); }} />
+            )}
           </div>
           <p className="text-xs text-ink-soft mt-3">Players see exactly what you can see before they agree to join.</p>
         </section>
@@ -144,6 +148,9 @@ export default function TeamSquad() {
       <div className="grid lg:grid-cols-2 gap-3 mb-3">
         <section className="p-7 sm:p-8 rounded-[2rem] bg-sand">
           <p className="eyebrow mb-2">Set a drill</p>
+          {guest ? (
+            <p className="text-sm text-ink-soft">A coach picks a drill from the library of 57, chooses one player or the whole team, adds a note and a due date. The player sees it on their dashboard and ticks it off. In the tour this is look-only.</p>
+          ) : (
           <form onSubmit={send} className="space-y-2">
             <select required value={form.drill_id} onChange={(e) => setForm({ ...form, drill_id: e.target.value })} aria-label="Drill"
               className="w-full px-4 py-3 rounded-2xl border border-line bg-paper text-sm">
@@ -165,6 +172,7 @@ export default function TeamSquad() {
                 className="px-6 py-3 rounded-full bg-ink text-white text-sm font-semibold disabled:opacity-40">Set drill</button>
             </div>
           </form>
+          )}
         </section>
         <section className="p-7 sm:p-8 rounded-[2rem] bg-paper border border-line">
           <p className="eyebrow mb-2">Drills set</p>
@@ -179,18 +187,20 @@ export default function TeamSquad() {
                   </span>
                   {t.note && <span className="block text-xs mt-0.5">“{t.note}”</span>}
                 </span>
-                <ConfirmButton label="Remove" question="Remove?" confirmLabel="Yes"
-                  onConfirm={async () => { await removeAssignment(teamId, t.id); await load(); }} />
+                {!guest && (
+                  <ConfirmButton label="Remove" question="Remove?" confirmLabel="Yes"
+                    onConfirm={async () => { await removeAssignment(teamId, t.id); await load(); }} />
+                )}
               </li>
             ))}
           </ul>
         </section>
       </div>
 
-      <div className="flex justify-end">
+      {!guest && <div className="flex justify-end">
         <ConfirmButton label="Close this team" question="Close it? Players stop sharing with you." confirmLabel="Yes, close"
           onConfirm={async () => { await closeTeam(teamId); navigate('/app/teams', { replace: true }); }} />
-      </div>
+      </div>}
     </main>
   );
 }

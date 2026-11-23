@@ -8,6 +8,7 @@ import SampleReport from '../components/landing/SampleReport';
 import Faq from '../components/landing/Faq';
 import { STATS, STEPS, JOURNEY, TRUST } from '../data/landing';
 import { useAuth } from '../context/AuthContext';
+import { TourButton } from '../components/Tour';
 
 const NAV = [
   ['How it works', '#how'],
@@ -79,6 +80,11 @@ export default function Landing() {
               <Link to={cta} className="flex items-center justify-center gap-2 w-full px-6 py-4 rounded-full bg-brand text-white font-semibold hover:bg-brand-deep transition shadow-xl shadow-brand/30">
                 Analyse my technique <span aria-hidden="true">→</span>
               </Link>
+              {!signedIn && (
+                <TourButton className="mt-2 flex items-center justify-center w-full px-6 py-3.5 rounded-full border border-white/25 text-white font-semibold hover:bg-white/10 transition">
+                  Take the tour, no sign-in
+                </TourButton>
+              )}
               <p className="mt-3 text-xs text-white/50 text-center">No sensors. Nothing to install. Just your camera.</p>
             </div>
           </div>
@@ -248,9 +254,16 @@ export default function Landing() {
           <div className="pointer-events-none absolute -top-24 -right-24 w-96 h-96 rounded-full bg-white/10 blur-2xl" />
           <h2 className="relative font-display text-3xl sm:text-5xl max-w-3xl mx-auto">Ready to see your game clearly?</h2>
           <p className="relative mt-5 text-white/85 text-lg">Your first report takes less than a minute.</p>
-          <Link to={cta} className="relative inline-block mt-9 px-8 py-4 rounded-full bg-stage text-white font-semibold hover:bg-ink transition">
-            Try it free →
-          </Link>
+          <div className="relative mt-9 flex flex-wrap justify-center gap-3">
+            <Link to={cta} className="inline-block px-8 py-4 rounded-full bg-stage text-white font-semibold hover:bg-ink transition">
+              Try it free →
+            </Link>
+            {!signedIn && (
+              <TourButton className="inline-block px-8 py-4 rounded-full border border-white/40 text-white font-semibold hover:bg-white/10 transition">
+                Take the tour
+              </TourButton>
+            )}
+          </div>
         </div>
       </section>
 

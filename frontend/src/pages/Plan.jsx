@@ -4,7 +4,7 @@ import DrillCard from '../components/DrillCard';
 import CoachDrills from '../components/CoachDrills';
 import { EmptyState, LABEL, PageHeader, shortDate } from '../components/Bits';
 import { useAuth } from '../context/AuthContext';
-import { get } from '../services/api';
+import { getPlan } from '../services/history';
 
 const KIND_LOOK = {
   technique: 'bg-stage text-white stage-grid',
@@ -21,21 +21,11 @@ export default function Plan() {
   const [openDay, setOpenDay] = useState(0);
 
   useEffect(() => {
-    if (guest) return;
-    get('/me/plan').then(setPlan).catch((err) => {
+    getPlan().then(setPlan).catch((err) => {
       if (err.status === 404) setPlan(null);
       else setError('Could not build your plan just now. The server may be waking up; try again in a minute.');
     });
   }, [guest]);
-
-  if (guest) {
-    return (
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <PageHeader eyebrow="Training plan" title={<>Your <em>week</em></>} />
-        <EmptyState title="Plans need an account" text="Sign in with Google: your plan is built from your saved reports and your setup answers." to="/login" cta="Sign in" />
-      </main>
-    );
-  }
 
   return (
     <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">

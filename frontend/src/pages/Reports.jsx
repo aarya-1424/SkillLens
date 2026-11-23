@@ -38,7 +38,7 @@ export default function Reports() {
     <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <PageHeader eyebrow="My reports" title={<>Every <em>analysis</em></>}
         action={<Link to="/app/analyze" className="px-6 py-3 rounded-full bg-brand text-white font-semibold hover:bg-brand-deep transition shadow-lg shadow-brand/25 text-center">New analysis</Link>}>
-        {rows?.length ? `${rows.length} saved report${rows.length === 1 ? '' : 's'}. Open one to see every check, or delete any you no longer want.` : 'Your saved reports live here.'}
+        {rows?.length ? `${rows.length} saved report${rows.length === 1 ? '' : 's'}. Open one to see every check${guest ? ', or press Compare to put two side by side.' : ', or delete any you no longer want.'}` : 'Your saved reports live here.'}
       </PageHeader>
 
       {error && <div className="mb-3 px-5 py-3 rounded-3xl bg-alert/10 border border-alert/30 text-red-800 text-sm">{error}</div>}
@@ -47,7 +47,7 @@ export default function Reports() {
 
       {rows?.length === 0 && (
         guest
-          ? <EmptyState title="Demo mode doesn't save reports" text="Sign in with Google to keep your reports and see your progress over time." to="/login" cta="Sign in" />
+          ? <EmptyState title="The tour does not save reports" text="Sign in with Google to keep your reports and see your progress over time." to="/login" cta="Sign in" />
           : <EmptyState title="No reports yet" text="Record or upload a short video and your first report will be saved here." />
       )}
 
@@ -99,7 +99,7 @@ export default function Reports() {
                   {picked.includes(r.id) ? 'Picked' : 'Compare'}
                 </button>
                 <Link to={`/app/reports/${r.id}`} className="px-4 py-2 rounded-full border border-line text-[13px] font-semibold hover:border-ink/40 transition">Open</Link>
-                <ConfirmButton label="Delete" question="Delete for good?" onConfirm={() => remove(r.id)} />
+                {!guest && <ConfirmButton label="Delete" question="Delete for good?" onConfirm={() => remove(r.id)} />}
               </div>
             </div>
           );

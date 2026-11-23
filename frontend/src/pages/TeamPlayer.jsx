@@ -3,10 +3,12 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import ProgressChart from '../components/ProgressChart';
 import { ConfirmButton, LABEL, RiskChip, scoreColour, shortDate } from '../components/Bits';
 import { getPlayer, removePlayer } from '../services/teams';
+import { useAuth } from '../context/AuthContext';
 
 /** A coach's view of one player: who they are, how they're trending, every report. */
 export default function TeamPlayer() {
   const { teamId, athleteId } = useParams();
+  const { guest } = useAuth();
   const navigate = useNavigate();
   const [p, setP] = useState(null);
   const [error, setError] = useState('');
@@ -85,10 +87,10 @@ export default function TeamPlayer() {
         </div>
       </section>
 
-      <div className="flex justify-end">
+      {!guest && <div className="flex justify-end">
         <ConfirmButton label="Remove from team" question={`Remove ${p.name}? You stop seeing their reports.`} confirmLabel="Remove"
           onConfirm={async () => { await removePlayer(teamId, athleteId); navigate(`/app/teams/${teamId}`, { replace: true }); }} />
-      </div>
+      </div>}
     </main>
   );
 }

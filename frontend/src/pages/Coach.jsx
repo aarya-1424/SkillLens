@@ -37,7 +37,7 @@ export default function Coach() {
             <p className="font-semibold mb-1">Good to know</p>
             <p className="text-ink-soft">
               {guest
-                ? 'Ask Coach needs a signed-in account, because answers are saved to your history.'
+                ? 'In the tour, Ask Coach is switched off: it uses AI and saves answers, so it needs an account. Sign in to ask your own questions.'
                 : <>For questions about one report, open it from <Link to="/app/reports" className="font-semibold underline text-ink">My reports</Link>: the coach then knows your numbers.</>}
             </p>
             <p className="text-ink-soft mt-2">

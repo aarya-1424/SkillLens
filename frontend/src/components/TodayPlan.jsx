@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../context/ProfileContext';
-import { get } from '../services/api';
+import { getPlan } from '../services/history';
 
 /** "Today: Technique, 45 min" on the dashboard, linking to the full week. */
 export default function TodayPlan({ reloadKey }) {
@@ -11,9 +11,9 @@ export default function TodayPlan({ reloadKey }) {
   const [today, setToday] = useState(null);
 
   useEffect(() => {
-    if (guest || !profile) return undefined;
+    if (!profile) return undefined;
     let alive = true;
-    get('/me/plan').then((p) => alive && setToday(p.days[0])).catch(() => {});
+    getPlan().then((p) => alive && setToday(p.days[0])).catch(() => {});
     return () => { alive = false; };
   }, [guest, profile, reloadKey]);
 
