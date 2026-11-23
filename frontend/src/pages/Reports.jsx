@@ -78,6 +78,7 @@ export default function Reports() {
                 </span>
               </Link>
               <div className="flex items-center gap-2 sm:justify-end flex-wrap">
+                {r.is_sample && <span className="shrink-0 text-[11px] font-semibold px-3 py-1 rounded-full bg-sand text-ink-soft" title="Made by the demo sample-data button, not from a real video">Sample</span>}
                 <RiskChip risk={r.injury_risk} />
                 <Link to={`/app/reports/${r.id}`} className="px-4 py-2 rounded-full border border-line text-[13px] font-semibold hover:border-ink/40 transition">Open</Link>
                 <ConfirmButton label="Delete" question="Delete for good?" onConfirm={() => remove(r.id)} />

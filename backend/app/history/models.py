@@ -131,6 +131,8 @@ class Analysis(Base):
     scoring_version: Mapped[str] = mapped_column(String(32))
     unverified: Mapped[bool] = mapped_column(Boolean, default=True)
     ai_summary: Mapped[str | None] = mapped_column(Text)
+    # Made by the demo "sample data" button, not from a real video. Shown as "Sample".
+    is_sample: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=_now, index=True)

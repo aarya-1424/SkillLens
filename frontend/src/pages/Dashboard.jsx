@@ -5,6 +5,7 @@ import { useProfile } from '../context/ProfileContext';
 import { AREAS, GOALS, LEVELS, labelOf } from '../data/profileQuestions';
 import { SPORTS } from '../data/landing';
 import ProgressChart from '../components/ProgressChart';
+import DemoTools from '../components/DemoTools';
 import { getProgress, getStats, listAnalyses } from '../services/history';
 
 const RISK_TONE = {
@@ -26,6 +27,7 @@ export default function Dashboard() {
   const [recent, setRecent] = useState([]);
   const [progress, setProgress] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     let alive = true;
@@ -41,7 +43,7 @@ export default function Dashboard() {
       setLoading(false);
     })();
     return () => { alive = false; };
-  }, []);
+  }, [reloadKey]);
 
   const hasHistory = Boolean(stats?.count);
   const latestSport = SPORTS.find((x) => x.slug === stats?.latest_movement);
@@ -141,6 +143,7 @@ export default function Dashboard() {
         </div>
       </div>
 
+      <DemoTools onChange={() => setReloadKey((k) => k + 1)} />
       <ProfileStrip profile={profile} guest={guest} />
 
       {/* Progress + recent reports */}
@@ -173,6 +176,7 @@ export default function Dashboard() {
                       <div className="font-semibold text-sm truncate">{a.sport} · {a.movement_name}</div>
                       <div className="text-xs text-ink-soft">{when(a.created_at)} · {a.measured} checks</div>
                     </div>
+                    {a.is_sample && <span className="shrink-0 text-[11px] font-semibold px-3 py-1 rounded-full bg-sand text-ink-soft" title="Made by the demo sample-data button, not from a real video">Sample</span>}
                     <span className={`shrink-0 text-[11px] font-semibold px-3 py-1 rounded-full ${RISK_TONE[a.injury_risk]}`}>
                       {a.injury_risk} risk
                     </span>
