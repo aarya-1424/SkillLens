@@ -26,6 +26,16 @@ class Settings(BaseSettings):
     # Comma-separated emails allowed to load sample history for demos.
     DEMO_EMAILS: str | None = None
 
+    # Email (parent confirmations). Either Resend, or a normal mail account over SMTP.
+    EMAIL_FROM: str | None = None          # e.g. "SkillLens <hello@yourdomain.com>"
+    RESEND_API_KEY: str | None = None
+    SMTP_HOST: str | None = None
+    SMTP_PORT: int = 587
+    SMTP_USER: str | None = None
+    SMTP_PASSWORD: str | None = None
+    # Where links in emails point.
+    FRONTEND_URL: str = "https://skill-lens-nu.vercel.app"
+
     # Postgres connection (Supabase). Must start with postgresql+psycopg://
     DATABASE_URL: str | None = None
 

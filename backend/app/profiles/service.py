@@ -9,6 +9,7 @@ from app.core.auth import CurrentUser
 from app.history.models import AthleteProfile
 from app.history.service import ensure_profile
 from app.movements import library
+from app.guardian import service as guardian
 from app.privacy import service as privacy
 from app.profiles.schemas import ADULT_AGE, TERMS_VERSION, ProfileIn, ProfileOut, age_on
 
@@ -40,6 +41,7 @@ def save(db: Session, user: CurrentUser, body: ProfileIn) -> AthleteProfile:
         row = AthleteProfile(user_id=user.id)
         db.add(row)
 
+    previous_guardian_email = None if first_time else row.guardian_email
     data = body.model_dump(exclude={"accept_terms", "guardian_consent"})
     for field, value in data.items():
         setattr(row, field, value)
@@ -54,6 +56,7 @@ def save(db: Session, user: CurrentUser, body: ProfileIn) -> AthleteProfile:
     else:
         row.guardian_consent_at = None
 
+    guardian.after_profile_save(db, row, previous_guardian_email)
     db.commit()
     db.refresh(row)
     return row
@@ -63,8 +66,10 @@ def to_out(row: AthleteProfile) -> ProfileOut:
     age = age_on(date.today(), row.birth_year, row.birth_month)
     bmi = round(row.weight_kg / ((row.height_cm / 100) ** 2), 1)
     stored = {name: getattr(row, name) for name in ProfileOut.model_fields
-              if name not in {"age", "is_minor", "bmi"}}
-    return ProfileOut(**stored, age=age, is_minor=age < ADULT_AGE, bmi=bmi)
+              if name not in {"age", "is_minor", "bmi", "guardian_email_hint", "guardian_email_sent"}}
+    return ProfileOut(**stored, age=age, is_minor=age < ADULT_AGE, bmi=bmi,
+                      guardian_email_hint=guardian.mask(row.guardian_email),
+                      guardian_email_sent=row.guardian_email_sent_at is not None)
 
 
 def age_band(age: int) -> str:

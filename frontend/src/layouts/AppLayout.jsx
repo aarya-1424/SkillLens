@@ -6,6 +6,7 @@ import { useProfile } from '../context/ProfileContext';
 import { signOut } from '../services/auth';
 import { clearGuestProfile } from '../services/profile';
 import { cancelAccountDeletion, getPrivacyStatus } from '../services/privacy';
+import GuardianBanner from '../components/GuardianBanner';
 
 const SECTIONS = [
   { to: '/app', label: 'Dashboard', short: 'Home', end: true, icon: 'M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z' },
@@ -65,6 +66,7 @@ function AccountMenu({ onSignOut }) {
           <div className="h-px bg-line my-1" />
           <Link role="menuitem" to="/app/setup" className={item}>{profile ? 'Edit profile' : 'Set up profile'}</Link>
           <Link role="menuitem" to="/app/coach" className={`${item} lg:hidden`}>Ask Coach</Link>
+          <Link role="menuitem" to="/app/teams" className={item}>Teams &amp; coaching</Link>
           <Link role="menuitem" to="/app/privacy" className={item}>Privacy &amp; data</Link>
           <div className="h-px bg-line my-1" />
           <Link role="menuitem" to="/terms" className={item}>Terms of Service</Link>
@@ -152,6 +154,7 @@ export default function AppLayout() {
       </header>
 
       <DeletionBanner />
+      <GuardianBanner />
 
       <div className="pt-6 pb-28 lg:pb-10">
         <Outlet />

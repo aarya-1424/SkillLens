@@ -3,7 +3,8 @@ frontend/src/data/legal.js together, and bump POLICY_VERSION so everyone is
 asked to agree again."""
 
 # Shown on /terms and /privacy, stored with every consent.
-POLICY_VERSION = "2026-11"
+# 2026-11-24: added sharing with coaches (Privacy Policy s.5 and s.8).
+POLICY_VERSION = "2026-11-24"
 
 # Privacy Policy s.6: a deleted account can be restored for this many days.
 DELETION_GRACE_DAYS = 30
@@ -31,4 +32,8 @@ ACTION_KINDS = {
     "delete_requested": "Asked for my account to be deleted",
     "delete_cancelled": "Cancelled account deletion",
     "erased": "Account erased",
+    "team_joined": "Joined a team and shared my reports with its coach",
+    "team_left": "Left a team; the coach can no longer see my reports",
+    "guardian_confirmed": "My parent or guardian confirmed by email",
+    "guardian_declined": "My parent or guardian did not agree",
 }

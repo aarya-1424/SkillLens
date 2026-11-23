@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import DrillCard from '../components/DrillCard';
+import CoachDrills from '../components/CoachDrills';
 import { EmptyState, LABEL, PageHeader, shortDate } from '../components/Bits';
 import { useAuth } from '../context/AuthContext';
 import { get } from '../services/api';
@@ -48,6 +49,8 @@ export default function Plan() {
           ? <>Seven days built from {plan.based_on_report ? <>your {plan.movement?.toLowerCase()} report of {shortDate(plan.based_on_report)}</> : 'your setup answers'} and what you told us about your body and goals. Film again at the end of the week and the plan updates itself.</>
           : 'Built from your latest report and your setup answers.'}
       </PageHeader>
+
+      <CoachDrills />
 
       {error && <div className="mb-3 px-5 py-3 rounded-3xl bg-alert/10 border border-alert/30 text-red-800 text-sm">{error}</div>}
       {plan === undefined && !error && <p className="text-ink-soft">Building your plan…</p>}

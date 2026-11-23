@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { SPORTS } from '../data/landing';
 import { deleteAnalysis, listAnalyses } from '../services/history';
@@ -11,6 +11,8 @@ export default function Reports() {
   const [rows, setRows] = useState(null);
   const [filter, setFilter] = useState('all');
   const [error, setError] = useState('');
+  const [picked, setPicked] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let alive = true;
@@ -60,6 +62,17 @@ export default function Reports() {
         </div>
       )}
 
+      {picked.length > 0 && (
+        <div className="sticky top-24 z-20 mb-3 flex flex-wrap items-center justify-between gap-3 px-5 py-3 rounded-full bg-ink text-white">
+          <span className="text-sm">{picked.length === 1 ? 'Pick one more report to compare' : 'Two reports picked'}</span>
+          <span className="flex gap-2">
+            <button type="button" onClick={() => setPicked([])} className="px-4 py-2 rounded-full border border-white/30 text-[13px] font-semibold">Clear</button>
+            <button type="button" disabled={picked.length < 2} onClick={() => navigate(`/app/compare?a=${picked[0]}&b=${picked[1]}`)}
+              className="px-4 py-2 rounded-full bg-brand text-[13px] font-semibold disabled:opacity-40">Compare</button>
+          </span>
+        </div>
+      )}
+
       <div className="space-y-2">
         {shown.map((r) => {
           const sport = SPORTS.find((s) => s.slug === r.movement_slug);
@@ -80,6 +93,11 @@ export default function Reports() {
               <div className="flex items-center gap-2 sm:justify-end flex-wrap">
                 {r.is_sample && <span className="shrink-0 text-[11px] font-semibold px-3 py-1 rounded-full bg-sand text-ink-soft" title="Made by the demo sample-data button, not from a real video">Sample</span>}
                 <RiskChip risk={r.injury_risk} />
+                <button type="button" aria-pressed={picked.includes(r.id)}
+                  onClick={() => setPicked((p) => (p.includes(r.id) ? p.filter((x) => x !== r.id) : [...p.slice(-1), r.id]))}
+                  className={`px-4 py-2 rounded-full border text-[13px] font-semibold transition ${picked.includes(r.id) ? 'bg-ink text-white border-ink' : 'border-line hover:border-ink/40'}`}>
+                  {picked.includes(r.id) ? 'Picked' : 'Compare'}
+                </button>
                 <Link to={`/app/reports/${r.id}`} className="px-4 py-2 rounded-full border border-line text-[13px] font-semibold hover:border-ink/40 transition">Open</Link>
                 <ConfirmButton label="Delete" question="Delete for good?" onConfirm={() => remove(r.id)} />
               </div>

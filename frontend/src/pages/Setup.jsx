@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../context/ProfileContext';
@@ -164,6 +164,7 @@ export default function Setup() {
   const { displayName, guest } = useAuth();
   const { profile, setProfile } = useProfile();
   const navigate = useNavigate();
+  const location = useLocation();
   const [params] = useSearchParams();
   const editing = Boolean(profile);
   // Agreed to an older version of the Terms: they must agree again, so no way out without it.
@@ -215,7 +216,7 @@ export default function Setup() {
       const saved = await saveProfile(toPayload(a));
       setProfile(saved);
       try { sessionStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
-      navigate('/app', { replace: true });
+      navigate(location.state?.from || '/app', { replace: true });
     } catch (err) {
       setSaveError(typeof err.detail === 'string' ? err.detail
         : 'We could not save that just now. Check your connection and try again.');
@@ -486,7 +487,7 @@ export default function Setup() {
                   <p className="font-display text-lg">Parent or guardian</p>
                   <p className="text-sm text-ink-soft mt-1 mb-2 leading-relaxed">
                     You are {age}, so the law asks for a parent or guardian to agree before you use SkillLens.
-                    Ask them to fill this in with you.
+                    We will email them a private link to confirm. Until they do, you can try the app, but nothing is saved.
                   </p>
                   <Question label="Their full name" error={errors.guardian_name}>
                     <input className={inputClass} value={a.guardian_name} maxLength={120} aria-label="Parent or guardian's full name"

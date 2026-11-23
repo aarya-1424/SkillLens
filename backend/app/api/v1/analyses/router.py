@@ -11,6 +11,7 @@ from app.drills.library import as_dict, for_check
 from app.core.auth import CurrentUser
 from app.db.session import get_db
 from app.history import service
+from app.guardian import service as guardian
 from app.privacy import service as privacy
 from app.profiles import service as profiles
 from app.movements import library
@@ -45,6 +46,7 @@ def save(body: SaveAnalysisRequest, user: CurrentUser = Depends(get_current_user
                             f"Unknown movement '{body.movement_slug}'")
     if not body.results:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "A report needs at least one check")
+    guardian.require_allowed(db, user.id)
     saved = service.save_analysis(db, user, body)
     return _detail(service.get_analysis(db, user.id, saved.id))
 
@@ -72,6 +74,13 @@ def my_progress(movement: str = Query(...), limit: int = Query(20, ge=2, le=100)
                 db: Session = Depends(get_db)) -> list[ProgressPoint]:
     """Scores over time for one movement — the real version of the chart."""
     return [ProgressPoint(**p) for p in service.progress(db, user.id, movement, limit)]
+
+
+@router.get("/insights")
+def insights(user: CurrentUser = Depends(get_current_user), db: Session = Depends(get_db)) -> list[dict]:
+    """Plateau, slipping and improving alerts, one per movement with 3+ reports."""
+    from app.history.insights import for_user
+    return for_user(db, user.id)
 
 
 @router.get("/checks")

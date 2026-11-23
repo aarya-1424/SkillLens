@@ -5,7 +5,8 @@ import { DrillList } from '../components/DrillCard';
 import RepStrip from '../components/RepStrip';
 import { ConfirmButton, LABEL, RiskChip, ScoreRing, scoreColour, shortDate } from '../components/Bits';
 import { SPORTS } from '../data/landing';
-import { deleteAnalysis, getAnalysis, getSummary } from '../services/history';
+import { deleteAnalysis, getAnalysis, getSummary, listAnalyses } from '../services/history';
+import { getPlayerReport } from '../services/teams';
 
 const SEVERITY_TONE = {
   none: 'bg-mint/10 border-mint/30',
@@ -40,21 +41,25 @@ function SavedCheck({ r }) {
 }
 
 export default function ReportDetail() {
-  const { id } = useParams();
+  const { id, teamId, athleteId } = useParams();
+  // Opened from a team: a coach looking at a player's report, read-only.
+  const coachView = Boolean(teamId && athleteId);
   const navigate = useNavigate();
   const [report, setReport] = useState(undefined);
   const [summary, setSummary] = useState({ text: null, state: 'idle' });
   const [showAll, setShowAll] = useState(false);
+  const [siblings, setSiblings] = useState([]);
 
   useEffect(() => {
     let alive = true;
-    getAnalysis(id).then((r) => {
+    (coachView ? getPlayerReport(teamId, athleteId, id) : getAnalysis(id)).then((r) => {
       if (!alive) return;
       setReport(r || null);
       if (r?.ai_summary) setSummary({ text: r.ai_summary, state: 'done' });
+      if (r && !coachView) listAnalyses(`?movement=${encodeURIComponent(r.movement_slug)}&limit=200`).then((l) => alive && setSiblings(l || []));
     }).catch(() => alive && setReport(null));
     return () => { alive = false; };
-  }, [id]);
+  }, [id, coachView, teamId, athleteId]);
 
   const writeSummary = async () => {
     setSummary({ text: null, state: 'loading' });
@@ -84,7 +89,9 @@ export default function ReportDetail() {
     <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
         <div>
-          <Link to="/app/reports" className="text-sm font-semibold text-ink-soft hover:text-ink no-print">← My reports</Link>
+          <Link to={coachView ? `/app/teams/${teamId}/players/${athleteId}` : '/app/reports'} className="text-sm font-semibold text-ink-soft hover:text-ink no-print">
+            {coachView ? '← Player' : '← My reports'}
+          </Link>
           <p className="eyebrow mt-4 mb-2">{report.sport} · {report.movement_name}</p>
           <h1 className="font-display text-3xl sm:text-[2.6rem]">Report <em>{shortDate(report.created_at)}</em></h1>
           {report.is_sample && (
@@ -92,10 +99,23 @@ export default function ReportDetail() {
           )}
         </div>
         <div className="flex flex-wrap gap-2 no-print">
+          {!coachView && (() => {
+            const older = siblings.filter((s) => new Date(s.created_at) < new Date(report.created_at));
+            const first = older[older.length - 1];
+            const previous = older[0];
+            return (
+              <>
+                {previous && <Link to={`/app/compare?a=${previous.id}&b=${report.id}`} className="px-5 py-2.5 rounded-full border border-line bg-paper text-sm font-semibold hover:border-ink/40 transition">Compare with previous</Link>}
+                {first && first.id !== previous?.id && <Link to={`/app/compare?a=${first.id}&b=${report.id}`} className="px-5 py-2.5 rounded-full border border-line bg-paper text-sm font-semibold hover:border-ink/40 transition">Compare with first</Link>}
+              </>
+            );
+          })()}
           <button type="button" onClick={() => window.print()}
             className="px-5 py-2.5 rounded-full border border-line bg-paper text-sm font-semibold hover:border-ink/40 transition">Save as PDF</button>
-          <Link to={`/app/analyze?sport=${encodeURIComponent(sport?.name || '')}`}
-            className="px-5 py-2.5 rounded-full bg-brand text-white text-sm font-semibold hover:bg-brand-deep transition shadow-lg shadow-brand/25">Record again</Link>
+          {!coachView && (
+            <Link to={`/app/analyze?sport=${encodeURIComponent(sport?.name || '')}`}
+              className="px-5 py-2.5 rounded-full bg-brand text-white text-sm font-semibold hover:bg-brand-deep transition shadow-lg shadow-brand/25">Record again</Link>
+          )}
         </div>
       </div>
 
@@ -141,6 +161,11 @@ export default function ReportDetail() {
 
       <RepStrip reps={report.reps} />
 
+      {coachView && (
+        <p className="mb-3 px-5 py-3 rounded-3xl bg-sand text-sm">You are viewing your player's report as their coach. It is read-only.</p>
+      )}
+
+      {(!coachView || summary.state === 'done') && (
       <section className="mb-10 rounded-[2rem] bg-sand p-7 sm:p-8">
         <p className="eyebrow mb-2">Coach's read</p>
         {summary.state === 'done' && <p className="text-lg leading-relaxed max-w-4xl">{summary.text}</p>}
@@ -155,6 +180,7 @@ export default function ReportDetail() {
         )}
         {summary.state === 'unavailable' && <p className="text-sm text-ink-soft">The AI is not available right now. Your scores are complete without it.</p>}
       </section>
+      )}
 
       <section className="mb-10">
         <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
@@ -186,15 +212,17 @@ export default function ReportDetail() {
         </section>
       )}
 
+      {!coachView && (
       <section className="mb-3">
         <AskCoach analysisId={report.id} movementSlug={report.movement_slug} sport={report.sport} withHistory />
       </section>
+      )}
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-[1.75rem] bg-paper border border-line text-sm no-print">
+      {!coachView && <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-[1.75rem] bg-paper border border-line text-sm no-print">
         <span className="text-ink-soft">Your video was never stored, so this page shows the measurements taken from it.</span>
         <ConfirmButton label="Delete this report" question="Delete this report and its Ask Coach messages for good?"
           onConfirm={async () => { await deleteAnalysis(report.id); navigate('/app/reports', { replace: true }); }} />
-      </div>
+      </div>}
     </main>
   );
 }

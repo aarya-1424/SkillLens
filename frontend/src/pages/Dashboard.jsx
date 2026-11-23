@@ -7,6 +7,7 @@ import { SPORTS } from '../data/landing';
 import ProgressChart from '../components/ProgressChart';
 import DemoTools from '../components/DemoTools';
 import TodayPlan from '../components/TodayPlan';
+import Insights from '../components/Insights';
 import { getProgress, getStats, listAnalyses } from '../services/history';
 
 const RISK_TONE = {
@@ -146,6 +147,7 @@ export default function Dashboard() {
 
       <DemoTools onChange={() => setReloadKey((k) => k + 1)} />
       <TodayPlan reloadKey={reloadKey} />
+      <Insights limit={2} reloadKey={reloadKey} />
       <ProfileStrip profile={profile} guest={guest} />
 
       {/* Progress + recent reports */}

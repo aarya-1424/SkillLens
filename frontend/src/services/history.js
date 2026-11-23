@@ -59,3 +59,4 @@ export const getCheckTrends = (movement) =>
   soft(get(`/analyses/checks?movement=${encodeURIComponent(movement)}`), []);
 export const getCoachHistory = (analysisId) =>
   soft(get(`/coach/history${analysisId ? `?analysis_id=${encodeURIComponent(analysisId)}` : ''}`), []);
+export const getInsights = () => soft(get('/analyses/insights'), []);

@@ -90,6 +90,11 @@ def status(db: Session, user: CurrentUser) -> dict:
     }
 
 
+def _teams_export(db: Session, user_id: str) -> dict:
+    from app.teams.service import export_for  # imported here: teams also uses this module
+    return export_for(db, user_id)
+
+
 def export(db: Session, user: CurrentUser) -> dict:
     """Everything we hold about this person, in one readable file."""
     profile = ensure_profile(db, user)
@@ -118,11 +123,12 @@ def export(db: Session, user: CurrentUser) -> dict:
         "exported_at": _now().isoformat(),
         "policy_version": POLICY_VERSION,
         "account": cols(profile),
-        "athlete_profile": cols(athlete, skip=("user_id",)) if athlete else None,
+        "athlete_profile": cols(athlete, skip=("user_id", "guardian_token_hash")) if athlete else None,
         "reports": [{**cols(a, skip=("user_id",)),
                      "checks": [cols(m, skip=("id", "analysis_id")) for m in a.metrics]} for a in analyses],
         "ask_coach_messages": [cols(c, skip=("user_id",)) for c in chats],
         "privacy_log": [cols(r, skip=("user_id",)) for r in requests],
+        "teams": _teams_export(db, user.id),
     }
     record(db, user.id, "export")
     return bundle
@@ -237,6 +243,8 @@ def erase(db: Session, user_id: str) -> None:
     The shared AI answer cache is keyed by question fingerprints and holds no
     user ids, so there is nothing of theirs to remove from it.
     """
+    from app.teams.service import erase_for  # imported here: teams also uses this module
+    erase_for(db, user_id)
     db.execute(delete(ChatMessage).where(ChatMessage.user_id == user_id))
     for a in db.execute(select(Analysis).where(Analysis.user_id == user_id)).scalars().all():
         db.delete(a)  # its checks go with it
