@@ -43,7 +43,7 @@ export default function ParentConfirm() {
   };
 
   return (
-    <div className="min-h-screen bg-canvas text-ink px-4 py-8">
+    <div className="min-h-screen text-ink px-4 py-8">
       <div className="max-w-2xl mx-auto">
         <div className="mb-8"><Logo /></div>
 

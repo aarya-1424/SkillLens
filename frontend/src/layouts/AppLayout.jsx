@@ -137,7 +137,7 @@ export default function AppLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-canvas">
+    <div className="min-h-screen">
       <header className="no-print sticky top-4 z-30 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 rounded-full glass shadow-[0_12px_40px_-22px_rgba(0,0,0,0.4)] pl-3 pr-2 py-2">
           <Logo to="/app" compact />

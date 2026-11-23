@@ -17,15 +17,15 @@
   --color-canvas: #f2f0eb;      /* page: warm bone, never pure white */
   /* Cards and tints are see-through, frosted by the .bg-paper / .bg-sand rules
      below, so the soft glows behind the page show through like glass. */
-  --color-paper: rgb(251 250 247 / 0.52);   /* cards */
-  --color-sand: rgb(233 230 222 / 0.5);    /* section tint */
+  --color-paper: rgb(255 253 250 / 0.42);   /* cards */
+  --color-sand: rgb(240 236 228 / 0.40);    /* section tint */
   --color-sand-deep: #dcd8cd;   /* stronger tint, ghost words */
   --color-line: rgb(20 20 20 / 0.09);      /* hairlines */
 
   --color-ink: #141414;         /* text */
   --color-ink-soft: #625f58;    /* muted text */
-  --color-stage: rgb(17 17 17 / 0.93);      /* dark blocks: hero, video, coaches (smoked glass) */
-  --color-stage-soft: rgb(29 29 29 / 0.9);  /* cards on a dark block */
+  --color-stage: rgb(17 17 17 / 0.84);      /* dark blocks: hero, video, coaches (smoked glass) */
+  --color-stage-soft: rgb(29 29 29 / 0.8);  /* cards on a dark block */
 
   --color-brand: #d7282f;       /* crimson */
   --color-brand-deep: #b81f26;  /* hover */
@@ -51,6 +51,7 @@ body {
     radial-gradient(30rem 26rem at 40% 55%, rgb(142 22 28 / 0.07), transparent 70%),
     var(--color-canvas);
   background-attachment: fixed;
+  min-height: 100vh;
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -85,6 +86,38 @@ body {
   -webkit-backdrop-filter: blur(18px) saturate(160%);
   backdrop-filter: blur(18px) saturate(160%);
 }
+/* The colour behind the glass: large soft shapes that drift very slowly.
+   Fixed to the screen, so every card, wherever you scroll, frosts some colour. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -10vmax;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(28vmax 28vmax at 12% 18%, rgb(215 40 47 / 0.38), transparent 70%),
+    radial-gradient(26vmax 26vmax at 88% 12%, rgb(245 158 11 / 0.34), transparent 70%),
+    radial-gradient(30vmax 30vmax at 78% 70%, rgb(215 40 47 / 0.30), transparent 70%),
+    radial-gradient(24vmax 24vmax at 20% 82%, rgb(246 213 210 / 0.95), transparent 70%),
+    radial-gradient(22vmax 22vmax at 50% 45%, rgb(245 158 11 / 0.16), transparent 70%);
+  filter: blur(20px);
+  animation: drift 38s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(3vmax, -2vmax, 0) scale(1.05); }
+  100% { transform: translate3d(-2vmax, 2vmax, 0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) { body::before { animation: none; } }
+
+/* Glass cards: a bright rim where light catches the edge, and a soft lift. */
+.bg-paper {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.8), 0 10px 30px -18px rgb(60 20 10 / 0.25);
+}
+.bg-sand {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.6);
+}
+
 /* A bright top edge on cards, like light catching the rim of a glass. */
 .bg-paper.border-line { border-color: rgb(255 255 255 / 0.7); }
 .bg-stage, .bg-stage-soft {
@@ -151,5 +184,6 @@ body {
 @media print {
   .no-print { display: none !important; }
   body { background: #fff; }
-  .bg-paper, .bg-sand, .glass, .glass-strong { background: #fff !important; backdrop-filter: none !important; }
+  .bg-paper, .bg-sand, .glass, .glass-strong { background: #fff !important; backdrop-filter: none !important; box-shadow: none !important; }
+  body::before { display: none; }
 }
