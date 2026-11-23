@@ -131,6 +131,8 @@ class Analysis(Base):
     scoring_version: Mapped[str] = mapped_column(String(32))
     unverified: Mapped[bool] = mapped_column(Boolean, default=True)
     ai_summary: Mapped[str | None] = mapped_column(Text)
+    # When the clip held several repetitions: each one's score. The report itself is the typical one.
+    reps: Mapped[list | None] = mapped_column(JSON)
     # Made by the demo "sample data" button, not from a real video. Shown as "Sample".
     is_sample: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
 

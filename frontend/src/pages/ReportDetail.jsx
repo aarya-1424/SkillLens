@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import AskCoach from '../components/AskCoach';
 import { DrillList } from '../components/DrillCard';
+import RepStrip from '../components/RepStrip';
 import { ConfirmButton, LABEL, RiskChip, ScoreRing, scoreColour, shortDate } from '../components/Bits';
 import { SPORTS } from '../data/landing';
 import { deleteAnalysis, getAnalysis, getSummary } from '../services/history';
@@ -137,6 +138,8 @@ export default function ReportDetail() {
           </div>
         </div>
       </section>
+
+      <RepStrip reps={report.reps} />
 
       <section className="mb-10 rounded-[2rem] bg-sand p-7 sm:p-8">
         <p className="eyebrow mb-2">Coach's read</p>

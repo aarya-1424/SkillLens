@@ -34,6 +34,7 @@ class SaveAnalysisRequest(BaseModel):
     groups: dict[str, float] = Field(default_factory=dict)
     scoring_version: str
     unverified: bool = True
+    reps: list[dict] | None = Field(None, max_length=8)
     results: list[MetricResultIn]
 
 
@@ -61,6 +62,7 @@ class AnalysisDetail(AnalysisSummary):
     unverified: bool
     skipped: int
     ai_summary: str | None = None
+    reps: list[dict] | None = None
     results: list[MetricResultOut]
 
 

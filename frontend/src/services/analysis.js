@@ -12,7 +12,8 @@
  */
 import { get, post } from './api';
 import { trackVideo } from '../lib/pose/tracker';
-import { measureAll } from '../lib/pose/measure';
+import { measureAll, resolveSides } from '../lib/pose/measure';
+import { findReps, sliceTracked } from '../lib/pose/reps';
 
 export const STAGES = {
   model: 'Getting the tracker ready…',
@@ -61,15 +62,42 @@ export async function analyse(videoUrl, slug, { onStage, signal, start = 0, leng
   }
 
   stage('measure', 1);
-  const { values, moments, sides, skipped } = measureAll(movement.metrics, tracked);
-  if (!Object.keys(values).length) {
+  const sides = resolveSides(tracked.frames);
+  const found = findReps(slug, tracked, sides);
+
+  // One part per repetition (measured over a fixed window around its key
+  // moment), or the whole clip for continuous movements like running.
+  const parts = (found.length ? found : [{ start: 0, end: tracked.frames.length, peak: null }])
+    .map((rep) => ({ rep, ...measureAll(movement.metrics, found.length ? sliceTracked(tracked, rep) : tracked, { sides }) }))
+    .filter((p) => Object.keys(p.values).length);
+  if (!parts.length) {
     throw new Error(
       'We could see you, but not clearly enough to measure anything. Try again from the side, further back, in better light.',
     );
   }
 
   stage('score');
-  const report = await post(`/movements/${slug}/score`, { values });
+  const scored = await Promise.all(parts.map(async (p) => ({
+    ...p, report: await post(`/movements/${slug}/score`, { values: p.values }),
+  })));
+
+  // Report the TYPICAL repetition (the middle score), not the luckiest one,
+  // and say how the others went.
+  const byScore = [...scored].sort((a, b) => a.report.total - b.report.total);
+  const typical = byScore[Math.floor((byScore.length - 1) / 2)];
+  const best = byScore[byScore.length - 1];
+  const { report, values, skipped } = typical;
+  // Moments were found inside the repetition; move them back onto the full clip.
+  const moments = Object.fromEntries(Object.entries(typical.moments)
+    .map(([k, v]) => [k, v == null ? null : v + typical.rep.start]));
+  const reps = found.length > 1 ? scored.map((p, i) => ({
+    number: i + 1,
+    total: p.report.total,
+    grade: p.report.grade,
+    peak_time: p.rep.peak != null ? tracked.times[p.rep.peak] : null,
+    typical: p === typical,
+    best: p === best,
+  })) : null;
   stage('done', 1);
 
   return {
@@ -79,6 +107,9 @@ export async function analyse(videoUrl, slug, { onStage, signal, start = 0, leng
     moments,
     sides,
     unmeasured: skipped,
+    values,
+    reps,
+    consistency: reps && reps.length > 1 ? +(best.report.total - byScore[0].report.total).toFixed(1) : null,
     confidence: tracked.confidence,
     window: { start: tracked.start, end: tracked.start + tracked.duration },
     lowConfidence: tracked.confidence < LOW_CONFIDENCE,

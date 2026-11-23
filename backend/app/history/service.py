@@ -41,6 +41,7 @@ def save_analysis(db: Session, user: CurrentUser, payload) -> Analysis:
         groups=payload.groups,
         scoring_version=payload.scoring_version,
         unverified=payload.unverified,
+        reps=payload.reps,
     )
     db.add(analysis)
     db.flush()

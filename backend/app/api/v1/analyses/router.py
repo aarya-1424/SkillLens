@@ -25,6 +25,7 @@ def _detail(a) -> AnalysisDetail:
         measured=a.measured, skipped=a.skipped, created_at=a.created_at, groups=a.groups or {},
         is_sample=bool(a.is_sample),
         scoring_version=a.scoring_version, unverified=a.unverified, ai_summary=a.ai_summary,
+        reps=a.reps,
         results=[MetricResultOut(
             id=m.metric_id, name=m.name, group=m.group, layer=m.layer, unit=m.unit,
             value=m.value, value_label=m.value_label, target_label=m.target_label,
