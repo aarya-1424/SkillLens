@@ -20,6 +20,7 @@ import Teams from './pages/Teams';
 import TeamSquad from './pages/TeamSquad';
 import TeamPlayer from './pages/TeamPlayer';
 import JoinTeam from './pages/JoinTeam';
+import Compare from './pages/Compare';
 
 // Heavy (charts, PDF, video) — only loaded when someone starts an analysis.
 const Analyze = lazy(() => import('./pages/Analyze'));
@@ -68,6 +69,7 @@ export default function App() {
         <Route path="teams/:teamId/players/:athleteId" element={<TeamPlayer />} />
         <Route path="teams/:teamId/players/:athleteId/reports/:id" element={<ReportDetail />} />
         <Route path="join/:code" element={<JoinTeam />} />
+        <Route path="compare" element={<Compare />} />
         <Route path="coach" element={<Coach />} />
         <Route path="privacy" element={<PrivacyCenter />} />
         <Route path="analyze" element={<Suspense fallback={<Spinner />}><Analyze /></Suspense>} />

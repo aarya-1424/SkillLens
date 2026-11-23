@@ -74,6 +74,13 @@ def my_progress(movement: str = Query(...), limit: int = Query(20, ge=2, le=100)
     return [ProgressPoint(**p) for p in service.progress(db, user.id, movement, limit)]
 
 
+@router.get("/insights")
+def insights(user: CurrentUser = Depends(get_current_user), db: Session = Depends(get_db)) -> list[dict]:
+    """Plateau, slipping and improving alerts, one per movement with 3+ reports."""
+    from app.history.insights import for_user
+    return for_user(db, user.id)
+
+
 @router.get("/checks")
 def check_trends(movement: str = Query(...), limit: int = Query(20, ge=2, le=100),
                  user: CurrentUser = Depends(get_current_user),

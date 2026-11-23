@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../context/ProfileContext';
 import ProgressChart from '../components/ProgressChart';
+import Insights from '../components/Insights';
 import { EmptyState, LABEL, PageHeader, scoreColour } from '../components/Bits';
 import { SPORTS } from '../data/landing';
 import { getCheckTrends, getProgress, listAnalyses } from '../services/history';
@@ -91,6 +92,8 @@ export default function Progress() {
               </button>
             ))}
           </div>
+
+          <Insights movement={movement} limit={1} />
 
           <div className="grid lg:grid-cols-12 gap-3 mb-3">
             <section className="lg:col-span-8 p-7 sm:p-8 rounded-[2rem] bg-paper border border-line">

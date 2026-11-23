@@ -5,7 +5,7 @@ import { DrillList } from '../components/DrillCard';
 import RepStrip from '../components/RepStrip';
 import { ConfirmButton, LABEL, RiskChip, ScoreRing, scoreColour, shortDate } from '../components/Bits';
 import { SPORTS } from '../data/landing';
-import { deleteAnalysis, getAnalysis, getSummary } from '../services/history';
+import { deleteAnalysis, getAnalysis, getSummary, listAnalyses } from '../services/history';
 import { getPlayerReport } from '../services/teams';
 
 const SEVERITY_TONE = {
@@ -48,6 +48,7 @@ export default function ReportDetail() {
   const [report, setReport] = useState(undefined);
   const [summary, setSummary] = useState({ text: null, state: 'idle' });
   const [showAll, setShowAll] = useState(false);
+  const [siblings, setSiblings] = useState([]);
 
   useEffect(() => {
     let alive = true;
@@ -55,6 +56,7 @@ export default function ReportDetail() {
       if (!alive) return;
       setReport(r || null);
       if (r?.ai_summary) setSummary({ text: r.ai_summary, state: 'done' });
+      if (r && !coachView) listAnalyses(`?movement=${encodeURIComponent(r.movement_slug)}&limit=200`).then((l) => alive && setSiblings(l || []));
     }).catch(() => alive && setReport(null));
     return () => { alive = false; };
   }, [id, coachView, teamId, athleteId]);
@@ -97,6 +99,17 @@ export default function ReportDetail() {
           )}
         </div>
         <div className="flex flex-wrap gap-2 no-print">
+          {!coachView && (() => {
+            const older = siblings.filter((s) => new Date(s.created_at) < new Date(report.created_at));
+            const first = older[older.length - 1];
+            const previous = older[0];
+            return (
+              <>
+                {previous && <Link to={`/app/compare?a=${previous.id}&b=${report.id}`} className="px-5 py-2.5 rounded-full border border-line bg-paper text-sm font-semibold hover:border-ink/40 transition">Compare with previous</Link>}
+                {first && first.id !== previous?.id && <Link to={`/app/compare?a=${first.id}&b=${report.id}`} className="px-5 py-2.5 rounded-full border border-line bg-paper text-sm font-semibold hover:border-ink/40 transition">Compare with first</Link>}
+              </>
+            );
+          })()}
           <button type="button" onClick={() => window.print()}
             className="px-5 py-2.5 rounded-full border border-line bg-paper text-sm font-semibold hover:border-ink/40 transition">Save as PDF</button>
           {!coachView && (
