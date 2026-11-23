@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../context/ProfileContext';
 import { POLICY_VERSION } from '../data/legal';
@@ -26,8 +26,9 @@ export function ProfileReady({ children }) {
 export function RequireProfile({ children }) {
   const { guest } = useAuth();
   const { profile, status } = useProfile();
+  const location = useLocation();
   if (status === 'idle' || status === 'loading') return <Spinner />;
-  if (status === 'ready' && !profile && !guest) return <Navigate to="/app/setup" replace />;
+  if (status === 'ready' && !profile && !guest) return <Navigate to="/app/setup" replace state={{ from: location.pathname }} />;
   // The Terms or Privacy Policy changed since they agreed: ask again before going on.
   if (!guest && profile?.terms_version && profile.terms_version !== POLICY_VERSION) {
     return <Navigate to="/app/setup?step=4" replace />;

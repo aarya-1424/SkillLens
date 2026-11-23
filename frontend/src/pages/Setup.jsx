@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../context/ProfileContext';
@@ -164,6 +164,7 @@ export default function Setup() {
   const { displayName, guest } = useAuth();
   const { profile, setProfile } = useProfile();
   const navigate = useNavigate();
+  const location = useLocation();
   const [params] = useSearchParams();
   const editing = Boolean(profile);
   // Agreed to an older version of the Terms: they must agree again, so no way out without it.
@@ -215,7 +216,7 @@ export default function Setup() {
       const saved = await saveProfile(toPayload(a));
       setProfile(saved);
       try { sessionStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
-      navigate('/app', { replace: true });
+      navigate(location.state?.from || '/app', { replace: true });
     } catch (err) {
       setSaveError(typeof err.detail === 'string' ? err.detail
         : 'We could not save that just now. Check your connection and try again.');

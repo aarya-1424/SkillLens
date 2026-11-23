@@ -5,9 +5,10 @@
 // POLICY_VERSION in BOTH this file and backend/app/privacy/policy.py, so
 // every signed-in person is asked to read and agree again.
 
-export const POLICY_VERSION = '2026-11';
-export const POLICY_LABEL = 'Version 1.0';
-export const EFFECTIVE = '22 November 2026';
+export const POLICY_VERSION = '2026-11-24';
+export const POLICY_LABEL = 'Version 1.1';
+export const EFFECTIVE = '24 November 2026';
+// 1.1: added sharing with a coach, only when you join their team (Privacy s.5, s.8; Terms s.6).
 export const DELETION_GRACE_DAYS = 30;
 export const RESPONSE_DAYS = 30;
 
@@ -32,6 +33,7 @@ export const PRIVACY = {
     'Your answers and reports are private to you.',
     'The AI that writes summaries gets your numbers, never your name, email, photo, exact age or weight. You can switch it off.',
     'You can download everything, or delete everything, yourself, at any time, from Privacy & data.',
+    'A coach sees your reports only if you join their team, and stops the moment you leave.',
   ],
   sections: [
     {
@@ -88,6 +90,7 @@ export const PRIVACY = {
           'Vercel: delivers the website to your browser.',
           'Google: sign-in, only when you choose "Continue with Google". Your browser also downloads the body-tracking model from Google\'s servers and from jsDelivr; like any website visit, they see your IP address. Nothing about you or your video is sent in that step.',
           'Groq: the AI model that writes report summaries and Ask Coach answers, located in the United States. We send it your report\'s numbers and coaching words, your question, and a short, general description of you (for example: age group "15 to 17", level, goal, sore areas). We never send your name, email, photo, exact age, height, weight or video. You can switch this off in Privacy & data; while it is off, nothing is sent.',
+          'Your coach, only if you choose: if you join a coach\'s team with their invite code, that coach can see your name, age group (not your exact age), level and role, any sore areas you told us about, your scores, injury-risk ratings and reports. They never see your Ask Coach messages, email, exact age, height, weight or videos. Leave the team at any time and the coach loses access at once. Anyone under 18 needs a parent or guardian\'s agreement to join a team.',
           'Legal authorities: only where the law, a court or a government authority requires it.',
         ] },
         'Cross-border transfer: some of these providers store or process information outside India (for example Singapore and the United States). We share the minimum needed with each of them.',
@@ -98,7 +101,7 @@ export const PRIVACY = {
       body: [
         { list: [
           'While your account is open, we keep your account, athlete profile, reports and Ask Coach messages so you can see your progress.',
-          'Delete a report, or clear your Ask Coach history, and it is removed straight away.',
+          'Delete a report, or clear your Ask Coach history, and it is removed straight away. Leave a team and its coach can no longer see anything of yours.',
           `Delete your account and you have ${DELETION_GRACE_DAYS} days to change your mind: sign in and press "Cancel deletion". When the ${DELETION_GRACE_DAYS} days end, everything is permanently erased automatically, including your sign-in record with our sign-in provider.`,
           'Your privacy log (what you asked and what we did) is kept as proof that we kept our promises. When your account is erased it is made anonymous: it no longer links to you and any text you wrote is removed.',
           'Ask Coach answers are also kept in a shared answer store so the same question costs nothing twice. It holds the answer and a fingerprint of the question, not who asked.',
@@ -121,7 +124,7 @@ export const PRIVACY = {
           'Access and portability: "Download my data" gives you everything we hold in one file, at once.',
           'Correction: edit your profile at any time. For anything else, send a "Correct my data" request.',
           'Erasure: delete a single report, clear your Ask Coach history, or delete your account.',
-          'Withdraw consent: switch AI features off at any time. To withdraw entirely, delete your account.',
+          'Withdraw consent: switch AI features off at any time, or leave any team to stop sharing with its coach. To withdraw entirely, delete your account.',
           `Grievance: "Raise a privacy complaint". We reply within ${RESPONSE_DAYS} days.`,
           'Nominate: name someone to act for you if you die or cannot act yourself, by sending a request.',
         ] },
@@ -208,6 +211,12 @@ export const TERMS = {
       id: 'data', title: '6. Your information',
       body: [
         'You own the information you give SkillLens and the reports made from it. You allow us to use it only to provide the App to you, as described in the Privacy Policy. We do not sell it, and we do not currently use it to train AI models. You can download or delete it at any time from Privacy & data.',
+      ],
+    },
+    {
+      id: 'coaches', title: '6a. If you coach a team',
+      body: [
+        'Only invite players who want to join. Use what you see only to coach them, keep it to yourself, and do not copy it elsewhere. Players can leave whenever they like. For players under 18, you should also have their parent or guardian\'s agreement in your own club or academy.',
       ],
     },
     {

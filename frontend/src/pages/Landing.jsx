@@ -201,7 +201,8 @@ export default function Landing() {
             <p className="text-white/70 text-lg leading-relaxed">
               One coach cannot watch thirty players at once. SkillLens can. See who is improving, who is drifting into risky form, and send the right drill to the right player.
             </p>
-            <span className="inline-block mt-8 px-4 py-2 rounded-full border border-white/20 text-sm text-white/80">Coming soon · after the prototype</span>
+            <Link to="/login" className="inline-block mt-8 px-6 py-3 rounded-full bg-brand text-white font-semibold hover:bg-brand-deep transition">Start a team →</Link>
+            <p className="text-xs text-white/50 mt-3">Players join with an invite code and choose what to share.</p>
           </div>
           <ul className="grid sm:grid-cols-2 gap-3">
             {[

@@ -234,3 +234,65 @@ class PrivacyRequest(Base):
     resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     resolution: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, index=True)
+
+
+class Team(Base):
+    """A coach's squad. Players join with the invite code, after agreeing to share."""
+
+    __tablename__ = "teams"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    coach_id: Mapped[str] = mapped_column(String(64), ForeignKey("profiles.id"), index=True)
+    name: Mapped[str] = mapped_column(String(80))
+    sport_slug: Mapped[str | None] = mapped_column(String(64))
+    invite_code: Mapped[str] = mapped_column(String(16), unique=True, index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+    members: Mapped[list["TeamMember"]] = relationship(
+        back_populates="team", cascade="all, delete-orphan")
+
+
+class TeamMember(Base):
+    """A player in a team. While this row exists, the coach can see their reports."""
+
+    __tablename__ = "team_members"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    team_id: Mapped[str] = mapped_column(String(36), ForeignKey("teams.id", ondelete="CASCADE"), index=True)
+    athlete_id: Mapped[str] = mapped_column(String(64), ForeignKey("profiles.id"), index=True)
+    # When the player agreed to share, and the version of the words they agreed to.
+    consented_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+    consent_version: Mapped[str] = mapped_column(String(16))
+    # For under-18s: when they confirmed their parent or guardian agrees to the sharing.
+    guardian_consent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    team: Mapped[Team] = relationship(back_populates="members")
+
+    __table_args__ = (Index("ux_team_member", "team_id", "athlete_id", unique=True),)
+
+
+class Assignment(Base):
+    """A drill a coach set for one player, or for the whole team (athlete_id empty)."""
+
+    __tablename__ = "assignments"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    team_id: Mapped[str] = mapped_column(String(36), ForeignKey("teams.id", ondelete="CASCADE"), index=True)
+    athlete_id: Mapped[str | None] = mapped_column(String(64), index=True)
+    drill_id: Mapped[str] = mapped_column(String(40))
+    note: Mapped[str | None] = mapped_column(String(300))
+    due_date: Mapped[datetime | None] = mapped_column(Date)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+
+class AssignmentDone(Base):
+    """A player ticking off an assigned drill (one row per player, so team drills work too)."""
+
+    __tablename__ = "assignment_done"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    assignment_id: Mapped[int] = mapped_column(Integer, ForeignKey("assignments.id", ondelete="CASCADE"), index=True)
+    athlete_id: Mapped[str] = mapped_column(String(64), index=True)
+    done_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+    __table_args__ = (Index("ux_assignment_done", "assignment_id", "athlete_id", unique=True),)

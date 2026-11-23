@@ -65,6 +65,7 @@ function AccountMenu({ onSignOut }) {
           <div className="h-px bg-line my-1" />
           <Link role="menuitem" to="/app/setup" className={item}>{profile ? 'Edit profile' : 'Set up profile'}</Link>
           <Link role="menuitem" to="/app/coach" className={`${item} lg:hidden`}>Ask Coach</Link>
+          <Link role="menuitem" to="/app/teams" className={item}>Teams &amp; coaching</Link>
           <Link role="menuitem" to="/app/privacy" className={item}>Privacy &amp; data</Link>
           <div className="h-px bg-line my-1" />
           <Link role="menuitem" to="/terms" className={item}>Terms of Service</Link>
