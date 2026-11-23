@@ -22,6 +22,7 @@ def _detail(a) -> AnalysisDetail:
         id=a.id, movement_slug=a.movement_slug, sport=a.sport, movement_name=a.movement_name,
         total=a.total, grade=a.grade, injury_risk=a.injury_risk, confidence=a.confidence,
         measured=a.measured, skipped=a.skipped, created_at=a.created_at, groups=a.groups or {},
+        is_sample=bool(a.is_sample),
         scoring_version=a.scoring_version, unverified=a.unverified, ai_summary=a.ai_summary,
         results=[MetricResultOut(
             id=m.metric_id, name=m.name, group=m.group, layer=m.layer, unit=m.unit,
@@ -53,7 +54,7 @@ def history(movement: str | None = Query(None), limit: int = Query(50, ge=1, le=
     return [AnalysisSummary(
         id=a.id, movement_slug=a.movement_slug, sport=a.sport, movement_name=a.movement_name,
         total=a.total, grade=a.grade, injury_risk=a.injury_risk, confidence=a.confidence,
-        measured=a.measured, created_at=a.created_at) for a in rows]
+        measured=a.measured, created_at=a.created_at, is_sample=bool(a.is_sample)) for a in rows]
 
 
 @router.get("/stats", response_model=StatsOut)

@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     # Only needed to delete a person's Supabase sign-in record when their
     # account is erased. Server-side only; never sent to the browser.
     SUPABASE_SERVICE_ROLE_KEY: str | None = None
+    # Comma-separated emails allowed to load sample history for demos.
+    DEMO_EMAILS: str | None = None
 
     # Postgres connection (Supabase). Must start with postgresql+psycopg://
     DATABASE_URL: str | None = None

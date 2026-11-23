@@ -61,9 +61,11 @@ export default function Progress() {
   }, [movement]);
 
   const sport = SPORTS.find((s) => s.slug === movement);
-  const moved = checks.filter((c) => c.change != null);
-  const best = [...moved].sort((a, b) => b.change - a.change)[0];
   const weakest = checks[0];
+  // Prefer a different check from "work on next", so the two cards never repeat.
+  const moved = checks.filter((c) => c.change != null && c.change > 0)
+    .sort((a, b) => b.change - a.change);
+  const best = moved.find((c) => c.metric_id !== weakest?.metric_id) || moved[0];
 
   return (
     <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">

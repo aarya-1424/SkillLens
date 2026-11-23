@@ -48,6 +48,7 @@ class AnalysisSummary(BaseModel):
     confidence: float
     measured: int
     created_at: datetime
+    is_sample: bool = False
 
 
 class MetricResultOut(MetricResultIn):

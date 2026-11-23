@@ -84,6 +84,9 @@ export default function ReportDetail() {
           <Link to="/app/reports" className="text-sm font-semibold text-ink-soft hover:text-ink no-print">← My reports</Link>
           <p className="eyebrow mt-4 mb-2">{report.sport} · {report.movement_name}</p>
           <h1 className="font-display text-3xl sm:text-[2.6rem]">Report <em>{shortDate(report.created_at)}</em></h1>
+          {report.is_sample && (
+            <p className="mt-2 text-xs text-ink-soft">Sample report for demonstration, scored by the real engine.</p>
+          )}
         </div>
         <div className="flex flex-wrap gap-2 no-print">
           <button type="button" onClick={() => window.print()}
