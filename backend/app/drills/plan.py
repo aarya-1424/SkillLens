@@ -77,7 +77,7 @@ def build(profile, fixes: list[Fix], sport: str, *, report_date: str | None = No
         notes.insert(0, "You said pain stops you training. Please see a doctor or physiotherapist "
                         "before training hard. This plan only includes gentle work that avoids the sore area.")
     elif sore:
-        notes.append("Go easy on: " + ", ".join(sorted(sore)) + ". Drills that load those areas are "
+        notes.append("Go easy on: " + ", ".join(sorted(sore)) + ". Drills that use those areas are "
                      "marked. Stop any drill that makes the pain worse.")
 
     if profile.goal_event and profile.goal_date:
@@ -91,7 +91,7 @@ def build(profile, fixes: list[Fix], sport: str, *, report_date: str | None = No
     def item(d: Drill, why: str | None = None) -> dict:
         out = {**as_dict(d), "sets": _sets(d.sets, level, fitness, comeback), "why": why}
         hit = sorted(sore & set(d.loads))
-        out["caution"] = f"Loads your {', '.join(hit)}. Go gently and stop if it hurts." if hit else None
+        out["caution"] = f"This uses your {', '.join(hit)}. Go gently and stop if it hurts." if hit else None
         return out
 
     # The technique drills, worst fix first, one or two drills each, no repeats.
@@ -152,7 +152,7 @@ def build(profile, fixes: list[Fix], sport: str, *, report_date: str | None = No
         else:
             items = [warmup] + technique[:2] + [{
                 "id": "film-again", "name": "Film your next video", "sport": sport,
-                "purpose": "Measure what moved this week.",
+                "purpose": "See what changed this week.",
                 "steps": ["Follow the filming guide for your sport.",
                           "Record a new video and analyse it.",
                           "Your next plan will be built from the new report."],
@@ -174,7 +174,7 @@ def build(profile, fixes: list[Fix], sport: str, *, report_date: str | None = No
                          "items": s["items"]})
         else:
             days.append({**base, "kind": "rest", "title": "Rest day",
-                         "items": [], "note": "Rest lets your body adapt. A walk or light stretching is fine."})
+                         "items": [], "note": "Rest helps your body get stronger. A walk or light stretching is fine."})
 
     return {
         "sport": sport,

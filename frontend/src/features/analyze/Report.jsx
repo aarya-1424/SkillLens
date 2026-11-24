@@ -1,3 +1,4 @@
+import { areaName } from '../../components/Bits';
 import { useEffect, useMemo, useState } from 'react';
 import MetricGauge from '../../components/MetricGauge';
 import { DrillList } from '../../components/DrillCard';
@@ -107,15 +108,14 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
       {/* Honesty banners */}
       {report.unverified && (
         <div className="mb-3 px-5 py-3 rounded-3xl bg-amber/15 border border-amber/40 text-ink text-sm">
-          <strong>Targets not yet coach-verified.</strong> These target ranges come from general
-          coaching guidance and are waiting on sign-off from a qualified coach. Treat them as a
-          guide, not gospel.
+          <strong>Use these numbers as a guide.</strong> The target numbers come from general
+          coaching advice. A qualified coach has not checked them yet.
         </div>
       )}
       {lowConfidence && (
         <div className="mb-3 px-5 py-3 rounded-3xl bg-amber/15 border border-amber/40 text-ink text-sm">
-          <strong>We could not see you clearly ({Math.round(confidence * 100)}%).</strong> Re-film
-          from the side, further back, in better light for a more reliable report.
+          <strong>We could not see you clearly ({Math.round(confidence * 100)}%).</strong> Film again
+          from the side, from further back, in better light. Your report will be more correct.
         </div>
       )}
 
@@ -125,10 +125,10 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
           <div className="pointer-events-none absolute -bottom-24 -left-20 w-64 h-64 rounded-full bg-brand/30 blur-3xl" />
           <ScoreRing value={report.total} />
           <div className="relative">
-            <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-white/50">Technique score</p>
+            <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-white/50">Your score</p>
             <p className="font-display text-2xl mt-1">{report.grade}</p>
             <p className="text-sm text-white/60 mt-2">
-              From {report.measured} checks on this movement.
+              We checked {report.measured} things in this movement.
             </p>
           </div>
         </div>
@@ -140,18 +140,18 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
           </span>
           <p className="text-sm text-white/70 mt-3 leading-relaxed">
             {report.injury_risk === 'Low'
-              ? 'Nothing in this clip stands out as risky.'
-              : 'Fixing the items below is what brings this down.'}
+              ? 'We did not see anything risky in this video.'
+              : 'Fix the mistakes below to lower this risk.'}
           </p>
-          <p className="text-[11px] text-white/40 mt-3">Coaching guidance, not medical advice.</p>
+          <p className="text-[11px] text-white/40 mt-3">This is coaching advice, not medical advice.</p>
         </div>
 
         <div className="rounded-[2rem] border border-line bg-paper p-7">
-          <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-ink-soft mb-4">By area</p>
+          <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-ink-soft mb-4">Score by body part</p>
           <div className="space-y-3">
             {Object.entries(report.groups).map(([group, score]) => (
               <div key={group} className="flex items-center gap-3 text-xs">
-                <span className="w-16 capitalize text-ink-soft">{group}</span>
+                <span className="w-20 text-ink-soft">{areaName(group)}</span>
                 <div className="flex-1 h-2 rounded-full bg-sand overflow-hidden">
                   <div className="h-full rounded-full bg-ink" style={{ width: `${score}%` }} />
                 </div>
@@ -171,7 +171,7 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
       {/* What the coach makes of it */}
       {summary && (
         <section className="mb-3 rounded-[2rem] bg-sand p-7 sm:p-8">
-          <p className="eyebrow mb-2">Coach's read</p>
+          <p className="eyebrow mb-2">Summary</p>
           <p className="text-lg leading-relaxed max-w-4xl">{summary}</p>
         </section>
       )}
@@ -197,18 +197,18 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
       {/* Video */}
       <section id="report-video" className="mb-10">
         <SkeletonVideo videoUrl={videoUrl} tracked={tracked} jumpTo={jumpTo}
-          title="Your video, with the tracking on top" />
+          title="Your video, with your body points marked" />
       </section>
 
       {/* The fixes */}
       <section className="mb-10">
         <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
           <h2 className="font-display text-xl sm:text-2xl">
-            {report.fixes.length ? `${report.fixes.length} thing${report.fixes.length > 1 ? 's' : ''} to work on` : 'Nothing to fix — good clip'}
+            {report.fixes.length ? `${report.fixes.length} thing${report.fixes.length > 1 ? 's' : ''} to work on` : 'Nothing to fix. Well done'}
           </h2>
           <button onClick={() => setShowAll((v) => !v)}
             className="px-4 py-2 rounded-full border border-line bg-paper text-[13px] font-semibold hover:border-ink/40 transition no-print">
-            {showAll ? 'Show only what needs work' : `Show all ${report.all_results.length} checks`}
+            {showAll ? 'Show only what to fix' : `Show all ${report.all_results.length} checks`}
           </button>
         </div>
 
@@ -225,14 +225,14 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
         </div>
 
         {!visible.length && (
-          <p className="text-ink-soft">Every check on this movement came back inside its target zone.</p>
+          <p className="text-ink-soft">You did every part of this movement correctly.</p>
         )}
       </section>
 
       {/* Strengths */}
       {report.strengths.length > 0 && (
         <section className="mb-3 rounded-[2rem] border border-mint/30 bg-mint/10 p-7 sm:p-8">
-          <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-emerald-700 mb-2">Strengths</p>
+          <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-emerald-700 mb-2">Good points</p>
           <h2 className="font-display text-xl sm:text-2xl mb-4">What you are doing well</h2>
           <ul className="grid sm:grid-cols-3 gap-3">
             {report.strengths.map((s) => (
@@ -250,7 +250,7 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
         <section className="mb-3 rounded-[2rem] border border-line bg-paper p-7 sm:p-8 no-print">
           <p className="eyebrow mb-2">Progress</p>
           <h2 className="font-display text-xl sm:text-2xl mb-1">Your {movement.name} <em>over time</em></h2>
-          <p className="text-sm text-ink-soft mb-4">Every analysis you save is a point on this line.</p>
+          <p className="text-sm text-ink-soft mb-4">Each saved report adds one point to this line.</p>
           <ProgressChart points={progress} movementName={movement.name} />
         </section>
       )}
@@ -268,8 +268,8 @@ export default function Report({ analysis, videoUrl, onStartOver }) {
 
       {unmeasured?.length > 0 && (
         <p className="text-xs text-ink-soft">
-          {unmeasured.length} check{unmeasured.length > 1 ? 's were' : ' was'} skipped because those
-          body parts were not clearly visible. We leave them out rather than guess.
+          We skipped {unmeasured.length} check{unmeasured.length > 1 ? 's' : ''} because we could not see those
+          body parts clearly. We do not guess.
         </p>
       )}
     </main>

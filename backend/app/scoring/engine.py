@@ -29,6 +29,13 @@ _SIZE_STEPS: dict[Unit, tuple[float, float, float]] = {
     Unit.DEG_PER_SEC: (100, 250, 500),
 }
 _SIZE_WORDS = ("a touch", "a little", "noticeably", "a lot")
+# The same four sizes, as the first words a player reads on a check.
+_SIZE_LABEL = {
+    "a touch": "Almost right",
+    "a little": "Small change needed",
+    "noticeably": "Needs practice",
+    "a lot": "Big change needed",
+}
 
 _UNIT_LABEL = {
     Unit.DEGREES: "°",
@@ -36,7 +43,7 @@ _UNIT_LABEL = {
     Unit.MILLISECONDS: " ms",
     Unit.PERCENT: "%",
     Unit.COUNT_PER_MIN: " per min",
-    Unit.DEG_PER_SEC: "°/s",
+    Unit.DEG_PER_SEC: "° per second",
 }
 
 GOOD, LOW, HIGH = "good", "low", "high"
@@ -83,7 +90,7 @@ class Guidance:
     delta: float         # how far from the nearest edge of the target zone
     size: str            # "a little", "a lot"...
     amount: str          # "13° more"
-    headline: str        # "Needs about 13° more — a little"
+    headline: str        # "Small change needed: 8° away from the target"
     cue: str             # the coach's sentence
     gauge: Gauge
 
@@ -163,7 +170,7 @@ def build_guidance(metric: Metric, value: float) -> Guidance:
     no_fault = inside or (low and _open_low(metric)) or (not low and _open_high(metric))
     if no_fault:
         return Guidance(GOOD, "hold", 0.0, "", "",
-                        "You're in the target zone", metric.cue_good, gauge)
+                        "You are doing this right", metric.cue_good, gauge)
 
     delta = round(metric.ideal_min - value if low else value - metric.ideal_max, 1)
     size = _size_word(metric.unit, delta)
@@ -173,7 +180,7 @@ def build_guidance(metric: Metric, value: float) -> Guidance:
         status=LOW if low else HIGH,
         direction="increase" if low else "decrease",
         delta=delta, size=size, amount=amount,
-        headline=f"Needs about {amount} — {size}",
+        headline=f"{_SIZE_LABEL[size]}: {fmt(metric.unit, delta)} away from the target",
         cue=cue, gauge=gauge,
     )
 

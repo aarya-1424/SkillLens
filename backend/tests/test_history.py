@@ -15,7 +15,7 @@ def test_saving_a_report_keeps_every_check_and_its_words(client, report):
     assert len(saved["results"]) == 2
     worst = saved["results"][0]           # worst first
     assert worst["name"] == "Front knee when you land"
-    assert worst["headline"] == "Needs about 13° more — noticeably"
+    assert worst["headline"] == "Needs practice: 13° away from the target"
     assert worst["target_label"] == "155° – 175°"
 
 

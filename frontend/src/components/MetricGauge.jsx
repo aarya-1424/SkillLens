@@ -32,7 +32,7 @@ export default function MetricGauge({ result, compact = false, children }) {
           <h4 className="font-semibold leading-tight">{result.name}</h4>
           {!compact && <p className="text-xs text-ink-soft mt-0.5">{result.means}</p>}
         </div>
-        <span className={`shrink-0 text-lg font-semibold tabular-nums ${tone.text}`}>{valueLabel}</span>
+        <span className={`shrink-0 text-lg font-semibold tabular-nums ${tone.text}`}><span className="text-xs font-normal text-ink-soft">You: </span>{valueLabel}</span>
       </div>
 
       {/* The bar */}
@@ -59,15 +59,13 @@ export default function MetricGauge({ result, compact = false, children }) {
 
       <div className="flex justify-between text-[11px] text-ink-soft mb-3">
         <span>{gauge.open_low ? 'less' : ''}</span>
-        <span>target {targetLabel}</span>
+        <span>aim for {targetLabel}</span>
         <span>{gauge.open_high ? 'more' : ''}</span>
       </div>
 
       {/* What to do about it */}
       <div className={`rounded-2xl border px-4 py-3 ${tone.chip}`}>
         <p className={`text-sm font-medium ${tone.text} flex items-center gap-1.5`}>
-          {result.direction === 'increase' && <span aria-hidden="true">▲</span>}
-          {result.direction === 'decrease' && <span aria-hidden="true">▼</span>}
           {result.direction === 'hold' && <span aria-hidden="true">✓</span>}
           {result.headline}
         </p>

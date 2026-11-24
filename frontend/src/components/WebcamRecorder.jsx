@@ -47,7 +47,7 @@ export function WebcamRecorder({ sport, onRecordingComplete, onCancel }) {
       if (videoRef.current) videoRef.current.srcObject = stream;
       setReady(true);
     }).catch(() => {
-      setError('We could not open your camera. Allow camera access in your browser, or upload a video instead.');
+      setError('We could not open your camera. Allow the camera in your browser, or upload a video.');
     });
     return () => { alive = false; clearTimer(); stopCamera(); };
   }, [stopCamera]);
@@ -84,7 +84,7 @@ export function WebcamRecorder({ sport, onRecordingComplete, onCancel }) {
         if (s >= MAX_CLIP_SECONDS) stop();
       }, 200);
     } catch {
-      setError('Recording could not start on this browser. Try uploading a video instead.');
+      setError('Recording did not start in this browser. Please upload a video.');
     }
   }, [onRecordingComplete, stop, stopCamera]);
 
@@ -117,7 +117,7 @@ export function WebcamRecorder({ sport, onRecordingComplete, onCancel }) {
             {phase === 'countdown' && (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/55 text-white">
                 <span className="font-display text-[7rem] leading-none">{count}</span>
-                <span className="mt-4 text-sm text-white/80">Get into position, side-on, whole body in frame</span>
+                <span className="mt-4 text-sm text-white/80">Stand side-on. Your whole body must be in the picture</span>
               </div>
             )}
 

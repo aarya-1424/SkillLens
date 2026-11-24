@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import AskCoach from '../components/AskCoach';
 import { DrillList } from '../components/DrillCard';
 import RepStrip from '../components/RepStrip';
-import { ConfirmButton, LABEL, RiskChip, ScoreRing, scoreColour, shortDate } from '../components/Bits';
+import { areaName, ConfirmButton, LABEL, RiskChip, ScoreRing, scoreColour, shortDate } from '../components/Bits';
 import { SPORTS } from '../data/landing';
 import { deleteAnalysis, getAnalysis, getSummary, listAnalyses } from '../services/history';
 import { getPlayerReport } from '../services/teams';
@@ -18,22 +18,22 @@ const SEVERITY_TONE = {
 
 /** One measured check, as it was shown when the report was made. */
 function SavedCheck({ r }) {
-  const arrow = r.direction === 'increase' ? '▲' : r.direction === 'decrease' ? '▼' : '✓';
+  const arrow = r.direction === 'hold' ? '✓' : '';
   return (
     <div className="rounded-[1.75rem] border border-line bg-paper p-6">
       <div className="flex items-start justify-between gap-4">
         <h3 className="font-semibold leading-tight">{r.name}</h3>
-        <span className="shrink-0 text-lg font-semibold tabular-nums">{r.value_label}</span>
+        <span className="shrink-0 text-lg font-semibold tabular-nums"><span className="text-xs font-normal text-ink-soft">You: </span>{r.value_label}</span>
       </div>
       <div className="flex items-center gap-3 mt-4">
         <div className="flex-1 h-2 rounded-full bg-sand overflow-hidden">
           <div className="h-full rounded-full" style={{ width: `${r.score}%`, background: scoreColour(r.score) }} />
         </div>
-        <span className="text-xs tabular-nums text-ink-soft w-14 text-right">{Math.round(r.score)} / 100</span>
+        <span className="text-xs tabular-nums text-ink-soft w-14 text-right">{Math.round(r.score)} of 100</span>
       </div>
-      <p className="text-[11px] text-ink-soft mt-2">Target {r.target_label}</p>
+      <p className="text-[11px] text-ink-soft mt-2">Aim for {r.target_label}</p>
       <div className={`mt-4 rounded-2xl border px-4 py-3 ${SEVERITY_TONE[r.severity] || SEVERITY_TONE.none}`}>
-        <p className="text-sm font-semibold flex gap-1.5"><span aria-hidden="true">{arrow}</span>{r.headline}</p>
+        <p className="text-sm font-semibold flex gap-1.5">{arrow && <span aria-hidden="true">{arrow}</span>}{r.headline}</p>
         {r.cue && <p className="text-sm mt-1.5 leading-relaxed">{r.cue}</p>}
       </div>
       <DrillList drills={r.drills} />
@@ -97,7 +97,7 @@ export default function ReportDetail() {
           <p className="eyebrow mt-4 mb-2">{report.sport} · {report.movement_name}</p>
           <h1 className="font-display text-3xl sm:text-[2.6rem]">Report <em>{shortDate(report.created_at)}</em></h1>
           {report.is_sample && (
-            <p className="mt-2 text-xs text-ink-soft">Sample report for demonstration, scored by the real engine.</p>
+            <p className="mt-2 text-xs text-ink-soft">This is an example report. The scores come from the real SkillLens system.</p>
           )}
         </div>
         <div className="flex flex-wrap gap-2 no-print">
@@ -123,7 +123,7 @@ export default function ReportDetail() {
 
       {report.unverified && (
         <div className="mb-3 px-5 py-3 rounded-3xl bg-amber/15 border border-amber/40 text-sm">
-          <strong>Targets not yet coach-verified.</strong> Treat them as a guide.
+          <strong>Use these numbers as a guide.</strong> A qualified coach has not checked the targets yet.
         </div>
       )}
 
@@ -132,25 +132,25 @@ export default function ReportDetail() {
           <div className="pointer-events-none absolute -bottom-24 -left-20 w-64 h-64 rounded-full bg-brand/30 blur-3xl" />
           <ScoreRing value={report.total} />
           <div className="relative">
-            <p className={`${LABEL} text-white/50`}>Technique score</p>
+            <p className={`${LABEL} text-white/50`}>Your score</p>
             <p className="font-display text-2xl mt-1">{report.grade}</p>
-            <p className="text-sm text-white/60 mt-2">From {report.measured} checks.</p>
+            <p className="text-sm text-white/60 mt-2">We checked {report.measured} things in this movement.</p>
           </div>
         </div>
         <div className="rounded-[2rem] bg-stage-soft text-white p-7">
           <p className={`${LABEL} text-white/50 mb-3`}>Injury risk</p>
           <RiskChip risk={report.injury_risk} suffix="" dark />
           <p className="text-sm text-white/70 mt-3 leading-relaxed">
-            {report.injury_risk === 'Low' ? 'Nothing in this clip stood out as risky.' : 'Fixing the checks below is what brings this down.'}
+            {report.injury_risk === 'Low' ? 'We did not see anything risky in this video.' : 'Fix the mistakes below to lower this risk.'}
           </p>
-          <p className="text-[11px] text-white/40 mt-3">Coaching guidance, not medical advice.</p>
+          <p className="text-[11px] text-white/40 mt-3">This is coaching advice, not medical advice.</p>
         </div>
         <div className="rounded-[2rem] border border-line bg-paper p-7">
-          <p className={`${LABEL} text-ink-soft mb-4`}>By area</p>
+          <p className={`${LABEL} text-ink-soft mb-4`}>Score by body part</p>
           <div className="space-y-3">
             {Object.entries(report.groups).map(([group, score]) => (
               <div key={group} className="flex items-center gap-3 text-xs">
-                <span className="w-16 capitalize text-ink-soft">{group}</span>
+                <span className="w-20 text-ink-soft">{areaName(group)}</span>
                 <div className="flex-1 h-2 rounded-full bg-sand overflow-hidden">
                   <div className="h-full rounded-full bg-ink" style={{ width: `${score}%` }} />
                 </div>
@@ -164,12 +164,12 @@ export default function ReportDetail() {
       <RepStrip reps={report.reps} />
 
       {coachView && (
-        <p className="mb-3 px-5 py-3 rounded-3xl bg-sand text-sm">You are viewing your player's report as their coach. It is read-only.</p>
+        <p className="mb-3 px-5 py-3 rounded-3xl bg-sand text-sm">You are seeing your player's report as their coach. You cannot change it.</p>
       )}
 
       {(!coachView || summary.state === 'done') && (
       <section className="mb-10 rounded-[2rem] bg-sand p-7 sm:p-8">
-        <p className="eyebrow mb-2">Coach's read</p>
+        <p className="eyebrow mb-2">Summary</p>
         {summary.state === 'done' && <p className="text-lg leading-relaxed max-w-4xl">{summary.text}</p>}
         {summary.state === 'idle' && (
           <button type="button" onClick={writeSummary} className="px-5 py-2.5 rounded-full bg-ink text-white text-sm font-semibold no-print">
@@ -177,22 +177,22 @@ export default function ReportDetail() {
           </button>
         )}
         {summary.state === 'loading' && <p className="text-ink-soft">Writing…</p>}
-        {summary.state === 'tour' && <p className="text-sm">With an account, a short coach's summary written by AI appears here, fitted to your level and goal.</p>}
+        {summary.state === 'tour' && <p className="text-sm">When you sign in, a short summary written by AI appears here. It is made for your level and your goal.</p>}
         {summary.state === 'paused' && (
-          <p className="text-sm">AI features are off in <Link to="/app/privacy" className="font-semibold underline">Privacy &amp; data</Link>, so no summary was written.</p>
+          <p className="text-sm">AI features are off in <Link to="/app/privacy" className="font-semibold underline">Privacy &amp; data</Link>, so there is no summary.</p>
         )}
-        {summary.state === 'unavailable' && <p className="text-sm text-ink-soft">The AI is not available right now. Your scores are complete without it.</p>}
+        {summary.state === 'unavailable' && <p className="text-sm text-ink-soft">The AI is not working right now. Your scores are still complete.</p>}
       </section>
       )}
 
       <section className="mb-10">
         <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
           <h2 className="font-display text-xl sm:text-2xl">
-            {fixes.length ? `${fixes.length} thing${fixes.length > 1 ? 's' : ''} to work on` : 'Nothing to fix in this clip'}
+            {fixes.length ? `${fixes.length} thing${fixes.length > 1 ? 's' : ''} to work on` : 'Nothing to fix. Well done'}
           </h2>
           <button type="button" onClick={() => setShowAll((v) => !v)}
             className="px-4 py-2 rounded-full border border-line bg-paper text-[13px] font-semibold hover:border-ink/40 transition no-print">
-            {showAll ? 'Show only what needs work' : `Show all ${report.results.length} checks`}
+            {showAll ? 'Show only what to fix' : `Show all ${report.results.length} checks`}
           </button>
         </div>
         <div className="grid md:grid-cols-2 gap-3">
@@ -202,7 +202,7 @@ export default function ReportDetail() {
 
       {strengths.length > 0 && !showAll && (
         <section className="mb-3 rounded-[2rem] border border-mint/30 bg-mint/10 p-7 sm:p-8">
-          <p className={`${LABEL} text-emerald-700 mb-2`}>Strengths</p>
+          <p className={`${LABEL} text-emerald-700 mb-2`}>Good points</p>
           <h2 className="font-display text-xl sm:text-2xl mb-4">What you did well</h2>
           <ul className="grid sm:grid-cols-3 gap-3">
             {strengths.map((s) => (
@@ -222,7 +222,7 @@ export default function ReportDetail() {
       )}
 
       {!coachView && <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-[1.75rem] bg-paper border border-line text-sm no-print">
-        <span className="text-ink-soft">Your video was never stored, so this page shows the measurements taken from it.</span>
+        <span className="text-ink-soft">We never saved your video. This page shows the numbers we measured from it.</span>
         {!isGuest() && (
           <ConfirmButton label="Delete this report" question="Delete this report and its Ask Coach messages for good?"
             onConfirm={async () => { await deleteAnalysis(report.id); navigate('/app/reports', { replace: true }); }} />

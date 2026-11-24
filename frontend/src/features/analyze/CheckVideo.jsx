@@ -70,7 +70,7 @@ export default function CheckVideo({ sport, videoUrl, knownDuration, source, onA
               <input type="range" min={0} max={maxStart} step={0.5} value={start}
                 onChange={(e) => moveStart(Number(e.target.value))}
                 aria-label="Where the analysed part starts" className="w-full accent-[#d7282f]" />
-              <p className="text-xs text-white/50 mt-1">Slide until all your repetitions are inside the red part.</p>
+              <p className="text-xs text-white/50 mt-1">Move the sliders until your whole movement is inside the red part.</p>
             </div>
           )}
         </div>
@@ -96,7 +96,7 @@ export default function CheckVideo({ sport, videoUrl, knownDuration, source, onA
             <>
               {short && (
                 <div className="px-5 py-3 rounded-3xl bg-amber/15 border border-amber/40 text-sm mb-5">
-                  <strong>Quite short.</strong> It can work, but make sure at least one full movement is in it.
+                  <strong>This video is short.</strong> It can work, but check that one full movement is in it.
                   10 to 15 seconds is best.
                 </div>
               )}
