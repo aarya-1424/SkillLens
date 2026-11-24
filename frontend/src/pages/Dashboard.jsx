@@ -68,8 +68,8 @@ export default function Dashboard() {
             </h1>
             <p className="text-white/60 mt-4 max-w-sm text-sm leading-relaxed">
               {hasHistory
-                ? 'Every new video builds on the last one. Record again to see what moved.'
-                : 'Film 5 to 15 seconds of your movement. Your first report takes under a minute.'}
+                ? 'Each new video is compared with your last one. Record again to see what changed.'
+                : 'Film 5 to 15 seconds of your movement. Your first report is ready in less than a minute.'}
             </p>
             <Link to="/app/analyze"
               className="inline-block mt-7 px-7 py-3.5 rounded-full font-semibold text-white bg-brand hover:bg-brand-deep transition shadow-xl shadow-brand/30">
@@ -221,7 +221,7 @@ function ProfileStrip({ profile, guest }) {
       <section className="mb-3 p-7 rounded-[2rem] bg-paper border border-line flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <p className="eyebrow mb-2">Quick setup</p>
-          <p className="font-display text-lg">Make the advice fit you</p>
+          <p className="font-display text-lg">Get advice made for you</p>
           <p className="text-sm text-ink-soft mt-1">
             5 short steps, about 2 minutes: your sport, level, body and goal.
             {guest && ' In the tour it stays in this browser.'}

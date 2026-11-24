@@ -90,20 +90,20 @@ export default function Compare() {
         <>
           <div className="grid md:grid-cols-2 gap-3 mb-3">
             <section className="p-7 rounded-[2rem] bg-mint/10 border border-mint/30">
-              <p className={`${LABEL} text-emerald-700 mb-3`}>Biggest gains</p>
+              <p className={`${LABEL} text-emerald-700 mb-3`}>Most improved</p>
               {gains.length ? gains.map((r) => (
                 <p key={r.name} className="flex justify-between gap-3 text-sm py-1">
                   <span><strong>{r.name}</strong>: {r.then.value_label} → {r.now.value_label}</span><Change value={r.change} />
                 </p>
-              )) : <p className="text-sm text-ink-soft">No check moved up by 5 points or more yet.</p>}
+              )) : <p className="text-sm text-ink-soft">Nothing improved by 5 points or more yet.</p>}
             </section>
             <section className="p-7 rounded-[2rem] bg-alert/5 border border-alert/25">
-              <p className={`${LABEL} text-red-700 mb-3`}>Slipped</p>
+              <p className={`${LABEL} text-red-700 mb-3`}>Got worse</p>
               {slips.length ? slips.map((r) => (
                 <p key={r.name} className="flex justify-between gap-3 text-sm py-1">
                   <span><strong>{r.name}</strong>: {r.then.value_label} → {r.now.value_label}</span><Change value={r.change} />
                 </p>
-              )) : <p className="text-sm text-ink-soft">Nothing slipped by 5 points or more.</p>}
+              )) : <p className="text-sm text-ink-soft">Nothing got worse by 5 points or more.</p>}
             </section>
           </div>
 
@@ -115,7 +115,7 @@ export default function Compare() {
               </div>
               {rows.map((r) => (
                 <div key={r.name} className="grid grid-cols-2 sm:grid-cols-[1fr_8rem_8rem_5rem] gap-x-3 gap-y-1 py-3 items-center text-sm">
-                  <span className="col-span-2 sm:col-span-1 font-semibold">{r.name}<span className="block text-[11px] font-normal text-ink-soft">Target {r.now.target_label}</span></span>
+                  <span className="col-span-2 sm:col-span-1 font-semibold">{r.name}<span className="block text-[11px] font-normal text-ink-soft">Aim for {r.now.target_label}</span></span>
                   <span className="tabular-nums text-ink-soft">{r.then ? r.then.value_label : '—'} <span className="text-[11px]">({r.then ? Math.round(r.then.score) : '–'})</span></span>
                   <span className="tabular-nums" style={{ color: scoreColour(r.now.score) }}>{r.now.value_label} <span className="text-[11px] text-ink-soft">({Math.round(r.now.score)})</span></span>
                   <span className="sm:text-right"><Change value={r.change} /></span>

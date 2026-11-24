@@ -23,7 +23,7 @@ export const HomePage = ({ onVideoSelect, onRecordClick, onError, initialSport }
       return;
     }
     if (file.size > MAX_FILE_MB * 1024 * 1024) {
-      onError?.(`That video is bigger than ${MAX_FILE_MB} MB. Trim it to the part with your movement, or film a shorter clip.`);
+      onError?.(`That video is bigger than ${MAX_FILE_MB} MB. Cut it to the part with your movement, or film a shorter video.`);
       return;
     }
     onVideoSelect(file, selectedSport);
@@ -33,7 +33,7 @@ export const HomePage = ({ onVideoSelect, onRecordClick, onError, initialSport }
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
       <p className="fade-up eyebrow mb-3">Step 1 of 3 · New analysis</p>
       <h1 className="fade-up font-display text-3xl sm:text-[2.6rem] mb-3">Choose <em>your sport</em></h1>
-      <p className="fade-up delay-1 text-ink-soft mb-9">Then follow the filming guide below. A good clip is what makes a good report.</p>
+      <p className="fade-up delay-1 text-ink-soft mb-9">Then follow the filming guide below. A clear video gives a better report.</p>
 
       <div className="fade-up delay-1 grid grid-cols-2 sm:grid-cols-5 gap-3 mb-3">
         {SPORTS.map((s) => {

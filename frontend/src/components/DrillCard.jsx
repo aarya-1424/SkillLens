@@ -38,7 +38,7 @@ export default function DrillCard({ drill, why, caution, compact = false }) {
             ))}
           </ol>
           {drill.safety && <p className="text-xs mt-3 px-3 py-2 rounded-xl bg-sand"><strong>Safety:</strong> {drill.safety}</p>}
-          {drill.verified === false && <p className="text-[11px] text-ink-soft mt-2">Not yet signed off by a coach. Treat it as a guide.</p>}
+          {drill.verified === false && <p className="text-[11px] text-ink-soft mt-2">A coach has not checked this drill yet. Use it as a guide.</p>}
         </div>
       )}
     </div>
@@ -50,7 +50,7 @@ export function DrillList({ drills }) {
   if (!drills?.length) return null;
   return (
     <div className="mt-3 space-y-2">
-      <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-ink-soft">Drills that fix this</p>
+      <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-ink-soft">Exercises that fix this</p>
       {drills.map((d) => <DrillCard key={d.id} drill={d} compact />)}
     </div>
   );

@@ -21,6 +21,8 @@ from app.history.models import AiCache
 SUMMARY_SYSTEM = (
     "You are a friendly sports coach writing to a young athlete in plain English. "
     "Three or four short sentences, no jargon, no bullet points, no emoji. "
+    "Write so a 12-year-old, or someone still learning English, understands every word: "
+    "short sentences, everyday words, no coaching slang and no idioms. "
     "Say what went well first, then the single most important thing to fix and why "
     "it matters for their body or their performance. Use only the numbers given. "
     "Never invent measurements. Do not give medical advice. "
@@ -35,6 +37,8 @@ COACH_SYSTEM = (
     "say plainly that SkillLens's library does not cover it yet and suggest they ask a "
     "qualified coach — do not fall back on your own sports knowledge. "
     "Keep it under 120 words. No medical advice, no diagnosis. "
+    "Write so a 12-year-old, or someone still learning English, understands every word: "
+    "short sentences, everyday words, no coaching slang and no idioms. "
     "Never claim a measurement the passages do not contain. "
     "If you are told about the athlete (age group, level, goal, sore areas), fit the answer "
     "to them, and be careful with anything that loads a sore area."

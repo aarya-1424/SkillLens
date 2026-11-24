@@ -62,15 +62,15 @@ def for_user(db: Session, user_id: str) -> list[dict]:
             stuck = _stuck_check(last)
             out.append({**base, "kind": "slipping", "stuck": stuck,
                         "message": f"Your {name.lower()} score has dropped to {totals[-1]:.0f} from {max(totals[:-1]):.0f}. "
-                                   "Tiredness, a niggle, or filming from a different angle can all do this. "
-                                   + (f"The check that slipped most is: {stuck['name']}." if stuck else "")})
+                                   "This can happen when you are tired, have a small pain, or film from a different angle. "
+                                   + (f"The check that dropped most is: {stuck['name']}." if stuck else "")})
         elif max(totals) - min(totals) <= PLATEAU_SPREAD and totals[-1] < GOOD_ENOUGH:
             stuck = _stuck_check(last)
             out.append({**base, "kind": "plateau", "stuck": stuck,
                         "message": f"Your {name.lower()} has stayed around {totals[-1]:.0f} for your last {WINDOW} videos. "
-                                   + (f"What is holding it back is: {stuck['name']} "
+                                   + (f"The main thing to fix is: {stuck['name']} "
                                       f"(you: {stuck['value_label']}, target {stuck['target_label']}). "
-                                      "Put one change into practice at a time, then film again."
+                                      "Work on one thing at a time, then film again."
                                       if stuck else "Try changing one thing at a time, then film again.")})
         elif totals[0] < totals[1] < totals[2]:
             out.append({**base, "kind": "improving", "stuck": None,

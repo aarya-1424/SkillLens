@@ -23,7 +23,7 @@ export default function Plan() {
   useEffect(() => {
     getPlan().then(setPlan).catch((err) => {
       if (err.status === 404) setPlan(null);
-      else setError('Could not build your plan just now. The server may be waking up; try again in a minute.');
+      else setError('We could not make your plan right now. Please try again in one minute.');
     });
   }, [guest]);
 

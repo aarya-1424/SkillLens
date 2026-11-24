@@ -13,12 +13,12 @@ export default function RepStrip({ reps, consistency, onPick }) {
     <section className="mb-3 p-6 sm:p-7 rounded-[2rem] bg-paper border border-line">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-4">
         <div>
-          <p className="eyebrow mb-1">Repetitions</p>
+          <p className="eyebrow mb-1">Each time you did the movement</p>
           <h2 className="font-display text-lg sm:text-xl">We found <em>{reps.length} reps</em></h2>
         </div>
         <p className="text-sm text-ink-soft max-w-md">
-          This report is about your <strong className="text-ink">typical rep</strong> (the middle score), not your luckiest one.{' '}
-          {steady ? 'Your reps were consistent.' : `Your scores varied by ${Math.round(spread)} points, so work on doing it the same way every time.`}
+          A rep is one time you do the movement. This report uses your <strong className="text-ink">normal rep</strong> (the middle score), not your best one.{' '}
+          {steady ? 'All your reps were similar. Good.' : `Your reps were ${Math.round(spread)} points apart. Try to do it the same way every time.`}
         </p>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -33,7 +33,7 @@ export default function RepStrip({ reps, consistency, onPick }) {
               <span className="text-left">
                 <span className="block text-sm font-semibold">Rep {r.number}</span>
                 <span className="block text-[11px] text-ink-soft">
-                  {r.typical ? 'Typical · this report' : r.best ? 'Your best' : r.grade}
+                  {r.typical ? 'Normal · this report' : r.best ? 'Your best' : r.grade}
                 </span>
               </span>
             </Tag>

@@ -104,3 +104,10 @@ export function ConfirmButton({ label, question, confirmLabel = 'Yes, delete', o
     </span>
   );
 }
+
+/** Plain names for the body areas a report is scored by. */
+export const AREA_LABEL = {
+  elbow: 'Elbow', knee: 'Knee', shoulder: 'Shoulder', trunk: 'Upper body',
+  timing: 'Timing', power: 'Speed', balance: 'Balance',
+};
+export const areaName = (key) => AREA_LABEL[key] ?? key;

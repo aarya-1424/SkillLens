@@ -78,7 +78,7 @@ export default function Progress() {
       {rows?.length === 0 && (
         guest
           ? <EmptyState title="The tour has no progress yet" text="Sign in with Google and every analysis you save becomes a point on your progress line." to="/login" cta="Sign in" />
-          : <EmptyState title="No progress yet" text="Analyse a movement twice and you will see your score move here." />
+          : <EmptyState title="No progress yet" text="Analyse the same movement two times and you will see your score change here." />
       )}
 
       {sportsUsed.length > 0 && (
@@ -110,7 +110,7 @@ export default function Progress() {
                     <p className="relative font-display text-lg mt-3 leading-tight">{best.name}</p>
                     <p className="relative text-sm text-mint mt-2 font-semibold">▲ {best.change} points</p>
                   </>
-                ) : <p className="relative text-sm text-white/60 mt-3">Record this movement again to see what moves.</p>}
+                ) : <p className="relative text-sm text-white/60 mt-3">Record this movement again to see what changes.</p>}
               </div>
               <div className="p-7 rounded-[2rem] bg-sand">
                 <p className={`${LABEL} text-ink-soft`}>Work on next</p>
@@ -125,7 +125,7 @@ export default function Progress() {
           </div>
 
           <section className="p-7 sm:p-8 rounded-[2rem] bg-paper border border-line">
-            <p className="eyebrow mb-2">Check by check</p>
+            <p className="eyebrow mb-2">Each check over time</p>
             <h2 className="font-display text-xl sm:text-2xl mb-5">What is <em>moving</em></h2>
             <div className="divide-y divide-line">
               {checks.map((c) => (

@@ -5,8 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import { getInsights } from '../services/history';
 
 const LOOK = {
-  slipping: { box: 'bg-alert/5 border-alert/30', tag: 'bg-alert/15 text-red-800', label: 'Score dropping' },
-  plateau: { box: 'bg-amber/10 border-amber/40', tag: 'bg-amber/20 text-amber-800', label: 'Stuck' },
+  slipping: { box: 'bg-alert/5 border-alert/30', tag: 'bg-alert/15 text-red-800', label: 'Score going down' },
+  plateau: { box: 'bg-amber/10 border-amber/40', tag: 'bg-amber/20 text-amber-800', label: 'Not improving' },
   improving: { box: 'bg-mint/10 border-mint/30', tag: 'bg-mint/15 text-emerald-800', label: 'Improving' },
 };
 
